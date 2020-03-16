@@ -1,0 +1,2060 @@
+1584356578.404067 server started (13853): version 2.6, socket /tmp/tmux-1000/default, protocol 8
+1584356578.404091 on Linux 4.15.0-48-generic #51-Ubuntu SMP Wed Apr 3 08:28:49 UTC 2019; libevent 2.1.8-stable (poll)
+1584356578.404803 add peer 0x561361e1dba0: 8 (0x561361e1d350)
+1584356578.404812 new client 0x561361e1d350
+1584356578.404835 loading /etc/tmux.conf
+1584356578.404846 loading /home/dawit/.tmux.conf
+1584356578.404863 /home/dawit/.tmux.conf: set -g mouse on        #For tmux version 2.1 and up
+1584356578.404874 /home/dawit/.tmux.conf: 
+1584356578.404881 server loop enter
+1584356578.404988 peer 0x561361e1dba0 message 100
+1584356578.404993 client 0x561361e1d350 IDENTIFY_FLAGS 0x10000
+1584356578.404997 peer 0x561361e1dba0 message 101
+1584356578.405000 client 0x561361e1d350 IDENTIFY_TERM xterm-256color
+1584356578.405003 peer 0x561361e1dba0 message 102
+1584356578.405006 client 0x561361e1d350 IDENTIFY_TTYNAME /dev/pts/0
+1584356578.405009 peer 0x561361e1dba0 message 108
+1584356578.405017 client 0x561361e1d350 IDENTIFY_CWD /home/dawit/Desktop/Datalogi/MIDICompiler/midicompiler/config
+1584356578.405020 peer 0x561361e1dba0 message 104
+1584356578.405023 client 0x561361e1d350 IDENTIFY_STDIN 6
+1584356578.405028 cmdq_next <global>: enter
+1584356578.405031 cmdq_next <global>: command[bind-key] (0), flags 0
+1584356578.405035 cmd_find_current_client: no target, return (nil)
+1584356578.405044 cmdq_next <global>: command[bind-key] (0), flags 0
+1584356578.405047 cmd_find_current_client: no target, return (nil)
+1584356578.405053 cmdq_next <global>: command[bind-key] (0), flags 0
+1584356578.405058 cmd_find_current_client: no target, return (nil)
+1584356578.405064 cmdq_next <global>: command[bind-key] (0), flags 0
+1584356578.405068 cmd_find_current_client: no target, return (nil)
+1584356578.405075 cmdq_next <global>: command[bind-key] (0), flags 0
+1584356578.405078 cmd_find_current_client: no target, return (nil)
+1584356578.405082 cmdq_next <global>: command[bind-key] (0), flags 0
+1584356578.405085 cmd_find_current_client: no target, return (nil)
+1584356578.405091 cmdq_next <global>: command[bind-key] (0), flags 0
+1584356578.405094 cmd_find_current_client: no target, return (nil)
+1584356578.405098 cmdq_next <global>: command[bind-key] (0), flags 0
+1584356578.405101 cmd_find_current_client: no target, return (nil)
+1584356578.405106 cmdq_next <global>: command[bind-key] (0), flags 0
+1584356578.405109 cmd_find_current_client: no target, return (nil)
+1584356578.405115 cmdq_next <global>: command[bind-key] (0), flags 0
+1584356578.405118 cmd_find_current_client: no target, return (nil)
+1584356578.405122 cmdq_next <global>: command[bind-key] (0), flags 0
+1584356578.405125 cmd_find_current_client: no target, return (nil)
+1584356578.405129 cmdq_next <global>: command[bind-key] (0), flags 0
+1584356578.405132 cmd_find_current_client: no target, return (nil)
+1584356578.405138 cmdq_next <global>: command[bind-key] (0), flags 0
+1584356578.405141 cmd_find_current_client: no target, return (nil)
+1584356578.405146 cmdq_next <global>: command[bind-key] (0), flags 0
+1584356578.405149 cmd_find_current_client: no target, return (nil)
+1584356578.405153 cmdq_next <global>: command[bind-key] (0), flags 0
+1584356578.405156 cmd_find_current_client: no target, return (nil)
+1584356578.405160 cmdq_next <global>: command[bind-key] (0), flags 0
+1584356578.405163 cmd_find_current_client: no target, return (nil)
+1584356578.405167 cmdq_next <global>: command[bind-key] (0), flags 0
+1584356578.405170 cmd_find_current_client: no target, return (nil)
+1584356578.405175 cmdq_next <global>: command[bind-key] (0), flags 0
+1584356578.405178 cmd_find_current_client: no target, return (nil)
+1584356578.405183 cmdq_next <global>: command[bind-key] (0), flags 0
+1584356578.405186 cmd_find_current_client: no target, return (nil)
+1584356578.405190 cmdq_next <global>: command[bind-key] (0), flags 0
+1584356578.405193 cmd_find_current_client: no target, return (nil)
+1584356578.405198 cmdq_next <global>: command[bind-key] (0), flags 0
+1584356578.405201 cmd_find_current_client: no target, return (nil)
+1584356578.405212 cmdq_next <global>: command[bind-key] (0), flags 0
+1584356578.405215 cmd_find_current_client: no target, return (nil)
+1584356578.405220 cmdq_next <global>: command[bind-key] (0), flags 0
+1584356578.405223 cmd_find_current_client: no target, return (nil)
+1584356578.405228 cmdq_next <global>: command[bind-key] (0), flags 0
+1584356578.405230 cmd_find_current_client: no target, return (nil)
+1584356578.405235 cmdq_next <global>: command[bind-key] (0), flags 0
+1584356578.405238 cmd_find_current_client: no target, return (nil)
+1584356578.405243 cmdq_next <global>: command[bind-key] (0), flags 0
+1584356578.405246 cmd_find_current_client: no target, return (nil)
+1584356578.405250 cmdq_next <global>: command[bind-key] (0), flags 0
+1584356578.405253 cmd_find_current_client: no target, return (nil)
+1584356578.405257 cmdq_next <global>: command[bind-key] (0), flags 0
+1584356578.405260 cmd_find_current_client: no target, return (nil)
+1584356578.405264 cmdq_next <global>: command[bind-key] (0), flags 0
+1584356578.405267 cmd_find_current_client: no target, return (nil)
+1584356578.405271 cmdq_next <global>: command[bind-key] (0), flags 0
+1584356578.405274 cmd_find_current_client: no target, return (nil)
+1584356578.405278 cmdq_next <global>: command[bind-key] (0), flags 0
+1584356578.405281 cmd_find_current_client: no target, return (nil)
+1584356578.405285 cmdq_next <global>: command[bind-key] (0), flags 0
+1584356578.405288 cmd_find_current_client: no target, return (nil)
+1584356578.405293 cmdq_next <global>: command[bind-key] (0), flags 0
+1584356578.405296 cmd_find_current_client: no target, return (nil)
+1584356578.405301 cmdq_next <global>: command[bind-key] (0), flags 0
+1584356578.405304 cmd_find_current_client: no target, return (nil)
+1584356578.405308 cmdq_next <global>: command[bind-key] (0), flags 0
+1584356578.405311 cmd_find_current_client: no target, return (nil)
+1584356578.405316 cmdq_next <global>: command[bind-key] (0), flags 0
+1584356578.405319 cmd_find_current_client: no target, return (nil)
+1584356578.405323 cmdq_next <global>: command[bind-key] (0), flags 0
+1584356578.405326 cmd_find_current_client: no target, return (nil)
+1584356578.405330 cmdq_next <global>: command[bind-key] (0), flags 0
+1584356578.405333 cmd_find_current_client: no target, return (nil)
+1584356578.405337 cmdq_next <global>: command[bind-key] (0), flags 0
+1584356578.405340 cmd_find_current_client: no target, return (nil)
+1584356578.405344 cmdq_next <global>: command[bind-key] (0), flags 0
+1584356578.405347 cmd_find_current_client: no target, return (nil)
+1584356578.405351 cmdq_next <global>: command[bind-key] (0), flags 0
+1584356578.405354 cmd_find_current_client: no target, return (nil)
+1584356578.405359 cmdq_next <global>: command[bind-key] (0), flags 0
+1584356578.405362 cmd_find_current_client: no target, return (nil)
+1584356578.405367 cmdq_next <global>: command[bind-key] (0), flags 0
+1584356578.405370 cmd_find_current_client: no target, return (nil)
+1584356578.405374 cmdq_next <global>: command[bind-key] (0), flags 0
+1584356578.405377 cmd_find_current_client: no target, return (nil)
+1584356578.405382 cmdq_next <global>: command[bind-key] (0), flags 0
+1584356578.405385 cmd_find_current_client: no target, return (nil)
+1584356578.405389 cmdq_next <global>: command[bind-key] (0), flags 0
+1584356578.405392 cmd_find_current_client: no target, return (nil)
+1584356578.405396 cmdq_next <global>: command[bind-key] (0), flags 0
+1584356578.405399 cmd_find_current_client: no target, return (nil)
+1584356578.405403 cmdq_next <global>: command[bind-key] (0), flags 0
+1584356578.405406 cmd_find_current_client: no target, return (nil)
+1584356578.405410 cmdq_next <global>: command[bind-key] (0), flags 0
+1584356578.405413 cmd_find_current_client: no target, return (nil)
+1584356578.405417 cmdq_next <global>: command[bind-key] (0), flags 0
+1584356578.405420 cmd_find_current_client: no target, return (nil)
+1584356578.405424 cmdq_next <global>: command[bind-key] (0), flags 0
+1584356578.405427 cmd_find_current_client: no target, return (nil)
+1584356578.405432 cmdq_next <global>: command[bind-key] (0), flags 0
+1584356578.405438 cmd_find_current_client: no target, return (nil)
+1584356578.405443 cmdq_next <global>: command[bind-key] (0), flags 0
+1584356578.405446 cmd_find_current_client: no target, return (nil)
+1584356578.405452 cmdq_next <global>: command[bind-key] (0), flags 0
+1584356578.405455 cmd_find_current_client: no target, return (nil)
+1584356578.405460 cmdq_next <global>: command[bind-key] (0), flags 0
+1584356578.405463 cmd_find_current_client: no target, return (nil)
+1584356578.405467 cmdq_next <global>: command[bind-key] (0), flags 0
+1584356578.405470 cmd_find_current_client: no target, return (nil)
+1584356578.405476 cmdq_next <global>: command[bind-key] (0), flags 0
+1584356578.405479 cmd_find_current_client: no target, return (nil)
+1584356578.405484 cmdq_next <global>: command[bind-key] (0), flags 0
+1584356578.405487 cmd_find_current_client: no target, return (nil)
+1584356578.405493 cmdq_next <global>: command[bind-key] (0), flags 0
+1584356578.405496 cmd_find_current_client: no target, return (nil)
+1584356578.405501 cmdq_next <global>: command[bind-key] (0), flags 0
+1584356578.405504 cmd_find_current_client: no target, return (nil)
+1584356578.405509 cmdq_next <global>: command[bind-key] (0), flags 0
+1584356578.405512 cmd_find_current_client: no target, return (nil)
+1584356578.405516 cmdq_next <global>: command[bind-key] (0), flags 0
+1584356578.405520 cmd_find_current_client: no target, return (nil)
+1584356578.405524 cmdq_next <global>: command[bind-key] (0), flags 0
+1584356578.405527 cmd_find_current_client: no target, return (nil)
+1584356578.405532 cmdq_next <global>: command[bind-key] (0), flags 0
+1584356578.405535 cmd_find_current_client: no target, return (nil)
+1584356578.405540 cmdq_next <global>: command[bind-key] (0), flags 0
+1584356578.405543 cmd_find_current_client: no target, return (nil)
+1584356578.405547 cmdq_next <global>: command[bind-key] (0), flags 0
+1584356578.405550 cmd_find_current_client: no target, return (nil)
+1584356578.405555 cmdq_next <global>: command[bind-key] (0), flags 0
+1584356578.405558 cmd_find_current_client: no target, return (nil)
+1584356578.405563 cmdq_next <global>: command[bind-key] (0), flags 0
+1584356578.405566 cmd_find_current_client: no target, return (nil)
+1584356578.405572 cmdq_next <global>: command[bind-key] (0), flags 0
+1584356578.405575 cmd_find_current_client: no target, return (nil)
+1584356578.405580 cmdq_next <global>: command[bind-key] (0), flags 0
+1584356578.405584 cmd_find_current_client: no target, return (nil)
+1584356578.405590 cmdq_next <global>: command[bind-key] (0), flags 0
+1584356578.405593 cmd_find_current_client: no target, return (nil)
+1584356578.405598 cmdq_next <global>: command[bind-key] (0), flags 0
+1584356578.405601 cmd_find_current_client: no target, return (nil)
+1584356578.405606 cmdq_next <global>: command[bind-key] (0), flags 0
+1584356578.405609 cmd_find_current_client: no target, return (nil)
+1584356578.405614 cmdq_next <global>: command[bind-key] (0), flags 0
+1584356578.405617 cmd_find_current_client: no target, return (nil)
+1584356578.405622 cmdq_next <global>: command[bind-key] (0), flags 0
+1584356578.405625 cmd_find_current_client: no target, return (nil)
+1584356578.405631 cmdq_next <global>: command[bind-key] (0), flags 0
+1584356578.405634 cmd_find_current_client: no target, return (nil)
+1584356578.405641 cmdq_next <global>: command[bind-key] (0), flags 0
+1584356578.405644 cmd_find_current_client: no target, return (nil)
+1584356578.405650 cmdq_next <global>: command[bind-key] (0), flags 0
+1584356578.405653 cmd_find_current_client: no target, return (nil)
+1584356578.405658 cmdq_next <global>: command[bind-key] (0), flags 0
+1584356578.405661 cmd_find_current_client: no target, return (nil)
+1584356578.405667 cmdq_next <global>: command[bind-key] (0), flags 0
+1584356578.405669 cmd_find_current_client: no target, return (nil)
+1584356578.405675 cmdq_next <global>: command[bind-key] (0), flags 0
+1584356578.405678 cmd_find_current_client: no target, return (nil)
+1584356578.405684 cmdq_next <global>: command[bind-key] (0), flags 0
+1584356578.405690 cmd_find_current_client: no target, return (nil)
+1584356578.405696 cmdq_next <global>: command[bind-key] (0), flags 0
+1584356578.405699 cmd_find_current_client: no target, return (nil)
+1584356578.405705 cmdq_next <global>: command[bind-key] (0), flags 0
+1584356578.405708 cmd_find_current_client: no target, return (nil)
+1584356578.405714 cmdq_next <global>: command[bind-key] (0), flags 0
+1584356578.405717 cmd_find_current_client: no target, return (nil)
+1584356578.405722 cmdq_next <global>: command[bind-key] (0), flags 0
+1584356578.405725 cmd_find_current_client: no target, return (nil)
+1584356578.405730 cmdq_next <global>: command[bind-key] (0), flags 0
+1584356578.405733 cmd_find_current_client: no target, return (nil)
+1584356578.405738 cmdq_next <global>: command[bind-key] (0), flags 0
+1584356578.405741 cmd_find_current_client: no target, return (nil)
+1584356578.405746 cmdq_next <global>: command[bind-key] (0), flags 0
+1584356578.405749 cmd_find_current_client: no target, return (nil)
+1584356578.405754 cmdq_next <global>: command[bind-key] (0), flags 0
+1584356578.405757 cmd_find_current_client: no target, return (nil)
+1584356578.405761 cmdq_next <global>: command[bind-key] (0), flags 0
+1584356578.405764 cmd_find_current_client: no target, return (nil)
+1584356578.405769 cmdq_next <global>: command[bind-key] (0), flags 0
+1584356578.405772 cmd_find_current_client: no target, return (nil)
+1584356578.405777 cmdq_next <global>: command[bind-key] (0), flags 0
+1584356578.405780 cmd_find_current_client: no target, return (nil)
+1584356578.405785 cmdq_next <global>: command[bind-key] (0), flags 0
+1584356578.405788 cmd_find_current_client: no target, return (nil)
+1584356578.405793 cmdq_next <global>: command[bind-key] (0), flags 0
+1584356578.405796 cmd_find_current_client: no target, return (nil)
+1584356578.405800 cmdq_next <global>: command[bind-key] (0), flags 0
+1584356578.405803 cmd_find_current_client: no target, return (nil)
+1584356578.405808 cmdq_next <global>: command[bind-key] (0), flags 0
+1584356578.405811 cmd_find_current_client: no target, return (nil)
+1584356578.405816 cmdq_next <global>: command[bind-key] (0), flags 0
+1584356578.405819 cmd_find_current_client: no target, return (nil)
+1584356578.405825 cmdq_next <global>: command[bind-key] (0), flags 0
+1584356578.405828 cmd_find_current_client: no target, return (nil)
+1584356578.405833 cmdq_next <global>: command[bind-key] (0), flags 0
+1584356578.405836 cmd_find_current_client: no target, return (nil)
+1584356578.405840 cmdq_next <global>: command[bind-key] (0), flags 0
+1584356578.405843 cmd_find_current_client: no target, return (nil)
+1584356578.405848 cmdq_next <global>: command[bind-key] (0), flags 0
+1584356578.405851 cmd_find_current_client: no target, return (nil)
+1584356578.405856 cmdq_next <global>: command[bind-key] (0), flags 0
+1584356578.405859 cmd_find_current_client: no target, return (nil)
+1584356578.405864 cmdq_next <global>: command[bind-key] (0), flags 0
+1584356578.405867 cmd_find_current_client: no target, return (nil)
+1584356578.405872 cmdq_next <global>: command[bind-key] (0), flags 0
+1584356578.405875 cmd_find_current_client: no target, return (nil)
+1584356578.405880 cmdq_next <global>: command[bind-key] (0), flags 0
+1584356578.405883 cmd_find_current_client: no target, return (nil)
+1584356578.405887 cmdq_next <global>: command[bind-key] (0), flags 0
+1584356578.405890 cmd_find_current_client: no target, return (nil)
+1584356578.405894 cmdq_next <global>: command[bind-key] (0), flags 0
+1584356578.405897 cmd_find_current_client: no target, return (nil)
+1584356578.405902 cmdq_next <global>: command[bind-key] (0), flags 0
+1584356578.405905 cmd_find_current_client: no target, return (nil)
+1584356578.405910 cmdq_next <global>: command[bind-key] (0), flags 0
+1584356578.405913 cmd_find_current_client: no target, return (nil)
+1584356578.405917 cmdq_next <global>: command[bind-key] (0), flags 0
+1584356578.405920 cmd_find_current_client: no target, return (nil)
+1584356578.405925 cmdq_next <global>: command[bind-key] (0), flags 0
+1584356578.405931 cmd_find_current_client: no target, return (nil)
+1584356578.405936 cmdq_next <global>: command[bind-key] (0), flags 0
+1584356578.405939 cmd_find_current_client: no target, return (nil)
+1584356578.405945 cmdq_next <global>: command[bind-key] (0), flags 0
+1584356578.405948 cmd_find_current_client: no target, return (nil)
+1584356578.405955 cmdq_next <global>: command[bind-key] (0), flags 0
+1584356578.405958 cmd_find_current_client: no target, return (nil)
+1584356578.405964 cmdq_next <global>: command[bind-key] (0), flags 0
+1584356578.405967 cmd_find_current_client: no target, return (nil)
+1584356578.405974 cmdq_next <global>: command[bind-key] (0), flags 0
+1584356578.405977 cmd_find_current_client: no target, return (nil)
+1584356578.405985 cmdq_next <global>: command[bind-key] (0), flags 0
+1584356578.405988 cmd_find_current_client: no target, return (nil)
+1584356578.405995 cmdq_next <global>: command[bind-key] (0), flags 0
+1584356578.405998 cmd_find_current_client: no target, return (nil)
+1584356578.406005 cmdq_next <global>: command[bind-key] (0), flags 0
+1584356578.406008 cmd_find_current_client: no target, return (nil)
+1584356578.406013 cmdq_next <global>: command[bind-key] (0), flags 0
+1584356578.406016 cmd_find_current_client: no target, return (nil)
+1584356578.406021 cmdq_next <global>: command[bind-key] (0), flags 0
+1584356578.406024 cmd_find_current_client: no target, return (nil)
+1584356578.406029 cmdq_next <global>: command[bind-key] (0), flags 0
+1584356578.406032 cmd_find_current_client: no target, return (nil)
+1584356578.406037 cmdq_next <global>: command[bind-key] (0), flags 0
+1584356578.406040 cmd_find_current_client: no target, return (nil)
+1584356578.406046 cmdq_next <global>: command[bind-key] (0), flags 0
+1584356578.406049 cmd_find_current_client: no target, return (nil)
+1584356578.406054 cmdq_next <global>: command[bind-key] (0), flags 0
+1584356578.406057 cmd_find_current_client: no target, return (nil)
+1584356578.406062 cmdq_next <global>: command[bind-key] (0), flags 0
+1584356578.406065 cmd_find_current_client: no target, return (nil)
+1584356578.406069 cmdq_next <global>: command[bind-key] (0), flags 0
+1584356578.406072 cmd_find_current_client: no target, return (nil)
+1584356578.406077 cmdq_next <global>: command[bind-key] (0), flags 0
+1584356578.406080 cmd_find_current_client: no target, return (nil)
+1584356578.406084 cmdq_next <global>: command[bind-key] (0), flags 0
+1584356578.406087 cmd_find_current_client: no target, return (nil)
+1584356578.406091 cmdq_next <global>: command[bind-key] (0), flags 0
+1584356578.406094 cmd_find_current_client: no target, return (nil)
+1584356578.406098 cmdq_next <global>: command[bind-key] (0), flags 0
+1584356578.406101 cmd_find_current_client: no target, return (nil)
+1584356578.406105 cmdq_next <global>: command[bind-key] (0), flags 0
+1584356578.406108 cmd_find_current_client: no target, return (nil)
+1584356578.406113 cmdq_next <global>: command[bind-key] (0), flags 0
+1584356578.406116 cmd_find_current_client: no target, return (nil)
+1584356578.406120 cmdq_next <global>: command[bind-key] (0), flags 0
+1584356578.406123 cmd_find_current_client: no target, return (nil)
+1584356578.406128 cmdq_next <global>: command[bind-key] (0), flags 0
+1584356578.406131 cmd_find_current_client: no target, return (nil)
+1584356578.406136 cmdq_next <global>: command[bind-key] (0), flags 0
+1584356578.406139 cmd_find_current_client: no target, return (nil)
+1584356578.406143 cmdq_next <global>: command[bind-key] (0), flags 0
+1584356578.406146 cmd_find_current_client: no target, return (nil)
+1584356578.406151 cmdq_next <global>: command[bind-key] (0), flags 0
+1584356578.406154 cmd_find_current_client: no target, return (nil)
+1584356578.406159 cmdq_next <global>: command[bind-key] (0), flags 0
+1584356578.406162 cmd_find_current_client: no target, return (nil)
+1584356578.406167 cmdq_next <global>: command[bind-key] (0), flags 0
+1584356578.406169 cmd_find_current_client: no target, return (nil)
+1584356578.406174 cmdq_next <global>: command[bind-key] (0), flags 0
+1584356578.406180 cmd_find_current_client: no target, return (nil)
+1584356578.406185 cmdq_next <global>: command[bind-key] (0), flags 0
+1584356578.406188 cmd_find_current_client: no target, return (nil)
+1584356578.406193 cmdq_next <global>: command[bind-key] (0), flags 0
+1584356578.406196 cmd_find_current_client: no target, return (nil)
+1584356578.406201 cmdq_next <global>: command[bind-key] (0), flags 0
+1584356578.406204 cmd_find_current_client: no target, return (nil)
+1584356578.406209 cmdq_next <global>: command[bind-key] (0), flags 0
+1584356578.406212 cmd_find_current_client: no target, return (nil)
+1584356578.406217 cmdq_next <global>: command[bind-key] (0), flags 0
+1584356578.406220 cmd_find_current_client: no target, return (nil)
+1584356578.406226 cmdq_next <global>: command[bind-key] (0), flags 0
+1584356578.406229 cmd_find_current_client: no target, return (nil)
+1584356578.406234 cmdq_next <global>: command[bind-key] (0), flags 0
+1584356578.406237 cmd_find_current_client: no target, return (nil)
+1584356578.406242 cmdq_next <global>: command[bind-key] (0), flags 0
+1584356578.406245 cmd_find_current_client: no target, return (nil)
+1584356578.406250 cmdq_next <global>: command[bind-key] (0), flags 0
+1584356578.406253 cmd_find_current_client: no target, return (nil)
+1584356578.406258 cmdq_next <global>: command[bind-key] (0), flags 0
+1584356578.406261 cmd_find_current_client: no target, return (nil)
+1584356578.406266 cmdq_next <global>: command[bind-key] (0), flags 0
+1584356578.406269 cmd_find_current_client: no target, return (nil)
+1584356578.406274 cmdq_next <global>: command[bind-key] (0), flags 0
+1584356578.406277 cmd_find_current_client: no target, return (nil)
+1584356578.406281 cmdq_next <global>: command[bind-key] (0), flags 0
+1584356578.406284 cmd_find_current_client: no target, return (nil)
+1584356578.406289 cmdq_next <global>: command[bind-key] (0), flags 0
+1584356578.406292 cmd_find_current_client: no target, return (nil)
+1584356578.406297 cmdq_next <global>: command[bind-key] (0), flags 0
+1584356578.406300 cmd_find_current_client: no target, return (nil)
+1584356578.406306 cmdq_next <global>: command[bind-key] (0), flags 0
+1584356578.406309 cmd_find_current_client: no target, return (nil)
+1584356578.406314 cmdq_next <global>: command[bind-key] (0), flags 0
+1584356578.406317 cmd_find_current_client: no target, return (nil)
+1584356578.406322 cmdq_next <global>: command[bind-key] (0), flags 0
+1584356578.406325 cmd_find_current_client: no target, return (nil)
+1584356578.406329 cmdq_next <global>: command[bind-key] (0), flags 0
+1584356578.406332 cmd_find_current_client: no target, return (nil)
+1584356578.406338 cmdq_next <global>: command[bind-key] (0), flags 0
+1584356578.406341 cmd_find_current_client: no target, return (nil)
+1584356578.406346 cmdq_next <global>: command[bind-key] (0), flags 0
+1584356578.406349 cmd_find_current_client: no target, return (nil)
+1584356578.406353 cmdq_next <global>: command[bind-key] (0), flags 0
+1584356578.406356 cmd_find_current_client: no target, return (nil)
+1584356578.406361 cmdq_next <global>: command[bind-key] (0), flags 0
+1584356578.406364 cmd_find_current_client: no target, return (nil)
+1584356578.406368 cmdq_next <global>: command[bind-key] (0), flags 0
+1584356578.406371 cmd_find_current_client: no target, return (nil)
+1584356578.406376 cmdq_next <global>: command[bind-key] (0), flags 0
+1584356578.406379 cmd_find_current_client: no target, return (nil)
+1584356578.406384 cmdq_next <global>: command[bind-key] (0), flags 0
+1584356578.406387 cmd_find_current_client: no target, return (nil)
+1584356578.406391 cmdq_next <global>: command[bind-key] (0), flags 0
+1584356578.406394 cmd_find_current_client: no target, return (nil)
+1584356578.406398 cmdq_next <global>: command[bind-key] (0), flags 0
+1584356578.406401 cmd_find_current_client: no target, return (nil)
+1584356578.406405 cmdq_next <global>: command[bind-key] (0), flags 0
+1584356578.406408 cmd_find_current_client: no target, return (nil)
+1584356578.406412 cmdq_next <global>: command[bind-key] (0), flags 0
+1584356578.406415 cmd_find_current_client: no target, return (nil)
+1584356578.406422 cmdq_next <global>: command[bind-key] (0), flags 0
+1584356578.406425 cmd_find_current_client: no target, return (nil)
+1584356578.406429 cmdq_next <global>: command[bind-key] (0), flags 0
+1584356578.406432 cmd_find_current_client: no target, return (nil)
+1584356578.406437 cmdq_next <global>: command[bind-key] (0), flags 0
+1584356578.406440 cmd_find_current_client: no target, return (nil)
+1584356578.406444 cmdq_next <global>: command[bind-key] (0), flags 0
+1584356578.406447 cmd_find_current_client: no target, return (nil)
+1584356578.406451 cmdq_next <global>: command[bind-key] (0), flags 0
+1584356578.406454 cmd_find_current_client: no target, return (nil)
+1584356578.406459 cmdq_next <global>: command[bind-key] (0), flags 0
+1584356578.406462 cmd_find_current_client: no target, return (nil)
+1584356578.406466 cmdq_next <global>: command[bind-key] (0), flags 0
+1584356578.406469 cmd_find_current_client: no target, return (nil)
+1584356578.406474 cmdq_next <global>: command[bind-key] (0), flags 0
+1584356578.406477 cmd_find_current_client: no target, return (nil)
+1584356578.406482 cmdq_next <global>: command[bind-key] (0), flags 0
+1584356578.406485 cmd_find_current_client: no target, return (nil)
+1584356578.406490 cmdq_next <global>: command[bind-key] (0), flags 0
+1584356578.406492 cmd_find_current_client: no target, return (nil)
+1584356578.406497 cmdq_next <global>: command[bind-key] (0), flags 0
+1584356578.406500 cmd_find_current_client: no target, return (nil)
+1584356578.406504 cmdq_next <global>: command[bind-key] (0), flags 0
+1584356578.406507 cmd_find_current_client: no target, return (nil)
+1584356578.406513 cmdq_next <global>: command[bind-key] (0), flags 0
+1584356578.406516 cmd_find_current_client: no target, return (nil)
+1584356578.406521 cmdq_next <global>: command[bind-key] (0), flags 0
+1584356578.406524 cmd_find_current_client: no target, return (nil)
+1584356578.406528 cmdq_next <global>: command[bind-key] (0), flags 0
+1584356578.406531 cmd_find_current_client: no target, return (nil)
+1584356578.406536 cmdq_next <global>: command[bind-key] (0), flags 0
+1584356578.406539 cmd_find_current_client: no target, return (nil)
+1584356578.406544 cmdq_next <global>: command[bind-key] (0), flags 0
+1584356578.406547 cmd_find_current_client: no target, return (nil)
+1584356578.406552 cmdq_next <global>: command[bind-key] (0), flags 0
+1584356578.406555 cmd_find_current_client: no target, return (nil)
+1584356578.406560 cmdq_next <global>: command[bind-key] (0), flags 0
+1584356578.406563 cmd_find_current_client: no target, return (nil)
+1584356578.406567 cmdq_next <global>: command[bind-key] (0), flags 0
+1584356578.406570 cmd_find_current_client: no target, return (nil)
+1584356578.406575 cmdq_next <global>: command[bind-key] (0), flags 0
+1584356578.406578 cmd_find_current_client: no target, return (nil)
+1584356578.406583 cmdq_next <global>: command[bind-key] (0), flags 0
+1584356578.406586 cmd_find_current_client: no target, return (nil)
+1584356578.406591 cmdq_next <global>: command[bind-key] (0), flags 0
+1584356578.406594 cmd_find_current_client: no target, return (nil)
+1584356578.406599 cmdq_next <global>: command[bind-key] (0), flags 0
+1584356578.406601 cmd_find_current_client: no target, return (nil)
+1584356578.406606 cmdq_next <global>: command[bind-key] (0), flags 0
+1584356578.406609 cmd_find_current_client: no target, return (nil)
+1584356578.406614 cmdq_next <global>: command[bind-key] (0), flags 0
+1584356578.406617 cmd_find_current_client: no target, return (nil)
+1584356578.406622 cmdq_next <global>: command[bind-key] (0), flags 0
+1584356578.406633 cmd_find_current_client: no target, return (nil)
+1584356578.406638 cmdq_next <global>: command[bind-key] (0), flags 0
+1584356578.406641 cmd_find_current_client: no target, return (nil)
+1584356578.406646 cmdq_next <global>: command[bind-key] (0), flags 0
+1584356578.406649 cmd_find_current_client: no target, return (nil)
+1584356578.406654 cmdq_next <global>: command[bind-key] (0), flags 0
+1584356578.406657 cmd_find_current_client: no target, return (nil)
+1584356578.406665 cmdq_next <global>: command[bind-key] (0), flags 0
+1584356578.406669 cmd_find_current_client: no target, return (nil)
+1584356578.406674 cmdq_next <global>: command[bind-key] (0), flags 0
+1584356578.406677 cmd_find_current_client: no target, return (nil)
+1584356578.406682 cmdq_next <global>: command[bind-key] (0), flags 0
+1584356578.406685 cmd_find_current_client: no target, return (nil)
+1584356578.406690 cmdq_next <global>: command[bind-key] (0), flags 0
+1584356578.406693 cmd_find_current_client: no target, return (nil)
+1584356578.406697 cmdq_next <global>: command[bind-key] (0), flags 0
+1584356578.406700 cmd_find_current_client: no target, return (nil)
+1584356578.406705 cmdq_next <global>: command[bind-key] (0), flags 0
+1584356578.406708 cmd_find_current_client: no target, return (nil)
+1584356578.406713 cmdq_next <global>: command[bind-key] (0), flags 0
+1584356578.406716 cmd_find_current_client: no target, return (nil)
+1584356578.406721 cmdq_next <global>: command[bind-key] (0), flags 0
+1584356578.406724 cmd_find_current_client: no target, return (nil)
+1584356578.406729 cmdq_next <global>: command[bind-key] (0), flags 0
+1584356578.406732 cmd_find_current_client: no target, return (nil)
+1584356578.406737 cmdq_next <global>: command[bind-key] (0), flags 0
+1584356578.406740 cmd_find_current_client: no target, return (nil)
+1584356578.406747 cmdq_next <global>: command[bind-key] (0), flags 0
+1584356578.406750 cmd_find_current_client: no target, return (nil)
+1584356578.406756 cmdq_next <global>: command[bind-key] (0), flags 0
+1584356578.406759 cmd_find_current_client: no target, return (nil)
+1584356578.406766 cmdq_next <global>: command[bind-key] (0), flags 0
+1584356578.406769 cmd_find_current_client: no target, return (nil)
+1584356578.406776 cmdq_next <global>: command[bind-key] (0), flags 0
+1584356578.406779 cmd_find_current_client: no target, return (nil)
+1584356578.406786 cmdq_next <global>: command[bind-key] (0), flags 0
+1584356578.406789 cmd_find_current_client: no target, return (nil)
+1584356578.406796 cmdq_next <global>: command[bind-key] (0), flags 0
+1584356578.406799 cmd_find_current_client: no target, return (nil)
+1584356578.406804 cmdq_next <global>: command[bind-key] (0), flags 0
+1584356578.406807 cmd_find_current_client: no target, return (nil)
+1584356578.406812 cmdq_next <global>: command[bind-key] (0), flags 0
+1584356578.406815 cmd_find_current_client: no target, return (nil)
+1584356578.406820 cmdq_next <global>: command[bind-key] (0), flags 0
+1584356578.406823 cmd_find_current_client: no target, return (nil)
+1584356578.406829 cmdq_next <global>: command[bind-key] (0), flags 0
+1584356578.406832 cmd_find_current_client: no target, return (nil)
+1584356578.406837 cmdq_next <global>: command[bind-key] (0), flags 0
+1584356578.406839 cmd_find_current_client: no target, return (nil)
+1584356578.406844 cmdq_next <global>: command[bind-key] (0), flags 0
+1584356578.406847 cmd_find_current_client: no target, return (nil)
+1584356578.406853 cmdq_next <global>: command[bind-key] (0), flags 0
+1584356578.406856 cmd_find_current_client: no target, return (nil)
+1584356578.406861 cmdq_next <global>: command[bind-key] (0), flags 0
+1584356578.406864 cmd_find_current_client: no target, return (nil)
+1584356578.406869 cmdq_next <global>: command[set-option] (0), flags 0
+1584356578.406873 cmd_find_current_client: no target, return (nil)
+1584356578.406876 cmd_find_target: target none, type window
+1584356578.406879 cmd_find_target: item 0x561361e31580, flags 0x42
+1584356578.406882 cmd_find_target: error
+1584356578.406885 cmd_find_current_client: no target, return (nil)
+1584356578.406894 format 'mouse' -> 'mouse'
+1584356578.406905 cmdq_next <global>: callback[cfg_done] (1), flags 0
+1584356578.406909 cmdq_next <global>: exit (empty)
+1584356578.406912 cmdq_next <global>: empty
+1584356578.406980 peer 0x561361e1dba0 message 107
+1584356578.406985 client 0x561361e1d350 IDENTIFY_CLIENTPID 13851
+1584356578.406988 peer 0x561361e1dba0 message 105
+1584356578.406992 client 0x561361e1d350 IDENTIFY_ENVIRON CONDA_SHLVL=1
+1584356578.407000 peer 0x561361e1dba0 message 105
+1584356578.407027 client 0x561361e1d350 IDENTIFY_ENVIRON LS_COLORS=rs=0:di=01;34:ln=01;36:mh=00:pi=40;33:so=01;35:do=01;35:bd=40;33;01:cd=40;33;01:or=40;31;01:mi=00:su=37;41:sg=30;43:ca=30;41:tw=30;42:ow=34;42:st=37;44:ex=01;32:*.tar=01;31:*.tgz=01;31:*.arc=01;31:*.arj=01;31:*.taz=01;31:*.lha=01;31:*.lz4=01;31:*.lzh=01;31:*.lzma=01;31:*.tlz=01;31:*.txz=01;31:*.tzo=01;31:*.t7z=01;31:*.zip=01;31:*.z=01;31:*.Z=01;31:*.dz=01;31:*.gz=01;31:*.lrz=01;31:*.lz=01;31:*.lzo=01;31:*.xz=01;31:*.zst=01;31:*.tzst=01;31:*.bz2=01;31:*.bz=01;31:*.tbz=01;31:*.tbz2=01;31:*.tz=01;31:*.deb=01;31:*.rpm=01;31:*.jar=01;31:*.war=01;31:*.ear=01;31:*.sar=01;31:*.rar=01;31:*.alz=01;31:*.ace=01;31:*.zoo=01;31:*.cpio=01;31:*.7z=01;31:*.rz=01;31:*.cab=01;31:*.wim=01;31:*.swm=01;31:*.dwm=01;31:*.esd=01;31:*.jpg=01;35:*.jpeg=01;35:*.mjpg=01;35:*.mjpeg=01;35:*.gif=01;35:*.bmp=01;35:*.pbm=01;35:*.pgm=01;35:*.ppm=01;35:*.tga=01;35:*.xbm=01;35:*.xpm=01;35:*.tif=01;35:*.tiff=01;35:*.png=01;35:*.svg=01;35:*.svgz=01;35:*.mng=01;35:*.pcx=01;35:*.mov=01;35:*.mpg=01;35:*.mpeg=01;35:*.m2v=01;35:*.mkv=01;35:*.webm=01;35:*.ogm=01;35:*.mp4=01;35:*.m4v=01;35:*.mp4v=01;35:*.vob=01;35:*.qt=01;35:*.nuv=01;35:*.wmv=01;35:*.asf=01;35:*.rm=01;35:*.rmvb=01;35:*.flc=01;35:*.avi=01;35:*.fli=01;35:*.flv=01;35:*.gl=01;35:*.dl=01;35:*.xcf=01;35:*.xwd=01;35:*.yuv=01;35:*.cgm=01;35:*.emf=01;35:*.ogv=01;35:*.ogx=01;35:*.aac=00;36:*.au=00;36:*.flac=00;36:*.m4a=00;36:*.mid=00;36:*.midi=00;36:*.mka=00;36:*.mp3=00;36:*.mpc=00;36:*.ogg=00;36:*.ra=00;36:*.wav=00;36:*.oga=00;36:*.opus=00;36:*.spx=00;36:*.xspf=00;36:
+1584356578.407033 peer 0x561361e1dba0 message 105
+1584356578.407037 client 0x561361e1d350 IDENTIFY_ENVIRON CONDA_EXE=/home/dawit/Programs/anaconda3/bin/conda
+1584356578.407040 peer 0x561361e1dba0 message 105
+1584356578.407044 client 0x561361e1d350 IDENTIFY_ENVIRON LESSCLOSE=/usr/bin/lesspipe %s %s
+1584356578.407047 peer 0x561361e1dba0 message 105
+1584356578.407051 client 0x561361e1d350 IDENTIFY_ENVIRON LANG=en_US.UTF-8
+1584356578.407054 peer 0x561361e1dba0 message 105
+1584356578.407058 client 0x561361e1d350 IDENTIFY_ENVIRON GDM_LANG=en_US
+1584356578.407061 peer 0x561361e1dba0 message 105
+1584356578.407064 client 0x561361e1d350 IDENTIFY_ENVIRON DISPLAY=:0
+1584356578.407067 peer 0x561361e1dba0 message 105
+1584356578.407071 client 0x561361e1d350 IDENTIFY_ENVIRON GTK_OVERLAY_SCROLLING=1
+1584356578.407074 peer 0x561361e1dba0 message 105
+1584356578.407078 client 0x561361e1d350 IDENTIFY_ENVIRON COLORTERM=truecolor
+1584356578.407081 peer 0x561361e1dba0 message 105
+1584356578.407085 client 0x561361e1d350 IDENTIFY_ENVIRON DESKTOP_AUTOSTART_ID=10a59c9570507c77ef158432240719121300000021320050
+1584356578.407088 peer 0x561361e1dba0 message 105
+1584356578.407092 client 0x561361e1d350 IDENTIFY_ENVIRON CONDA_PREFIX=/home/dawit/Programs/anaconda3
+1584356578.407095 peer 0x561361e1dba0 message 105
+1584356578.407099 client 0x561361e1d350 IDENTIFY_ENVIRON XDG_VTNR=7
+1584356578.407102 peer 0x561361e1dba0 message 105
+1584356578.407106 client 0x561361e1d350 IDENTIFY_ENVIRON SSH_AUTH_SOCK=/run/user/1000/keyring/ssh
+1584356578.407109 peer 0x561361e1dba0 message 105
+1584356578.407113 client 0x561361e1d350 IDENTIFY_ENVIRON MANDATORY_PATH=/usr/share/gconf/cinnamon.mandatory.path
+1584356578.407116 peer 0x561361e1dba0 message 105
+1584356578.407119 client 0x561361e1d350 IDENTIFY_ENVIRON _CE_M=
+1584356578.407122 peer 0x561361e1dba0 message 105
+1584356578.407126 client 0x561361e1d350 IDENTIFY_ENVIRON XDG_SESSION_ID=c2
+1584356578.407129 peer 0x561361e1dba0 message 105
+1584356578.407133 client 0x561361e1d350 IDENTIFY_ENVIRON XDG_GREETER_DATA_DIR=/var/lib/lightdm-data/dawit
+1584356578.407136 peer 0x561361e1dba0 message 105
+1584356578.407139 client 0x561361e1d350 IDENTIFY_ENVIRON USER=dawit
+1584356578.407142 peer 0x561361e1dba0 message 105
+1584356578.407146 client 0x561361e1d350 IDENTIFY_ENVIRON DESKTOP_SESSION=cinnamon
+1584356578.407149 peer 0x561361e1dba0 message 105
+1584356578.407154 client 0x561361e1d350 IDENTIFY_ENVIRON GNOME_TERMINAL_SCREEN=/org/gnome/Terminal/screen/958cca2a_6c48_491a_9c5a_f1fa507714d6
+1584356578.407160 peer 0x561361e1dba0 message 105
+1584356578.407164 client 0x561361e1d350 IDENTIFY_ENVIRON DEFAULTS_PATH=/usr/share/gconf/cinnamon.default.path
+1584356578.407167 peer 0x561361e1dba0 message 105
+1584356578.407171 client 0x561361e1d350 IDENTIFY_ENVIRON QT_QPA_PLATFORMTHEME=qt5ct
+1584356578.407174 peer 0x561361e1dba0 message 105
+1584356578.407178 client 0x561361e1d350 IDENTIFY_ENVIRON PWD=/home/dawit/Desktop/Datalogi/MIDICompiler/midicompiler/config
+1584356578.407181 peer 0x561361e1dba0 message 105
+1584356578.407185 client 0x561361e1d350 IDENTIFY_ENVIRON HOME=/home/dawit
+1584356578.407188 peer 0x561361e1dba0 message 105
+1584356578.407192 client 0x561361e1d350 IDENTIFY_ENVIRON CONDA_PYTHON_EXE=/home/dawit/Programs/anaconda3/bin/python
+1584356578.407195 peer 0x561361e1dba0 message 105
+1584356578.407198 client 0x561361e1d350 IDENTIFY_ENVIRON SSH_AGENT_PID=2198
+1584356578.407201 peer 0x561361e1dba0 message 105
+1584356578.407205 client 0x561361e1d350 IDENTIFY_ENVIRON QT_ACCESSIBILITY=1
+1584356578.407208 peer 0x561361e1dba0 message 105
+1584356578.407211 client 0x561361e1d350 IDENTIFY_ENVIRON XDG_SESSION_TYPE=x11
+1584356578.407214 peer 0x561361e1dba0 message 105
+1584356578.407220 client 0x561361e1d350 IDENTIFY_ENVIRON XDG_DATA_DIRS=/usr/share/cinnamon:/usr/share/gnome:/home/dawit/.local/share/flatpak/exports/share:/var/lib/flatpak/exports/share:/usr/local/share:/usr/share:/var/lib/snapd/desktop
+1584356578.407224 peer 0x561361e1dba0 message 105
+1584356578.407227 client 0x561361e1d350 IDENTIFY_ENVIRON _CE_CONDA=
+1584356578.407230 peer 0x561361e1dba0 message 105
+1584356578.407234 client 0x561361e1d350 IDENTIFY_ENVIRON XDG_SESSION_DESKTOP=cinnamon
+1584356578.407237 peer 0x561361e1dba0 message 105
+1584356578.407241 client 0x561361e1d350 IDENTIFY_ENVIRON CONDA_PROMPT_MODIFIER=(base) 
+1584356578.407244 peer 0x561361e1dba0 message 105
+1584356578.407248 client 0x561361e1d350 IDENTIFY_ENVIRON GTK_MODULES=gail:atk-bridge
+1584356578.407250 peer 0x561361e1dba0 message 105
+1584356578.407254 client 0x561361e1d350 IDENTIFY_ENVIRON TERM=xterm-256color
+1584356578.407257 peer 0x561361e1dba0 message 105
+1584356578.407260 client 0x561361e1d350 IDENTIFY_ENVIRON SHELL=/bin/bash
+1584356578.407263 peer 0x561361e1dba0 message 105
+1584356578.407267 client 0x561361e1d350 IDENTIFY_ENVIRON VTE_VERSION=5202
+1584356578.407270 peer 0x561361e1dba0 message 105
+1584356578.407274 client 0x561361e1d350 IDENTIFY_ENVIRON XDG_SEAT_PATH=/org/freedesktop/DisplayManager/Seat0
+1584356578.407277 peer 0x561361e1dba0 message 105
+1584356578.407281 client 0x561361e1d350 IDENTIFY_ENVIRON XDG_CURRENT_DESKTOP=X-Cinnamon
+1584356578.407284 peer 0x561361e1dba0 message 105
+1584356578.407288 client 0x561361e1d350 IDENTIFY_ENVIRON GPG_AGENT_INFO=/run/user/1000/gnupg/S.gpg-agent:0:1
+1584356578.407291 peer 0x561361e1dba0 message 105
+1584356578.407295 client 0x561361e1d350 IDENTIFY_ENVIRON GNOME_TERMINAL_SERVICE=:1.63
+1584356578.407298 peer 0x561361e1dba0 message 105
+1584356578.407301 client 0x561361e1d350 IDENTIFY_ENVIRON XDG_SEAT=seat0
+1584356578.407304 peer 0x561361e1dba0 message 105
+1584356578.407308 client 0x561361e1d350 IDENTIFY_ENVIRON SHLVL=1
+1584356578.407311 peer 0x561361e1dba0 message 105
+1584356578.407314 client 0x561361e1d350 IDENTIFY_ENVIRON LANGUAGE=en_US:en
+1584356578.407317 peer 0x561361e1dba0 message 105
+1584356578.407321 client 0x561361e1d350 IDENTIFY_ENVIRON GDMSESSION=cinnamon
+1584356578.407323 peer 0x561361e1dba0 message 105
+1584356578.407327 client 0x561361e1d350 IDENTIFY_ENVIRON GNOME_DESKTOP_SESSION_ID=this-is-deprecated
+1584356578.407330 peer 0x561361e1dba0 message 105
+1584356578.407334 client 0x561361e1d350 IDENTIFY_ENVIRON LOGNAME=dawit
+1584356578.407337 peer 0x561361e1dba0 message 105
+1584356578.407341 client 0x561361e1d350 IDENTIFY_ENVIRON DBUS_SESSION_BUS_ADDRESS=unix:path=/run/user/1000/bus
+1584356578.407344 peer 0x561361e1dba0 message 105
+1584356578.407347 client 0x561361e1d350 IDENTIFY_ENVIRON XDG_RUNTIME_DIR=/run/user/1000
+1584356578.407350 peer 0x561361e1dba0 message 105
+1584356578.407357 client 0x561361e1d350 IDENTIFY_ENVIRON XAUTHORITY=/home/dawit/.Xauthority
+1584356578.407360 peer 0x561361e1dba0 message 105
+1584356578.407364 client 0x561361e1d350 IDENTIFY_ENVIRON XDG_SESSION_PATH=/org/freedesktop/DisplayManager/Session0
+1584356578.407367 peer 0x561361e1dba0 message 105
+1584356578.407371 client 0x561361e1d350 IDENTIFY_ENVIRON XDG_CONFIG_DIRS=/etc/xdg/xdg-cinnamon:/etc/xdg
+1584356578.407374 peer 0x561361e1dba0 message 105
+1584356578.407384 client 0x561361e1d350 IDENTIFY_ENVIRON PATH=/home/dawit/Programs/anaconda3/bin:/home/dawit/Programs/anaconda3/condabin:/home/dawit/.local/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/usr/games:/usr/local/games:/snap/bin:/home/dawit/.dotnet/tools
+1584356578.407387 peer 0x561361e1dba0 message 105
+1584356578.407391 client 0x561361e1d350 IDENTIFY_ENVIRON CONDA_DEFAULT_ENV=base
+1584356578.407394 peer 0x561361e1dba0 message 105
+1584356578.407399 client 0x561361e1d350 IDENTIFY_ENVIRON SESSION_MANAGER=local/dawit-VLT-WX0:@/tmp/.ICE-unix/2132,unix/dawit-VLT-WX0:/tmp/.ICE-unix/2132
+1584356578.407402 peer 0x561361e1dba0 message 105
+1584356578.407406 client 0x561361e1d350 IDENTIFY_ENVIRON LESSOPEN=| /usr/bin/lesspipe %s
+1584356578.407409 peer 0x561361e1dba0 message 105
+1584356578.407413 client 0x561361e1d350 IDENTIFY_ENVIRON OLDPWD=/home/dawit/Desktop/Datalogi/MIDICompiler/midicompiler
+1584356578.407416 peer 0x561361e1dba0 message 105
+1584356578.407419 client 0x561361e1d350 IDENTIFY_ENVIRON _=/usr/bin/tmux
+1584356578.407422 peer 0x561361e1dba0 message 105
+1584356578.407426 client 0x561361e1d350 IDENTIFY_ENVIRON EVENT_NOEPOLL=1
+1584356578.407429 peer 0x561361e1dba0 message 106
+1584356578.407432 client 0x561361e1d350 name is /dev/pts/0
+1584356578.407439 tty_resize: /dev/pts/0 now 238x57
+1584356578.407442 peer 0x561361e1dba0 message 200
+1584356578.407451 cmdq_next <global>: empty
+1584356578.407455 cmdq_next <0x561361e1d350>: enter
+1584356578.407459 cmdq_next <0x561361e1d350>: callback[cfg_client_done] (1), flags 0
+1584356578.407462 unref client 0x561361e1d350 (4 references)
+1584356578.407466 cmdq_next <0x561361e1d350>: command[new-session] (0), flags 0
+1584356578.407469 cmd_find_target: target none, type session
+1584356578.407473 cmd_find_target: item 0x561361df9100, flags 0x42
+1584356578.407476 cmd_find_target: error
+1584356578.407481 new term: xterm-256color
+1584356578.407590 xterm-256color override: XT=
+1584356578.407597 xterm-256color override: Ms=\033]52;%p1%s;%p2%s\a
+1584356578.407602 xterm-256color override: Cs=\033]12;%p1%s\a
+1584356578.407606 xterm-256color override: Cr=\033]112\a
+1584356578.407610 xterm-256color override: Ss=\033[%p1%d q
+1584356578.407614 xterm-256color override: Se=\033[2 q
+1584356578.407621 xterm-256color   0: AX: (flag) true
+1584356578.407626 xterm-256color   1: acsc: (string) ``aaffggiijjkkllmmnnooppqqrrssttuuvvwwxxyyzz{{||}}~~
+1584356578.407629 xterm-256color   2: bce: (flag) true
+1584356578.407632 xterm-256color   3: bel: (string) \\007
+1584356578.407636 xterm-256color   4: blink: (string) \\033[5m
+1584356578.407639 xterm-256color   5: bold: (string) \\033[1m
+1584356578.407642 xterm-256color   6: civis: (string) \\033[?25l
+1584356578.407645 xterm-256color   7: clear: (string) \\033[H\\033[2J
+1584356578.407649 xterm-256color   8: cnorm: (string) \\033[?12l\\033[?25h
+1584356578.407653 xterm-256color   9: colors: (number) 256
+1584356578.407656 xterm-256color  10: Cr: (string) \\033]112\\007
+1584356578.407660 xterm-256color  11: Cs: (string) \\033]12;%p1%s\\007
+1584356578.407663 xterm-256color  12: csr: (string) \\033[%i%p1%d;%p2%dr
+1584356578.407667 xterm-256color  13: cub: (string) \\033[%p1%dD
+1584356578.407670 xterm-256color  14: cub1: (string) \\010
+1584356578.407673 xterm-256color  15: cud: (string) \\033[%p1%dB
+1584356578.407676 xterm-256color  16: cud1: (string) \\012
+1584356578.407679 xterm-256color  17: cuf: (string) \\033[%p1%dC
+1584356578.407682 xterm-256color  18: cuf1: (string) \\033[C
+1584356578.407685 xterm-256color  19: cup: (string) \\033[%i%p1%d;%p2%dH
+1584356578.407689 xterm-256color  20: cuu: (string) \\033[%p1%dA
+1584356578.407695 xterm-256color  21: cuu1: (string) \\033[A
+1584356578.407699 xterm-256color  22: cvvis: (string) \\033[?12;25h
+1584356578.407702 xterm-256color  23: dch: (string) \\033[%p1%dP
+1584356578.407705 xterm-256color  24: dch1: (string) \\033[P
+1584356578.407708 xterm-256color  25: dim: (string) \\033[2m
+1584356578.407711 xterm-256color  26: dl: (string) \\033[%p1%dM
+1584356578.407714 xterm-256color  27: dl1: (string) \\033[M
+1584356578.407717 xterm-256color  28: E3: (string) \\033[3J
+1584356578.407720 xterm-256color  29: ech: (string) \\033[%p1%dX
+1584356578.407723 xterm-256color  30: ed: (string) \\033[J
+1584356578.407726 xterm-256color  31: el: (string) \\033[K
+1584356578.407729 xterm-256color  32: el1: (string) \\033[1K
+1584356578.407732 xterm-256color  33: enacs: [missing]
+1584356578.407735 xterm-256color  34: fsl: (string) \\007
+1584356578.407738 xterm-256color  35: home: (string) \\033[H
+1584356578.407741 xterm-256color  36: hpa: (string) \\033[%i%p1%dG
+1584356578.407744 xterm-256color  37: ich: (string) \\033[%p1%d@
+1584356578.407747 xterm-256color  38: ich1: [missing]
+1584356578.407750 xterm-256color  39: il: (string) \\033[%p1%dL
+1584356578.407753 xterm-256color  40: il1: (string) \\033[L
+1584356578.407756 xterm-256color  41: indn: (string) \\033[%p1%dS
+1584356578.407759 xterm-256color  42: invis: (string) \\033[8m
+1584356578.407762 xterm-256color  43: kcbt: (string) \\033[Z
+1584356578.407765 xterm-256color  44: kcub1: (string) \\033OD
+1584356578.407768 xterm-256color  45: kcud1: (string) \\033OB
+1584356578.407771 xterm-256color  46: kcuf1: (string) \\033OC
+1584356578.407774 xterm-256color  47: kcuu1: (string) \\033OA
+1584356578.407777 xterm-256color  48: kDC: (string) \\033[3;2~
+1584356578.407780 xterm-256color  49: kDC3: (string) \\033[3;3~
+1584356578.407784 xterm-256color  50: kDC4: (string) \\033[3;4~
+1584356578.407787 xterm-256color  51: kDC5: (string) \\033[3;5~
+1584356578.407790 xterm-256color  52: kDC6: (string) \\033[3;6~
+1584356578.407792 xterm-256color  53: kDC7: (string) \\033[3;7~
+1584356578.407796 xterm-256color  54: kdch1: (string) \\033[3~
+1584356578.407799 xterm-256color  55: kDN: (string) \\033[1;2B
+1584356578.407802 xterm-256color  56: kDN3: (string) \\033[1;3B
+1584356578.407805 xterm-256color  57: kDN4: (string) \\033[1;4B
+1584356578.407808 xterm-256color  58: kDN5: (string) \\033[1;5B
+1584356578.407811 xterm-256color  59: kDN6: (string) \\033[1;6B
+1584356578.407814 xterm-256color  60: kDN7: (string) \\033[1;7B
+1584356578.407817 xterm-256color  61: kend: (string) \\033OF
+1584356578.407820 xterm-256color  62: kEND: (string) \\033[1;2F
+1584356578.407823 xterm-256color  63: kEND3: (string) \\033[1;3F
+1584356578.407826 xterm-256color  64: kEND4: (string) \\033[1;4F
+1584356578.407829 xterm-256color  65: kEND5: (string) \\033[1;5F
+1584356578.407832 xterm-256color  66: kEND6: (string) \\033[1;6F
+1584356578.407835 xterm-256color  67: kEND7: (string) \\033[1;7F
+1584356578.407838 xterm-256color  68: kf1: (string) \\033OP
+1584356578.407841 xterm-256color  69: kf10: (string) \\033[21~
+1584356578.407844 xterm-256color  70: kf11: (string) \\033[23~
+1584356578.407847 xterm-256color  71: kf12: (string) \\033[24~
+1584356578.407850 xterm-256color  72: kf13: (string) \\033[1;2P
+1584356578.407852 xterm-256color  73: kf14: (string) \\033[1;2Q
+1584356578.407855 xterm-256color  74: kf15: (string) \\033[1;2R
+1584356578.407859 xterm-256color  75: kf16: (string) \\033[1;2S
+1584356578.407862 xterm-256color  76: kf17: (string) \\033[15;2~
+1584356578.407865 xterm-256color  77: kf18: (string) \\033[17;2~
+1584356578.407868 xterm-256color  78: kf19: (string) \\033[18;2~
+1584356578.407871 xterm-256color  79: kf2: (string) \\033OQ
+1584356578.407874 xterm-256color  80: kf20: (string) \\033[19;2~
+1584356578.407877 xterm-256color  81: kf21: (string) \\033[20;2~
+1584356578.407880 xterm-256color  82: kf22: (string) \\033[21;2~
+1584356578.407883 xterm-256color  83: kf23: (string) \\033[23;2~
+1584356578.407886 xterm-256color  84: kf24: (string) \\033[24;2~
+1584356578.407889 xterm-256color  85: kf25: (string) \\033[1;5P
+1584356578.407895 xterm-256color  86: kf26: (string) \\033[1;5Q
+1584356578.407898 xterm-256color  87: kf27: (string) \\033[1;5R
+1584356578.407901 xterm-256color  88: kf28: (string) \\033[1;5S
+1584356578.407904 xterm-256color  89: kf29: (string) \\033[15;5~
+1584356578.407907 xterm-256color  90: kf3: (string) \\033OR
+1584356578.407910 xterm-256color  91: kf30: (string) \\033[17;5~
+1584356578.407913 xterm-256color  92: kf31: (string) \\033[18;5~
+1584356578.407917 xterm-256color  93: kf32: (string) \\033[19;5~
+1584356578.407920 xterm-256color  94: kf33: (string) \\033[20;5~
+1584356578.407923 xterm-256color  95: kf34: (string) \\033[21;5~
+1584356578.407926 xterm-256color  96: kf35: (string) \\033[23;5~
+1584356578.407929 xterm-256color  97: kf36: (string) \\033[24;5~
+1584356578.407932 xterm-256color  98: kf37: (string) \\033[1;6P
+1584356578.407935 xterm-256color  99: kf38: (string) \\033[1;6Q
+1584356578.407938 xterm-256color 100: kf39: (string) \\033[1;6R
+1584356578.407941 xterm-256color 101: kf4: (string) \\033OS
+1584356578.407944 xterm-256color 102: kf40: (string) \\033[1;6S
+1584356578.407947 xterm-256color 103: kf41: (string) \\033[15;6~
+1584356578.407950 xterm-256color 104: kf42: (string) \\033[17;6~
+1584356578.407953 xterm-256color 105: kf43: (string) \\033[18;6~
+1584356578.407956 xterm-256color 106: kf44: (string) \\033[19;6~
+1584356578.407959 xterm-256color 107: kf45: (string) \\033[20;6~
+1584356578.407962 xterm-256color 108: kf46: (string) \\033[21;6~
+1584356578.407965 xterm-256color 109: kf47: (string) \\033[23;6~
+1584356578.407968 xterm-256color 110: kf48: (string) \\033[24;6~
+1584356578.407971 xterm-256color 111: kf49: (string) \\033[1;3P
+1584356578.407974 xterm-256color 112: kf5: (string) \\033[15~
+1584356578.407977 xterm-256color 113: kf50: (string) \\033[1;3Q
+1584356578.407980 xterm-256color 114: kf51: (string) \\033[1;3R
+1584356578.407984 xterm-256color 115: kf52: (string) \\033[1;3S
+1584356578.407989 xterm-256color 116: kf53: (string) \\033[15;3~
+1584356578.407994 xterm-256color 117: kf54: (string) \\033[17;3~
+1584356578.407998 xterm-256color 118: kf55: (string) \\033[18;3~
+1584356578.408002 xterm-256color 119: kf56: (string) \\033[19;3~
+1584356578.408007 xterm-256color 120: kf57: (string) \\033[20;3~
+1584356578.408011 xterm-256color 121: kf58: (string) \\033[21;3~
+1584356578.408015 xterm-256color 122: kf59: (string) \\033[23;3~
+1584356578.408019 xterm-256color 123: kf6: (string) \\033[17~
+1584356578.408023 xterm-256color 124: kf60: (string) \\033[24;3~
+1584356578.408027 xterm-256color 125: kf61: (string) \\033[1;4P
+1584356578.408031 xterm-256color 126: kf62: (string) \\033[1;4Q
+1584356578.408035 xterm-256color 127: kf63: (string) \\033[1;4R
+1584356578.408039 xterm-256color 128: kf7: (string) \\033[18~
+1584356578.408043 xterm-256color 129: kf8: (string) \\033[19~
+1584356578.408047 xterm-256color 130: kf9: (string) \\033[20~
+1584356578.408051 xterm-256color 131: kHOM: (string) \\033[1;2H
+1584356578.408056 xterm-256color 132: kHOM3: (string) \\033[1;3H
+1584356578.408060 xterm-256color 133: kHOM4: (string) \\033[1;4H
+1584356578.408064 xterm-256color 134: kHOM5: (string) \\033[1;5H
+1584356578.408069 xterm-256color 135: kHOM6: (string) \\033[1;6H
+1584356578.408073 xterm-256color 136: kHOM7: (string) \\033[1;7H
+1584356578.408078 xterm-256color 137: khome: (string) \\033OH
+1584356578.408083 xterm-256color 138: kIC: (string) \\033[2;2~
+1584356578.408087 xterm-256color 139: kIC3: (string) \\033[2;3~
+1584356578.408092 xterm-256color 140: kIC4: (string) \\033[2;4~
+1584356578.408097 xterm-256color 141: kIC5: (string) \\033[2;5~
+1584356578.408102 xterm-256color 142: kIC6: (string) \\033[2;6~
+1584356578.408107 xterm-256color 143: kIC7: (string) \\033[2;7~
+1584356578.408112 xterm-256color 144: kich1: (string) \\033[2~
+1584356578.408116 xterm-256color 145: kind: (string) \\033[1;2B
+1584356578.408121 xterm-256color 146: kLFT: (string) \\033[1;2D
+1584356578.408126 xterm-256color 147: kLFT3: (string) \\033[1;3D
+1584356578.408131 xterm-256color 148: kLFT4: (string) \\033[1;4D
+1584356578.408136 xterm-256color 149: kLFT5: (string) \\033[1;5D
+1584356578.408146 xterm-256color 150: kLFT6: (string) \\033[1;6D
+1584356578.408151 xterm-256color 151: kLFT7: (string) \\033[1;7D
+1584356578.408156 xterm-256color 152: kmous: (string) \\033[M
+1584356578.408161 xterm-256color 153: knp: (string) \\033[6~
+1584356578.408166 xterm-256color 154: kNXT: (string) \\033[6;2~
+1584356578.408171 xterm-256color 155: kNXT3: (string) \\033[6;3~
+1584356578.408175 xterm-256color 156: kNXT4: (string) \\033[6;4~
+1584356578.408180 xterm-256color 157: kNXT5: (string) \\033[6;5~
+1584356578.408185 xterm-256color 158: kNXT6: (string) \\033[6;6~
+1584356578.408189 xterm-256color 159: kNXT7: (string) \\033[6;7~
+1584356578.408194 xterm-256color 160: kpp: (string) \\033[5~
+1584356578.408199 xterm-256color 161: kPRV: (string) \\033[5;2~
+1584356578.408203 xterm-256color 162: kPRV3: (string) \\033[5;3~
+1584356578.408208 xterm-256color 163: kPRV4: (string) \\033[5;4~
+1584356578.408213 xterm-256color 164: kPRV5: (string) \\033[5;5~
+1584356578.408217 xterm-256color 165: kPRV6: (string) \\033[5;6~
+1584356578.408222 xterm-256color 166: kPRV7: (string) \\033[5;7~
+1584356578.408227 xterm-256color 167: kri: (string) \\033[1;2A
+1584356578.408234 xterm-256color 168: kRIT: (string) \\033[1;2C
+1584356578.408238 xterm-256color 169: kRIT3: (string) \\033[1;3C
+1584356578.408243 xterm-256color 170: kRIT4: (string) \\033[1;4C
+1584356578.408248 xterm-256color 171: kRIT5: (string) \\033[1;5C
+1584356578.408252 xterm-256color 172: kRIT6: (string) \\033[1;6C
+1584356578.408257 xterm-256color 173: kRIT7: (string) \\033[1;7C
+1584356578.408262 xterm-256color 174: kUP: (string) \\033[1;2A
+1584356578.408266 xterm-256color 175: kUP3: (string) \\033[1;3A
+1584356578.408271 xterm-256color 176: kUP4: (string) \\033[1;4A
+1584356578.408276 xterm-256color 177: kUP5: (string) \\033[1;5A
+1584356578.408280 xterm-256color 178: kUP6: (string) \\033[1;6A
+1584356578.408285 xterm-256color 179: kUP7: (string) \\033[1;7A
+1584356578.408291 xterm-256color 180: Ms: (string) \\033]52;%p1%s;%p2%s\\007
+1584356578.408296 xterm-256color 181: op: (string) \\033[39;49m
+1584356578.408301 xterm-256color 182: rev: (string) \\033[7m
+1584356578.408306 xterm-256color 183: ri: (string) \\033M
+1584356578.408310 xterm-256color 184: rmacs: (string) \\033(B
+1584356578.408316 xterm-256color 185: rmcup: (string) \\033[?1049l\\033[23;0;0t
+1584356578.408321 xterm-256color 186: rmkx: (string) \\033[?1l\\033>
+1584356578.408326 xterm-256color 187: Se: (string) \\033[2 q
+1584356578.408334 xterm-256color 188: setab: (string) \\033[%?%p1%{8}%<%t4%p1%d%e%p1%{16}%<%t10%p1%{8}%-%d%e48;5;%p1%d%;m
+1584356578.408341 xterm-256color 189: setaf: (string) \\033[%?%p1%{8}%<%t3%p1%d%e%p1%{16}%<%t9%p1%{8}%-%d%e38;5;%p1%d%;m
+1584356578.408346 xterm-256color 190: setrgbb: [missing]
+1584356578.408350 xterm-256color 191: setrgbf: [missing]
+1584356578.408356 xterm-256color 192: sgr0: (string) \\033(B\\033[m
+1584356578.408361 xterm-256color 193: sitm: (string) \\033[3m
+1584356578.408368 xterm-256color 194: smacs: (string) \\033(0
+1584356578.408374 xterm-256color 195: smcup: (string) \\033[?1049h\\033[22;0;0t
+1584356578.408380 xterm-256color 196: smkx: (string) \\033[?1h\\033=
+1584356578.408384 xterm-256color 197: smso: (string) \\033[7m
+1584356578.408389 xterm-256color 198: smul: (string) \\033[4m
+1584356578.408394 xterm-256color 199: smxx: (string) \\033[9m
+1584356578.408399 xterm-256color 200: Ss: (string) \\033[%p1%d q
+1584356578.408403 xterm-256color 201: Tc: [missing]
+1584356578.408408 xterm-256color 202: tsl: (string) \\033]0;
+1584356578.408412 xterm-256color 203: U8: [missing]
+1584356578.408417 xterm-256color 204: vpa: (string) \\033[%i%p1%dd
+1584356578.408423 xterm-256color 205: xenl: (flag) true
+1584356578.408427 xterm-256color 206: XT: (flag) true
+1584356578.408452 /dev/pts/0: \033[?1049h\033[22;0;0t
+1584356578.408458 /dev/pts/0: \033[?1h\033=
+1584356578.408462 /dev/pts/0: \033[H\033[2J
+1584356578.408466 /dev/pts/0: using UTF-8 for ACS
+1584356578.408471 /dev/pts/0: \033[?12l\033[?25h
+1584356578.408475 /dev/pts/0: \033[?1000l\033[?1002l\033[?1006l\033[?1005l
+1584356578.408484 /dev/pts/0: \033[c
+1584356578.408489 /dev/pts/0: \033(B\033[m
+1584356578.408493 /dev/pts/0: \033[?12;25h
+1584356578.408498 /dev/pts/0: \033[?12l\033[?25h
+1584356578.408502 /dev/pts/0: \033[?1003l
+1584356578.408506 /dev/pts/0: \033[?1006l
+1584356578.408510 /dev/pts/0: \033[?2004l
+1584356578.408518 /dev/pts/0: \033[1;1H
+1584356578.408524 /dev/pts/0: \033[1;57r
+1584356578.408529 /dev/pts/0: \033]112\a
+1584356578.408535 new key \033Oo: 0x1000005d (KP/)
+1584356578.408540 new key \033Oj: 0x1000005e (KP*)
+1584356578.408544 new key \033Om: 0x1000005f (KP-)
+1584356578.408548 new key \033Ow: 0x10000060 (KP7)
+1584356578.408553 new key \033Ox: 0x10000061 (KP8)
+1584356578.408557 new key \033Oy: 0x10000062 (KP9)
+1584356578.408561 new key \033Ok: 0x10000063 (KP+)
+1584356578.408565 new key \033Ot: 0x10000064 (KP4)
+1584356578.408569 new key \033Ou: 0x10000065 (KP5)
+1584356578.408573 new key \033Ov: 0x10000066 (KP6)
+1584356578.408578 new key \033Oq: 0x10000067 (KP1)
+1584356578.408582 new key \033Or: 0x10000068 (KP2)
+1584356578.408586 new key \033Os: 0x10000069 (KP3)
+1584356578.408590 new key \033OM: 0x1000006a (KPEnter)
+1584356578.408594 new key \033Op: 0x1000006b (KP0)
+1584356578.408598 new key \033On: 0x1000006c (KP.)
+1584356578.408602 new key \033OA: 0x10000059 (Up)
+1584356578.408606 new key \033OB: 0x1000005a (Down)
+1584356578.408610 new key \033OC: 0x1000005c (Right)
+1584356578.408614 new key \033OD: 0x1000005b (Left)
+1584356578.408618 new key \033[A: 0x10000059 (Up)
+1584356578.408623 new key \033[B: 0x1000005a (Down)
+1584356578.408627 new key \033[C: 0x1000005c (Right)
+1584356578.408631 new key \033[D: 0x1000005b (Left)
+1584356578.408636 new key \033OH: 0x10000054 (Home)
+1584356578.408640 new key \033OF: 0x10000055 (End)
+1584356578.408644 new key \033[H: 0x10000054 (Home)
+1584356578.408648 new key \033[F: 0x10000055 (End)
+1584356578.408653 new key \033Oa: 0x400010000059 (C-Up)
+1584356578.408657 new key \033Ob: 0x40001000005a (C-Down)
+1584356578.408662 new key \033Oc: 0x40001000005c (C-Right)
+1584356578.408667 new key \033Od: 0x40001000005b (C-Left)
+1584356578.408671 new key \033[a: 0x800010000059 (S-Up)
+1584356578.408675 new key \033[b: 0x80001000005a (S-Down)
+1584356578.408680 new key \033[c: 0x80001000005c (S-Right)
+1584356578.408684 new key \033[d: 0x80001000005b (S-Left)
+1584356578.408688 new key \033[11^: 0x400010000046 (C-F1)
+1584356578.408693 new key \033[12^: 0x400010000047 (C-F2)
+1584356578.408697 new key \033[13^: 0x400010000048 (C-F3)
+1584356578.408701 new key \033[14^: 0x400010000049 (C-F4)
+1584356578.408705 new key \033[15^: 0x40001000004a (C-F5)
+1584356578.408709 new key \033[17^: 0x40001000004b (C-F6)
+1584356578.408727 new key \033[18^: 0x40001000004c (C-F7)
+1584356578.408731 new key \033[19^: 0x40001000004d (C-F8)
+1584356578.408736 new key \033[20^: 0x40001000004e (C-F9)
+1584356578.408741 new key \033[21^: 0x40001000004f (C-F10)
+1584356578.408746 new key \033[23^: 0x400010000050 (C-F11)
+1584356578.408750 new key \033[24^: 0x400010000051 (C-F12)
+1584356578.408756 new key \033[2^: 0x400010000052 (C-IC)
+1584356578.408761 new key \033[3^: 0x400010000053 (C-DC)
+1584356578.408766 new key \033[7^: 0x400010000054 (C-Home)
+1584356578.408771 new key \033[8^: 0x400010000055 (C-End)
+1584356578.408776 new key \033[6^: 0x400010000056 (C-NPage)
+1584356578.408781 new key \033[5^: 0x400010000057 (C-PPage)
+1584356578.408786 new key \033[11$: 0x800010000046 (S-F1)
+1584356578.408791 new key \033[12$: 0x800010000047 (S-F2)
+1584356578.408796 new key \033[13$: 0x800010000048 (S-F3)
+1584356578.408802 new key \033[14$: 0x800010000049 (S-F4)
+1584356578.408808 new key \033[15$: 0x80001000004a (S-F5)
+1584356578.408813 new key \033[17$: 0x80001000004b (S-F6)
+1584356578.408818 new key \033[18$: 0x80001000004c (S-F7)
+1584356578.408823 new key \033[19$: 0x80001000004d (S-F8)
+1584356578.408828 new key \033[20$: 0x80001000004e (S-F9)
+1584356578.408833 new key \033[21$: 0x80001000004f (S-F10)
+1584356578.408839 new key \033[23$: 0x800010000050 (S-F11)
+1584356578.408845 new key \033[24$: 0x800010000051 (S-F12)
+1584356578.408850 new key \033[2$: 0x800010000052 (S-IC)
+1584356578.408862 new key \033[3$: 0x800010000053 (S-DC)
+1584356578.408868 new key \033[7$: 0x800010000054 (S-Home)
+1584356578.408873 new key \033[8$: 0x800010000055 (S-End)
+1584356578.408878 new key \033[6$: 0x800010000056 (S-NPage)
+1584356578.408883 new key \033[5$: 0x800010000057 (S-PPage)
+1584356578.408889 new key \033[11@: 0xc00010000046 (C-S-F1)
+1584356578.408895 new key \033[12@: 0xc00010000047 (C-S-F2)
+1584356578.408900 new key \033[13@: 0xc00010000048 (C-S-F3)
+1584356578.408905 new key \033[14@: 0xc00010000049 (C-S-F4)
+1584356578.408910 new key \033[15@: 0xc0001000004a (C-S-F5)
+1584356578.408915 new key \033[17@: 0xc0001000004b (C-S-F6)
+1584356578.408920 new key \033[18@: 0xc0001000004c (C-S-F7)
+1584356578.408925 new key \033[19@: 0xc0001000004d (C-S-F8)
+1584356578.408931 new key \033[20@: 0xc0001000004e (C-S-F9)
+1584356578.408936 new key \033[21@: 0xc0001000004f (C-S-F10)
+1584356578.408941 new key \033[23@: 0xc00010000050 (C-S-F11)
+1584356578.408947 new key \033[24@: 0xc00010000051 (C-S-F12)
+1584356578.408952 new key \033[2@: 0xc00010000052 (C-S-IC)
+1584356578.408957 new key \033[3@: 0xc00010000053 (C-S-DC)
+1584356578.408963 new key \033[7@: 0xc00010000054 (C-S-Home)
+1584356578.408969 new key \033[8@: 0xc00010000055 (C-S-End)
+1584356578.408975 new key \033[6@: 0xc00010000056 (C-S-NPage)
+1584356578.408981 new key \033[5@: 0xc00010000057 (C-S-PPage)
+1584356578.408987 new key \033[I: 0x10000000 (FocusIn)
+1584356578.408991 new key \033[O: 0x10000001 (FocusOut)
+1584356578.408995 new key \033[200~: 0x10000002 (PasteStart)
+1584356578.408998 new key \033[201~: 0x10000003 (PasteEnd)
+1584356578.409002 new key \033OP: 0x10000046 (F1)
+1584356578.409006 new key \033OQ: 0x10000047 (F2)
+1584356578.409009 new key \033OR: 0x10000048 (F3)
+1584356578.409012 new key \033OS: 0x10000049 (F4)
+1584356578.409016 new key \033[15~: 0x1000004a (F5)
+1584356578.409020 new key \033[17~: 0x1000004b (F6)
+1584356578.409023 new key \033[18~: 0x1000004c (F7)
+1584356578.409026 new key \033[19~: 0x1000004d (F8)
+1584356578.409030 new key \033[20~: 0x1000004e (F9)
+1584356578.409033 new key \033[21~: 0x1000004f (F10)
+1584356578.409037 new key \033[23~: 0x10000050 (F11)
+1584356578.409040 new key \033[24~: 0x10000051 (F12)
+1584356578.409044 new key \033[1;2P: 0x800010000046 (S-F1)
+1584356578.409048 new key \033[1;2Q: 0x800010000047 (S-F2)
+1584356578.409052 new key \033[1;2R: 0x800010000048 (S-F3)
+1584356578.409056 new key \033[1;2S: 0x800010000049 (S-F4)
+1584356578.409060 new key \033[15;2~: 0x80001000004a (S-F5)
+1584356578.409063 new key \033[17;2~: 0x80001000004b (S-F6)
+1584356578.409067 new key \033[18;2~: 0x80001000004c (S-F7)
+1584356578.409071 new key \033[19;2~: 0x80001000004d (S-F8)
+1584356578.409075 new key \033[20;2~: 0x80001000004e (S-F9)
+1584356578.409079 new key \033[21;2~: 0x80001000004f (S-F10)
+1584356578.409082 new key \033[23;2~: 0x800010000050 (S-F11)
+1584356578.409086 new key \033[24;2~: 0x800010000051 (S-F12)
+1584356578.409090 new key \033[1;5P: 0x400010000046 (C-F1)
+1584356578.409094 new key \033[1;5Q: 0x400010000047 (C-F2)
+1584356578.409097 new key \033[1;5R: 0x400010000048 (C-F3)
+1584356578.409101 new key \033[1;5S: 0x400010000049 (C-F4)
+1584356578.409105 new key \033[15;5~: 0x40001000004a (C-F5)
+1584356578.409109 new key \033[17;5~: 0x40001000004b (C-F6)
+1584356578.409112 new key \033[18;5~: 0x40001000004c (C-F7)
+1584356578.409116 new key \033[19;5~: 0x40001000004d (C-F8)
+1584356578.409119 new key \033[20;5~: 0x40001000004e (C-F9)
+1584356578.409123 new key \033[21;5~: 0x40001000004f (C-F10)
+1584356578.409127 new key \033[23;5~: 0x400010000050 (C-F11)
+1584356578.409130 new key \033[24;5~: 0x400010000051 (C-F12)
+1584356578.409134 new key \033[1;6P: 0xc00010000046 (C-S-F1)
+1584356578.409138 new key \033[1;6Q: 0xc00010000047 (C-S-F2)
+1584356578.409142 new key \033[1;6R: 0xc00010000048 (C-S-F3)
+1584356578.409145 new key \033[1;6S: 0xc00010000049 (C-S-F4)
+1584356578.409149 new key \033[15;6~: 0xc0001000004a (C-S-F5)
+1584356578.409153 new key \033[17;6~: 0xc0001000004b (C-S-F6)
+1584356578.409156 new key \033[18;6~: 0xc0001000004c (C-S-F7)
+1584356578.409166 new key \033[19;6~: 0xc0001000004d (C-S-F8)
+1584356578.409170 new key \033[20;6~: 0xc0001000004e (C-S-F9)
+1584356578.409174 new key \033[21;6~: 0xc0001000004f (C-S-F10)
+1584356578.409177 new key \033[23;6~: 0xc00010000050 (C-S-F11)
+1584356578.409181 new key \033[24;6~: 0xc00010000051 (C-S-F12)
+1584356578.409185 new key \033[1;3P: 0x200010000046 (M-F1)
+1584356578.409189 new key \033[1;3Q: 0x200010000047 (M-F2)
+1584356578.409193 new key \033[1;3R: 0x200010000048 (M-F3)
+1584356578.409196 new key \033[1;3S: 0x200010000049 (M-F4)
+1584356578.409200 new key \033[15;3~: 0x20001000004a (M-F5)
+1584356578.409204 new key \033[17;3~: 0x20001000004b (M-F6)
+1584356578.409208 new key \033[18;3~: 0x20001000004c (M-F7)
+1584356578.409212 new key \033[19;3~: 0x20001000004d (M-F8)
+1584356578.409215 new key \033[20;3~: 0x20001000004e (M-F9)
+1584356578.409219 new key \033[21;3~: 0x20001000004f (M-F10)
+1584356578.409223 new key \033[23;3~: 0x200010000050 (M-F11)
+1584356578.409227 new key \033[24;3~: 0x200010000051 (M-F12)
+1584356578.409231 new key \033[1;4P: 0xa00010000046 (M-S-F1)
+1584356578.409234 new key \033[1;4Q: 0xa00010000047 (M-S-F2)
+1584356578.409238 new key \033[1;4R: 0xa00010000048 (M-S-F3)
+1584356578.409242 new key \033[2~: 0x10000052 (IC)
+1584356578.409245 new key \033[3~: 0x10000053 (DC)
+1584356578.409250 replacing key \033OH: 0x10000054 (Home)
+1584356578.409253 replacing key \033OF: 0x10000055 (End)
+1584356578.409257 new key \033[6~: 0x10000056 (NPage)
+1584356578.409260 new key \033[5~: 0x10000057 (PPage)
+1584356578.409264 new key \033[Z: 0x10000058 (BTab)
+1584356578.409268 replacing key \033OA: 0x10000059 (Up)
+1584356578.409272 replacing key \033OB: 0x1000005a (Down)
+1584356578.409275 replacing key \033OD: 0x1000005b (Left)
+1584356578.409279 replacing key \033OC: 0x1000005c (Right)
+1584356578.409282 new key \033[3;2~: 0x1800010000053 (S-DC)
+1584356578.409286 new key \033[3;3~: 0x1200010000053 (M-DC)
+1584356578.409291 new key \033[3;4~: 0x1a00010000053 (M-S-DC)
+1584356578.409294 new key \033[3;5~: 0x1400010000053 (C-DC)
+1584356578.409298 new key \033[3;6~: 0x1c00010000053 (C-S-DC)
+1584356578.409302 new key \033[3;7~: 0x1600010000053 (C-M-DC)
+1584356578.409306 new key \033[1;2B: 0x1800010000059 (S-Up)
+1584356578.409311 replacing key \033[1;2B: 0x180001000005a (S-Down)
+1584356578.409315 new key \033[1;3B: 0x120001000005a (M-Down)
+1584356578.409319 new key \033[1;4B: 0x1a0001000005a (M-S-Down)
+1584356578.409323 new key \033[1;5B: 0x140001000005a (C-Down)
+1584356578.409327 new key \033[1;6B: 0x1c0001000005a (C-S-Down)
+1584356578.409330 new key \033[1;7B: 0x160001000005a (C-M-Down)
+1584356578.409334 new key \033[1;2F: 0x1800010000055 (S-End)
+1584356578.409338 new key \033[1;3F: 0x1200010000055 (M-End)
+1584356578.409342 new key \033[1;4F: 0x1a00010000055 (M-S-End)
+1584356578.409346 new key \033[1;5F: 0x1400010000055 (C-End)
+1584356578.409349 new key \033[1;6F: 0x1c00010000055 (C-S-End)
+1584356578.409353 new key \033[1;7F: 0x1600010000055 (C-M-End)
+1584356578.409357 new key \033[1;2H: 0x1800010000054 (S-Home)
+1584356578.409361 new key \033[1;3H: 0x1200010000054 (M-Home)
+1584356578.409364 new key \033[1;4H: 0x1a00010000054 (M-S-Home)
+1584356578.409368 new key \033[1;5H: 0x1400010000054 (C-Home)
+1584356578.409372 new key \033[1;6H: 0x1c00010000054 (C-S-Home)
+1584356578.409376 new key \033[1;7H: 0x1600010000054 (C-M-Home)
+1584356578.409379 new key \033[2;2~: 0x1800010000052 (S-IC)
+1584356578.409383 new key \033[2;3~: 0x1200010000052 (M-IC)
+1584356578.409387 new key \033[2;4~: 0x1a00010000052 (M-S-IC)
+1584356578.409391 new key \033[2;5~: 0x1400010000052 (C-IC)
+1584356578.409395 new key \033[2;6~: 0x1c00010000052 (C-S-IC)
+1584356578.409398 new key \033[2;7~: 0x1600010000052 (C-M-IC)
+1584356578.409402 new key \033[1;2D: 0x180001000005b (S-Left)
+1584356578.409406 new key \033[1;3D: 0x120001000005b (M-Left)
+1584356578.409410 new key \033[1;4D: 0x1a0001000005b (M-S-Left)
+1584356578.409414 new key \033[1;5D: 0x140001000005b (C-Left)
+1584356578.409417 new key \033[1;6D: 0x1c0001000005b (C-S-Left)
+1584356578.409426 new key \033[1;7D: 0x160001000005b (C-M-Left)
+1584356578.409430 new key \033[6;2~: 0x1800010000056 (S-NPage)
+1584356578.409435 new key \033[6;3~: 0x1200010000056 (M-NPage)
+1584356578.409439 new key \033[6;4~: 0x1a00010000056 (M-S-NPage)
+1584356578.409442 new key \033[6;5~: 0x1400010000056 (C-NPage)
+1584356578.409446 new key \033[6;6~: 0x1c00010000056 (C-S-NPage)
+1584356578.409450 new key \033[6;7~: 0x1600010000056 (C-M-NPage)
+1584356578.409454 new key \033[5;2~: 0x1800010000057 (S-PPage)
+1584356578.409458 new key \033[5;3~: 0x1200010000057 (M-PPage)
+1584356578.409462 new key \033[5;4~: 0x1a00010000057 (M-S-PPage)
+1584356578.409465 new key \033[5;5~: 0x1400010000057 (C-PPage)
+1584356578.409469 new key \033[5;6~: 0x1c00010000057 (C-S-PPage)
+1584356578.409473 new key \033[5;7~: 0x1600010000057 (C-M-PPage)
+1584356578.409477 new key \033[1;2C: 0x180001000005c (S-Right)
+1584356578.409481 new key \033[1;3C: 0x120001000005c (M-Right)
+1584356578.409485 new key \033[1;4C: 0x1a0001000005c (M-S-Right)
+1584356578.409489 new key \033[1;5C: 0x140001000005c (C-Right)
+1584356578.409493 new key \033[1;6C: 0x1c0001000005c (C-S-Right)
+1584356578.409497 new key \033[1;7C: 0x160001000005c (C-M-Right)
+1584356578.409501 new key \033[1;2A: 0x1800010000059 (S-Up)
+1584356578.409505 replacing key \033[1;2A: 0x1800010000059 (S-Up)
+1584356578.409508 new key \033[1;3A: 0x1200010000059 (M-Up)
+1584356578.409512 new key \033[1;4A: 0x1a00010000059 (M-S-Up)
+1584356578.409516 new key \033[1;5A: 0x1400010000059 (C-Up)
+1584356578.409519 new key \033[1;6A: 0x1c00010000059 (C-S-Up)
+1584356578.409523 new key \033[1;7A: 0x1600010000059 (C-M-Up)
+1584356578.409539 new session 0 $0
+1584356578.409545 session 0 activity 1584356578.409542 (last 0.000000)
+1584356578.409608 @0 alerts timer reset 0
+1584356578.409612 @0 alerts flags added 0x2
+1584356578.409624 window_add_pane: @0 at start
+1584356578.409630 spawn: /bin/bash -- 
+1584356578.409634 spawn: COLORTERM=truecolor
+1584356578.409637 spawn: CONDA_DEFAULT_ENV=base
+1584356578.409641 spawn: CONDA_EXE=/home/dawit/Programs/anaconda3/bin/conda
+1584356578.409645 spawn: CONDA_PREFIX=/home/dawit/Programs/anaconda3
+1584356578.409649 spawn: CONDA_PROMPT_MODIFIER=(base) 
+1584356578.409652 spawn: CONDA_PYTHON_EXE=/home/dawit/Programs/anaconda3/bin/python
+1584356578.409656 spawn: CONDA_SHLVL=1
+1584356578.409660 spawn: DBUS_SESSION_BUS_ADDRESS=unix:path=/run/user/1000/bus
+1584356578.409663 spawn: DEFAULTS_PATH=/usr/share/gconf/cinnamon.default.path
+1584356578.409668 spawn: DESKTOP_AUTOSTART_ID=10a59c9570507c77ef158432240719121300000021320050
+1584356578.409671 spawn: DESKTOP_SESSION=cinnamon
+1584356578.409674 spawn: DISPLAY=:0
+1584356578.409677 spawn: GDMSESSION=cinnamon
+1584356578.409681 spawn: GDM_LANG=en_US
+1584356578.409684 spawn: GNOME_DESKTOP_SESSION_ID=this-is-deprecated
+1584356578.409689 spawn: GNOME_TERMINAL_SCREEN=/org/gnome/Terminal/screen/958cca2a_6c48_491a_9c5a_f1fa507714d6
+1584356578.409692 spawn: GNOME_TERMINAL_SERVICE=:1.63
+1584356578.409696 spawn: GPG_AGENT_INFO=/run/user/1000/gnupg/S.gpg-agent:0:1
+1584356578.409699 spawn: GTK_MODULES=gail:atk-bridge
+1584356578.409702 spawn: GTK_OVERLAY_SCROLLING=1
+1584356578.409706 spawn: HOME=/home/dawit
+1584356578.409709 spawn: LANG=en_US.UTF-8
+1584356578.409712 spawn: LANGUAGE=en_US:en
+1584356578.409715 spawn: LESSCLOSE=/usr/bin/lesspipe %s %s
+1584356578.409719 spawn: LESSOPEN=| /usr/bin/lesspipe %s
+1584356578.409722 spawn: LOGNAME=dawit
+1584356578.409748 spawn: LS_COLORS=rs=0:di=01;34:ln=01;36:mh=00:pi=40;33:so=01;35:do=01;35:bd=40;33;01:cd=40;33;01:or=40;31;01:mi=00:su=37;41:sg=30;43:ca=30;41:tw=30;42:ow=34;42:st=37;44:ex=01;32:*.tar=01;31:*.tgz=01;31:*.arc=01;31:*.arj=01;31:*.taz=01;31:*.lha=01;31:*.lz4=01;31:*.lzh=01;31:*.lzma=01;31:*.tlz=01;31:*.txz=01;31:*.tzo=01;31:*.t7z=01;31:*.zip=01;31:*.z=01;31:*.Z=01;31:*.dz=01;31:*.gz=01;31:*.lrz=01;31:*.lz=01;31:*.lzo=01;31:*.xz=01;31:*.zst=01;31:*.tzst=01;31:*.bz2=01;31:*.bz=01;31:*.tbz=01;31:*.tbz2=01;31:*.tz=01;31:*.deb=01;31:*.rpm=01;31:*.jar=01;31:*.war=01;31:*.ear=01;31:*.sar=01;31:*.rar=01;31:*.alz=01;31:*.ace=01;31:*.zoo=01;31:*.cpio=01;31:*.7z=01;31:*.rz=01;31:*.cab=01;31:*.wim=01;31:*.swm=01;31:*.dwm=01;31:*.esd=01;31:*.jpg=01;35:*.jpeg=01;35:*.mjpg=01;35:*.mjpeg=01;35:*.gif=01;35:*.bmp=01;35:*.pbm=01;35:*.pgm=01;35:*.ppm=01;35:*.tga=01;35:*.xbm=01;35:*.xpm=01;35:*.tif=01;35:*.tiff=01;35:*.png=01;35:*.svg=01;35:*.svgz=01;35:*.mng=01;35:*.pcx=01;35:*.mov=01;35:*.mpg=01;35:*.mpeg=01;35:*.m2v=01;35:*.mkv=01;35:*.webm=01;35:*.ogm=01;35:*.mp4=01;35:*.m4v=01;35:*.mp4v=01;35:*.vob=01;35:*.qt=01;35:*.nuv=01;35:*.wmv=01;35:*.asf=01;35:*.rm=01;35:*.rmvb=01;35:*.flc=01;35:*.avi=01;35:*.fli=01;35:*.flv=01;35:*.gl=01;35:*.dl=01;35:*.xcf=01;35:*.xwd=01;35:*.yuv=01;35:*.cgm=01;35:*.emf=01;35:*.ogv=01;35:*.ogx=01;35:*.aac=00;36:*.au=00;36:*.flac=00;36:*.m4a=00;36:*.mid=00;36:*.midi=00;36:*.mka=00;36:*.mp3=00;36:*.mpc=00;36:*.ogg=00;36:*.ra=00;36:*.wav=00;36:*.oga=00;36:*.opus=00;36:*.spx=00;36:*.xspf=00;36:
+1584356578.409776 spawn: MANDATORY_PATH=/usr/share/gconf/cinnamon.mandatory.path
+1584356578.409780 spawn: OLDPWD=/home/dawit/Desktop/Datalogi/MIDICompiler/midicompiler
+1584356578.409785 spawn: PATH=/home/dawit/Programs/anaconda3/bin:/home/dawit/Programs/anaconda3/condabin:/home/dawit/.local/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/usr/games:/usr/local/games:/snap/bin:/home/dawit/.dotnet/tools
+1584356578.409789 spawn: PWD=/home/dawit/Desktop/Datalogi/MIDICompiler/midicompiler/config
+1584356578.409792 spawn: QT_ACCESSIBILITY=1
+1584356578.409795 spawn: QT_QPA_PLATFORMTHEME=qt5ct
+1584356578.409799 spawn: SESSION_MANAGER=local/dawit-VLT-WX0:@/tmp/.ICE-unix/2132,unix/dawit-VLT-WX0:/tmp/.ICE-unix/2132
+1584356578.409802 spawn: SHELL=/bin/bash
+1584356578.409805 spawn: SHLVL=1
+1584356578.409807 spawn: SSH_AGENT_PID=2198
+1584356578.409810 spawn: SSH_AUTH_SOCK=/run/user/1000/keyring/ssh
+1584356578.409813 spawn: TERM=screen
+1584356578.409816 spawn: TMUX=/tmp/tmux-1000/default,13853,0
+1584356578.409818 spawn: USER=dawit
+1584356578.409821 spawn: VTE_VERSION=5202
+1584356578.409824 spawn: XAUTHORITY=/home/dawit/.Xauthority
+1584356578.409827 spawn: XDG_CONFIG_DIRS=/etc/xdg/xdg-cinnamon:/etc/xdg
+1584356578.409830 spawn: XDG_CURRENT_DESKTOP=X-Cinnamon
+1584356578.409835 spawn: XDG_DATA_DIRS=/usr/share/cinnamon:/usr/share/gnome:/home/dawit/.local/share/flatpak/exports/share:/var/lib/flatpak/exports/share:/usr/local/share:/usr/share:/var/lib/snapd/desktop
+1584356578.409838 spawn: XDG_GREETER_DATA_DIR=/var/lib/lightdm-data/dawit
+1584356578.409841 spawn: XDG_RUNTIME_DIR=/run/user/1000
+1584356578.409844 spawn: XDG_SEAT=seat0
+1584356578.409847 spawn: XDG_SEAT_PATH=/org/freedesktop/DisplayManager/Seat0
+1584356578.409850 spawn: XDG_SESSION_DESKTOP=cinnamon
+1584356578.409852 spawn: XDG_SESSION_ID=c2
+1584356578.409855 spawn: XDG_SESSION_PATH=/org/freedesktop/DisplayManager/Session0
+1584356578.409858 spawn: XDG_SESSION_TYPE=x11
+1584356578.409861 spawn: XDG_VTNR=7
+1584356578.409863 spawn: _=/usr/bin/tmux
+1584356578.409866 spawn: _CE_CONDA=
+1584356578.409869 spawn: _CE_M=
+1584356578.411640 window_add_ref: @0 notify_add, now 1
+1584356578.411667 window_add_ref: @0 winlink_set_window, now 2
+1584356578.411732 cmd_find_from_session_window: s=$0
+1584356578.411739 cmd_find_from_session_window: wl=0 1 w=@0 bash
+1584356578.411744 cmd_find_from_session_window: wp=%0
+1584356578.411748 cmd_find_from_session_window: idx=0
+1584356578.411753 session_add_ref: 0 notify_add, now 2
+1584356578.411757 window_add_ref: @0 notify_add, now 3
+1584356578.411761 session_add_ref: 0 notify_add, now 3
+1584356578.411771 @0 alerts timer reset 0
+1584356578.411776 @0 alerts flags added 0x2
+1584356578.411780 cmd_find_from_session: s=$0
+1584356578.411785 cmd_find_from_session: wl=0 1 w=@0 bash
+1584356578.411789 cmd_find_from_session: wp=%0
+1584356578.411793 cmd_find_from_session: idx=none
+1584356578.411797 session_add_ref: 0 notify_add, now 4
+1584356578.411802 session_add_ref: 0 notify_add, now 5
+1584356578.411807 session 0 created
+1584356578.411816 cmd_find_from_session: s=$0
+1584356578.411821 cmd_find_from_session: wl=0 1 w=@0 bash
+1584356578.411825 cmd_find_from_session: wp=%0
+1584356578.411839 cmd_find_from_session: idx=none
+1584356578.411843 session_add_ref: 0 notify_add, now 6
+1584356578.411848 session_add_ref: 0 notify_add, now 7
+1584356578.411857 sending message 207 to peer 0x561361e1dba0 (0 bytes)
+1584356578.411870 client 0x561361e1d350, status interval 15
+1584356578.411876 cmd_find_from_session: s=$0
+1584356578.411880 cmd_find_from_session: wl=0 1 w=@0 bash
+1584356578.411884 cmd_find_from_session: wp=%0
+1584356578.411888 cmd_find_from_session: idx=none
+1584356578.411893 session_add_ref: 0 notify_add, now 8
+1584356578.411900 session 0 activity 1584356578.411897 (last 1584356578.409542)
+1584356578.411921 cmd_find_from_session: s=$0
+1584356578.411925 cmd_find_from_session: wl=0 1 w=@0 bash
+1584356578.411929 cmd_find_from_session: wp=%0
+1584356578.411933 cmd_find_from_session: idx=none
+1584356578.411937 cmd_find_from_session: s=$0
+1584356578.411942 cmd_find_from_session: wl=0 1 w=@0 bash
+1584356578.411946 cmd_find_from_session: wp=%0
+1584356578.411949 cmd_find_from_session: idx=none
+1584356578.411956 unref client 0x561361e1d350 (4 references)
+1584356578.411964 cmdq_next <0x561361e1d350>: callback[server_client_command_done] (1), flags 0
+1584356578.411971 unref client 0x561361e1d350 (3 references)
+1584356578.411976 cmdq_next <0x561361e1d350>: exit (empty)
+1584356578.411980 cmdq_next <global>: enter
+1584356578.411986 cmdq_next <global>: callback[notify_callback] (1), flags 0
+1584356578.411990 notify_callback: window-pane-changed
+1584356578.411996 cmd_find_from_nothing: s=$0
+1584356578.412000 cmd_find_from_nothing: wl=0 1 w=@0 bash
+1584356578.412004 cmd_find_from_nothing: wp=%0
+1584356578.412008 cmd_find_from_nothing: idx=0
+1584356578.412013 window_remove_ref: @0 notify_callback, now 2
+1584356578.412019 cmdq_next <global>: callback[notify_callback] (1), flags 0
+1584356578.412023 notify_callback: window-linked
+1584356578.412029 session_remove_ref: 0 notify_callback, now 7
+1584356578.412034 window_remove_ref: @0 notify_callback, now 1
+1584356578.412039 session_remove_ref: 0 notify_callback, now 6
+1584356578.412044 cmdq_next <global>: callback[notify_callback] (1), flags 0
+1584356578.412048 notify_callback: session-window-changed
+1584356578.412053 session_remove_ref: 0 notify_callback, now 5
+1584356578.412058 session_remove_ref: 0 notify_callback, now 4
+1584356578.412063 cmdq_next <global>: callback[notify_callback] (1), flags 0
+1584356578.412068 notify_callback: session-created
+1584356578.412073 session_remove_ref: 0 notify_callback, now 3
+1584356578.412078 session_remove_ref: 0 notify_callback, now 2
+1584356578.412083 cmdq_next <global>: callback[notify_callback] (1), flags 0
+1584356578.412087 notify_callback: client-session-changed
+1584356578.412092 unref client 0x561361e1d350 (2 references)
+1584356578.412097 session_remove_ref: 0 notify_callback, now 1
+1584356578.412102 cmdq_next <global>: exit (empty)
+1584356578.412107 cmdq_next <0x561361e1d350>: empty
+1584356578.412111 cmdq_next <global>: empty
+1584356578.412117 cmdq_next <0x561361e1d350>: empty
+1584356578.412122 /dev/pts/0: redraw deferred (148 left)
+1584356578.412127 redraw timer started
+1584356578.412142 /dev/pts/0: \033[1;1H
+1584356578.412148 /dev/pts/0: \033[?1006h
+1584356578.412152 /dev/pts/0: \033[?1002h
+1584356578.412159 @0 active pane not changed
+1584356578.412215 /dev/pts/0: wrote 170 bytes (of 170)
+1584356578.412231 server_signal: Child exited
+1584356578.412238 cmdq_next <global>: empty
+1584356578.412242 cmdq_next <0x561361e1d350>: empty
+1584356578.412247 /dev/pts/0: redraw needed
+1584356578.412256 screen_write_start: size 238x1, no pane
+1584356578.412310 screen_write_collect_flush: flushed 0 items (0 bytes)
+1584356578.412317 screen_write_stop: 238 cells (238 written, 0 skipped)
+1584356578.412416 format '[#S] ' -> '[0] '
+1584356578.412437 unref client 0x561361e1d350 (2 references)
+1584356578.412522 format ' "#{=21:pane_title}" 12:02 16-Mar-20' -> ' "dawit-VLT-WX0" 12:02 16-Mar-20'
+1584356578.412540 unref client 0x561361e1d350 (2 references)
+1584356578.412616 format '#{window_flags}' -> '*'
+1584356578.412623 format '#I:#W#{?window_flags,#{window_flags}, }' -> '0:bash*'
+1584356578.412649 unref client 0x561361e1d350 (2 references)
+1584356578.412659 screen_write_start: size 8x1, no pane
+1584356578.412667 screen_write_collect_flush: flushed 0 items (0 bytes)
+1584356578.412673 screen_write_stop: 8 cells (8 written, 0 skipped)
+1584356578.412679 screen_write_start: size 238x1, no pane
+1584356578.412691 screen_write_collect_flush: flushed 0 items (0 bytes)
+1584356578.412696 screen_write_stop: 44 cells (39 written, 5 skipped)
+1584356578.412704 /dev/pts/0: \033[?25l
+1584356578.413048 tty_clear_line: 238 at 0,0
+1584356578.413057 /dev/pts/0: \033[K
+1584356578.413062 tty_clear_line: 238 at 0,1
+1584356578.413067 /dev/pts/0: \r
+1584356578.413071 /dev/pts/0: \n
+1584356578.413075 /dev/pts/0: \033[K
+1584356578.413080 tty_clear_line: 238 at 0,2
+1584356578.413085 /dev/pts/0: \r
+1584356578.413088 /dev/pts/0: \n
+1584356578.413092 /dev/pts/0: \033[K
+1584356578.413097 tty_clear_line: 238 at 0,3
+1584356578.413101 /dev/pts/0: \r
+1584356578.413105 /dev/pts/0: \n
+1584356578.413109 /dev/pts/0: \033[K
+1584356578.413114 tty_clear_line: 238 at 0,4
+1584356578.413118 /dev/pts/0: \r
+1584356578.413122 /dev/pts/0: \n
+1584356578.413126 /dev/pts/0: \033[K
+1584356578.413131 tty_clear_line: 238 at 0,5
+1584356578.413135 /dev/pts/0: \r
+1584356578.413138 /dev/pts/0: \n
+1584356578.413142 /dev/pts/0: \033[K
+1584356578.413147 tty_clear_line: 238 at 0,6
+1584356578.413151 /dev/pts/0: \r
+1584356578.413155 /dev/pts/0: \n
+1584356578.413159 /dev/pts/0: \033[K
+1584356578.413163 tty_clear_line: 238 at 0,7
+1584356578.413167 /dev/pts/0: \r
+1584356578.413171 /dev/pts/0: \n
+1584356578.413175 /dev/pts/0: \033[K
+1584356578.413180 tty_clear_line: 238 at 0,8
+1584356578.413184 /dev/pts/0: \r
+1584356578.413188 /dev/pts/0: \n
+1584356578.413191 /dev/pts/0: \033[K
+1584356578.413196 tty_clear_line: 238 at 0,9
+1584356578.413200 /dev/pts/0: \r
+1584356578.413204 /dev/pts/0: \n
+1584356578.413208 /dev/pts/0: \033[K
+1584356578.413213 tty_clear_line: 238 at 0,10
+1584356578.413217 /dev/pts/0: \r
+1584356578.413221 /dev/pts/0: \n
+1584356578.413225 /dev/pts/0: \033[K
+1584356578.413230 tty_clear_line: 238 at 0,11
+1584356578.413234 /dev/pts/0: \r
+1584356578.413238 /dev/pts/0: \n
+1584356578.413242 /dev/pts/0: \033[K
+1584356578.413247 tty_clear_line: 238 at 0,12
+1584356578.413251 /dev/pts/0: \r
+1584356578.413255 /dev/pts/0: \n
+1584356578.413259 /dev/pts/0: \033[K
+1584356578.413264 tty_clear_line: 238 at 0,13
+1584356578.413268 /dev/pts/0: \r
+1584356578.413272 /dev/pts/0: \n
+1584356578.413276 /dev/pts/0: \033[K
+1584356578.413281 tty_clear_line: 238 at 0,14
+1584356578.413285 /dev/pts/0: \r
+1584356578.413288 /dev/pts/0: \n
+1584356578.413292 /dev/pts/0: \033[K
+1584356578.413297 tty_clear_line: 238 at 0,15
+1584356578.413301 /dev/pts/0: \r
+1584356578.413305 /dev/pts/0: \n
+1584356578.413309 /dev/pts/0: \033[K
+1584356578.413313 tty_clear_line: 238 at 0,16
+1584356578.413317 /dev/pts/0: \r
+1584356578.413321 /dev/pts/0: \n
+1584356578.413324 /dev/pts/0: \033[K
+1584356578.413329 tty_clear_line: 238 at 0,17
+1584356578.413333 /dev/pts/0: \r
+1584356578.413336 /dev/pts/0: \n
+1584356578.413341 /dev/pts/0: \033[K
+1584356578.413346 tty_clear_line: 238 at 0,18
+1584356578.413350 /dev/pts/0: \r
+1584356578.413354 /dev/pts/0: \n
+1584356578.413358 /dev/pts/0: \033[K
+1584356578.413363 tty_clear_line: 238 at 0,19
+1584356578.413367 /dev/pts/0: \r
+1584356578.413371 /dev/pts/0: \n
+1584356578.413374 /dev/pts/0: \033[K
+1584356578.413379 tty_clear_line: 238 at 0,20
+1584356578.413383 /dev/pts/0: \r
+1584356578.413388 /dev/pts/0: \n
+1584356578.413391 /dev/pts/0: \033[K
+1584356578.413396 tty_clear_line: 238 at 0,21
+1584356578.413400 /dev/pts/0: \r
+1584356578.413404 /dev/pts/0: \n
+1584356578.413408 /dev/pts/0: \033[K
+1584356578.413413 tty_clear_line: 238 at 0,22
+1584356578.413417 /dev/pts/0: \r
+1584356578.413421 /dev/pts/0: \n
+1584356578.413425 /dev/pts/0: \033[K
+1584356578.413430 tty_clear_line: 238 at 0,23
+1584356578.413434 /dev/pts/0: \r
+1584356578.413439 /dev/pts/0: \n
+1584356578.413443 /dev/pts/0: \033[K
+1584356578.413447 tty_clear_line: 238 at 0,24
+1584356578.413451 /dev/pts/0: \r
+1584356578.413464 /dev/pts/0: \n
+1584356578.413469 /dev/pts/0: \033[K
+1584356578.413474 tty_clear_line: 238 at 0,25
+1584356578.413478 /dev/pts/0: \r
+1584356578.413481 /dev/pts/0: \n
+1584356578.413485 /dev/pts/0: \033[K
+1584356578.413489 tty_clear_line: 238 at 0,26
+1584356578.413494 /dev/pts/0: \r
+1584356578.413498 /dev/pts/0: \n
+1584356578.413502 /dev/pts/0: \033[K
+1584356578.413507 tty_clear_line: 238 at 0,27
+1584356578.413512 /dev/pts/0: \r
+1584356578.413516 /dev/pts/0: \n
+1584356578.413520 /dev/pts/0: \033[K
+1584356578.413525 tty_clear_line: 238 at 0,28
+1584356578.413529 /dev/pts/0: \r
+1584356578.413533 /dev/pts/0: \n
+1584356578.413536 /dev/pts/0: \033[K
+1584356578.413541 tty_clear_line: 238 at 0,29
+1584356578.413545 /dev/pts/0: \r
+1584356578.413548 /dev/pts/0: \n
+1584356578.413552 /dev/pts/0: \033[K
+1584356578.413557 tty_clear_line: 238 at 0,30
+1584356578.413561 /dev/pts/0: \r
+1584356578.413565 /dev/pts/0: \n
+1584356578.413569 /dev/pts/0: \033[K
+1584356578.413573 tty_clear_line: 238 at 0,31
+1584356578.413577 /dev/pts/0: \r
+1584356578.413581 /dev/pts/0: \n
+1584356578.413585 /dev/pts/0: \033[K
+1584356578.413589 tty_clear_line: 238 at 0,32
+1584356578.413593 /dev/pts/0: \r
+1584356578.413597 /dev/pts/0: \n
+1584356578.413601 /dev/pts/0: \033[K
+1584356578.413606 tty_clear_line: 238 at 0,33
+1584356578.413610 /dev/pts/0: \r
+1584356578.413615 /dev/pts/0: \n
+1584356578.413618 /dev/pts/0: \033[K
+1584356578.413623 tty_clear_line: 238 at 0,34
+1584356578.413627 /dev/pts/0: \r
+1584356578.413631 /dev/pts/0: \n
+1584356578.413635 /dev/pts/0: \033[K
+1584356578.413640 tty_clear_line: 238 at 0,35
+1584356578.413644 /dev/pts/0: \r
+1584356578.413648 /dev/pts/0: \n
+1584356578.413652 /dev/pts/0: \033[K
+1584356578.413658 tty_clear_line: 238 at 0,36
+1584356578.413663 /dev/pts/0: \r
+1584356578.413667 /dev/pts/0: \n
+1584356578.413671 /dev/pts/0: \033[K
+1584356578.413675 tty_clear_line: 238 at 0,37
+1584356578.413679 /dev/pts/0: \r
+1584356578.413683 /dev/pts/0: \n
+1584356578.413689 /dev/pts/0: \033[K
+1584356578.413692 tty_clear_line: 238 at 0,38
+1584356578.413695 /dev/pts/0: \r
+1584356578.413698 /dev/pts/0: \n
+1584356578.413700 /dev/pts/0: \033[K
+1584356578.413703 tty_clear_line: 238 at 0,39
+1584356578.413706 /dev/pts/0: \r
+1584356578.413709 /dev/pts/0: \n
+1584356578.413711 /dev/pts/0: \033[K
+1584356578.413715 tty_clear_line: 238 at 0,40
+1584356578.413717 /dev/pts/0: \r
+1584356578.413720 /dev/pts/0: \n
+1584356578.413722 /dev/pts/0: \033[K
+1584356578.413725 tty_clear_line: 238 at 0,41
+1584356578.413728 /dev/pts/0: \r
+1584356578.413731 /dev/pts/0: \n
+1584356578.413733 /dev/pts/0: \033[K
+1584356578.413736 tty_clear_line: 238 at 0,42
+1584356578.413739 /dev/pts/0: \r
+1584356578.413742 /dev/pts/0: \n
+1584356578.413744 /dev/pts/0: \033[K
+1584356578.413748 tty_clear_line: 238 at 0,43
+1584356578.413751 /dev/pts/0: \r
+1584356578.413772 /dev/pts/0: \n
+1584356578.413775 /dev/pts/0: \033[K
+1584356578.413779 tty_clear_line: 238 at 0,44
+1584356578.413782 /dev/pts/0: \r
+1584356578.413785 /dev/pts/0: \n
+1584356578.413788 /dev/pts/0: \033[K
+1584356578.413792 tty_clear_line: 238 at 0,45
+1584356578.413796 /dev/pts/0: \r
+1584356578.413799 /dev/pts/0: \n
+1584356578.413802 /dev/pts/0: \033[K
+1584356578.413805 tty_clear_line: 238 at 0,46
+1584356578.413809 /dev/pts/0: \r
+1584356578.413812 /dev/pts/0: \n
+1584356578.413815 /dev/pts/0: \033[K
+1584356578.413818 tty_clear_line: 238 at 0,47
+1584356578.413821 /dev/pts/0: \r
+1584356578.413824 /dev/pts/0: \n
+1584356578.413827 /dev/pts/0: \033[K
+1584356578.413831 tty_clear_line: 238 at 0,48
+1584356578.413834 /dev/pts/0: \r
+1584356578.413837 /dev/pts/0: \n
+1584356578.413840 /dev/pts/0: \033[K
+1584356578.413844 tty_clear_line: 238 at 0,49
+1584356578.413847 /dev/pts/0: \r
+1584356578.413850 /dev/pts/0: \n
+1584356578.413853 /dev/pts/0: \033[K
+1584356578.413857 tty_clear_line: 238 at 0,50
+1584356578.413862 /dev/pts/0: \r
+1584356578.413866 /dev/pts/0: \n
+1584356578.413869 /dev/pts/0: \033[K
+1584356578.413872 tty_clear_line: 238 at 0,51
+1584356578.413875 /dev/pts/0: \r
+1584356578.413878 /dev/pts/0: \n
+1584356578.413882 /dev/pts/0: \033[K
+1584356578.413892 tty_clear_line: 238 at 0,52
+1584356578.413895 /dev/pts/0: \r
+1584356578.413898 /dev/pts/0: \n
+1584356578.413901 /dev/pts/0: \033[K
+1584356578.413905 tty_clear_line: 238 at 0,53
+1584356578.413908 /dev/pts/0: \r
+1584356578.413911 /dev/pts/0: \n
+1584356578.413914 /dev/pts/0: \033[K
+1584356578.413918 tty_clear_line: 238 at 0,54
+1584356578.413921 /dev/pts/0: \r
+1584356578.413924 /dev/pts/0: \n
+1584356578.413927 /dev/pts/0: \033[K
+1584356578.413931 tty_clear_line: 238 at 0,55
+1584356578.413934 /dev/pts/0: \r
+1584356578.413937 /dev/pts/0: \n
+1584356578.413939 /dev/pts/0: \033[K
+1584356578.413943 /dev/pts/0: \r
+1584356578.413946 /dev/pts/0: \n
+1584356578.413960 /dev/pts/0: \033[30m
+1584356578.413965 /dev/pts/0: \033[42m
+1584356578.414013 /dev/pts/0: [0] 0:bash*                                                                                                                                                                                                    "dawit-VLT-WX0" 12:02 16-Mar-20
+1584356578.414020 /dev/pts/0: \033(B\033[m
+1584356578.414025 /dev/pts/0: redraw added 540 bytes
+1584356578.414032 /dev/pts/0: \033[1;1H
+1584356578.414037 /dev/pts/0: \033[?12l\033[?25h
+1584356578.414042 @0 active pane not changed
+1584356578.414073 /dev/pts/0: wrote 558 bytes (of 558)
+1584356578.414078 /dev/pts/0: waiting for redraw, 0 bytes left
+1584356578.414147 peer 0x561361e1dba0 message 208
+1584356578.414154 tty_resize: /dev/pts/0 now 238x57
+1584356578.414159 /dev/pts/0: \033(B\033[m
+1584356578.414163 /dev/pts/0: \033[?12;25h
+1584356578.414167 /dev/pts/0: \033[?12l\033[?25h
+1584356578.414170 /dev/pts/0: \033[?1003l
+1584356578.414173 /dev/pts/0: \033[?1006l
+1584356578.414176 /dev/pts/0: \033[?2004l
+1584356578.414181 /dev/pts/0: \033[1;1H
+1584356578.414185 /dev/pts/0: \033[1;57r
+1584356578.414191 cmd_find_from_session: s=$0
+1584356578.414195 cmd_find_from_session: wl=0 1 w=@0 bash
+1584356578.414198 cmd_find_from_session: wp=%0
+1584356578.414202 cmd_find_from_session: idx=none
+1584356578.414206 session_add_ref: 0 notify_add, now 2
+1584356578.414213 cmdq_next <global>: enter
+1584356578.414217 cmdq_next <global>: callback[notify_callback] (1), flags 0
+1584356578.414221 notify_callback: client-resized
+1584356578.414227 unref client 0x561361e1d350 (2 references)
+1584356578.414231 session_remove_ref: 0 notify_callback, now 1
+1584356578.414235 cmdq_next <global>: exit (empty)
+1584356578.414239 cmdq_next <0x561361e1d350>: empty
+1584356578.414242 cmdq_next <global>: empty
+1584356578.414245 cmdq_next <0x561361e1d350>: empty
+1584356578.414249 /dev/pts/0: redraw deferred (64 left)
+1584356578.414254 /dev/pts/0: \033[1;1H
+1584356578.414258 /dev/pts/0: \033[?1006h
+1584356578.414261 /dev/pts/0: \033[?1002h
+1584356578.414265 @0 active pane not changed
+1584356578.414278 /dev/pts/0: wrote 86 bytes (of 86)
+1584356578.414281 cmdq_next <global>: empty
+1584356578.414285 cmdq_next <0x561361e1d350>: empty
+1584356578.414288 /dev/pts/0: redraw needed
+1584356578.414295 screen_write_start: size 238x1, no pane
+1584356578.414315 screen_write_collect_flush: flushed 0 items (0 bytes)
+1584356578.414320 screen_write_stop: 238 cells (238 written, 0 skipped)
+1584356578.414397 format '[#S] ' -> '[0] '
+1584356578.414412 unref client 0x561361e1d350 (2 references)
+1584356578.414475 format ' "#{=21:pane_title}" 12:02 16-Mar-20' -> ' "dawit-VLT-WX0" 12:02 16-Mar-20'
+1584356578.414489 unref client 0x561361e1d350 (2 references)
+1584356578.414543 format '#{window_flags}' -> '*'
+1584356578.414549 format '#I:#W#{?window_flags,#{window_flags}, }' -> '0:bash*'
+1584356578.414560 unref client 0x561361e1d350 (2 references)
+1584356578.414566 screen_write_start: size 8x1, no pane
+1584356578.414573 screen_write_collect_flush: flushed 0 items (0 bytes)
+1584356578.414577 screen_write_stop: 8 cells (8 written, 0 skipped)
+1584356578.414581 screen_write_start: size 238x1, no pane
+1584356578.414589 screen_write_collect_flush: flushed 0 items (0 bytes)
+1584356578.414593 screen_write_stop: 44 cells (39 written, 5 skipped)
+1584356578.414604 /dev/pts/0: \033[?25l
+1584356578.414856 tty_clear_line: 238 at 0,0
+1584356578.414873 /dev/pts/0: \033[K
+1584356578.414878 tty_clear_line: 238 at 0,1
+1584356578.414881 /dev/pts/0: \r
+1584356578.414884 /dev/pts/0: \n
+1584356578.414887 /dev/pts/0: \033[K
+1584356578.414891 tty_clear_line: 238 at 0,2
+1584356578.414895 /dev/pts/0: \r
+1584356578.414898 /dev/pts/0: \n
+1584356578.414901 /dev/pts/0: \033[K
+1584356578.414904 tty_clear_line: 238 at 0,3
+1584356578.414907 /dev/pts/0: \r
+1584356578.414910 /dev/pts/0: \n
+1584356578.414913 /dev/pts/0: \033[K
+1584356578.414917 tty_clear_line: 238 at 0,4
+1584356578.414920 /dev/pts/0: \r
+1584356578.414923 /dev/pts/0: \n
+1584356578.414925 /dev/pts/0: \033[K
+1584356578.414929 tty_clear_line: 238 at 0,5
+1584356578.414932 /dev/pts/0: \r
+1584356578.414935 /dev/pts/0: \n
+1584356578.414939 /dev/pts/0: \033[K
+1584356578.414942 tty_clear_line: 238 at 0,6
+1584356578.414945 /dev/pts/0: \r
+1584356578.414948 /dev/pts/0: \n
+1584356578.414952 /dev/pts/0: \033[K
+1584356578.414955 tty_clear_line: 238 at 0,7
+1584356578.414958 /dev/pts/0: \r
+1584356578.414961 /dev/pts/0: \n
+1584356578.414964 /dev/pts/0: \033[K
+1584356578.414968 tty_clear_line: 238 at 0,8
+1584356578.414970 /dev/pts/0: \r
+1584356578.414974 /dev/pts/0: \n
+1584356578.414977 /dev/pts/0: \033[K
+1584356578.414980 tty_clear_line: 238 at 0,9
+1584356578.414983 /dev/pts/0: \r
+1584356578.414986 /dev/pts/0: \n
+1584356578.414989 /dev/pts/0: \033[K
+1584356578.414992 tty_clear_line: 238 at 0,10
+1584356578.414996 /dev/pts/0: \r
+1584356578.414999 /dev/pts/0: \n
+1584356578.415002 /dev/pts/0: \033[K
+1584356578.415005 tty_clear_line: 238 at 0,11
+1584356578.415010 /dev/pts/0: \r
+1584356578.415014 /dev/pts/0: \n
+1584356578.415018 /dev/pts/0: \033[K
+1584356578.415024 tty_clear_line: 238 at 0,12
+1584356578.415028 /dev/pts/0: \r
+1584356578.415033 /dev/pts/0: \n
+1584356578.415037 /dev/pts/0: \033[K
+1584356578.415042 tty_clear_line: 238 at 0,13
+1584356578.415046 /dev/pts/0: \r
+1584356578.415051 /dev/pts/0: \n
+1584356578.415055 /dev/pts/0: \033[K
+1584356578.415060 tty_clear_line: 238 at 0,14
+1584356578.415064 /dev/pts/0: \r
+1584356578.415068 /dev/pts/0: \n
+1584356578.415072 /dev/pts/0: \033[K
+1584356578.415077 tty_clear_line: 238 at 0,15
+1584356578.415082 /dev/pts/0: \r
+1584356578.415086 /dev/pts/0: \n
+1584356578.415091 /dev/pts/0: \033[K
+1584356578.415097 tty_clear_line: 238 at 0,16
+1584356578.415101 /dev/pts/0: \r
+1584356578.415106 /dev/pts/0: \n
+1584356578.415110 /dev/pts/0: \033[K
+1584356578.415115 tty_clear_line: 238 at 0,17
+1584356578.415120 /dev/pts/0: \r
+1584356578.415124 /dev/pts/0: \n
+1584356578.415128 /dev/pts/0: \033[K
+1584356578.415133 tty_clear_line: 238 at 0,18
+1584356578.415138 /dev/pts/0: \r
+1584356578.415142 /dev/pts/0: \n
+1584356578.415147 /dev/pts/0: \033[K
+1584356578.415152 tty_clear_line: 238 at 0,19
+1584356578.415156 /dev/pts/0: \r
+1584356578.415160 /dev/pts/0: \n
+1584356578.415165 /dev/pts/0: \033[K
+1584356578.415171 tty_clear_line: 238 at 0,20
+1584356578.415176 /dev/pts/0: \r
+1584356578.415181 /dev/pts/0: \n
+1584356578.415185 /dev/pts/0: \033[K
+1584356578.415190 tty_clear_line: 238 at 0,21
+1584356578.415195 /dev/pts/0: \r
+1584356578.415200 /dev/pts/0: \n
+1584356578.415204 /dev/pts/0: \033[K
+1584356578.415209 tty_clear_line: 238 at 0,22
+1584356578.415214 /dev/pts/0: \r
+1584356578.415219 /dev/pts/0: \n
+1584356578.415223 /dev/pts/0: \033[K
+1584356578.415229 tty_clear_line: 238 at 0,23
+1584356578.415233 /dev/pts/0: \r
+1584356578.415238 /dev/pts/0: \n
+1584356578.415242 /dev/pts/0: \033[K
+1584356578.415247 tty_clear_line: 238 at 0,24
+1584356578.415252 /dev/pts/0: \r
+1584356578.415256 /dev/pts/0: \n
+1584356578.415261 /dev/pts/0: \033[K
+1584356578.415266 tty_clear_line: 238 at 0,25
+1584356578.415270 /dev/pts/0: \r
+1584356578.415275 /dev/pts/0: \n
+1584356578.415279 /dev/pts/0: \033[K
+1584356578.415284 tty_clear_line: 238 at 0,26
+1584356578.415289 /dev/pts/0: \r
+1584356578.415293 /dev/pts/0: \n
+1584356578.415298 /dev/pts/0: \033[K
+1584356578.415303 tty_clear_line: 238 at 0,27
+1584356578.415308 /dev/pts/0: \r
+1584356578.415313 /dev/pts/0: \n
+1584356578.415317 /dev/pts/0: \033[K
+1584356578.415322 tty_clear_line: 238 at 0,28
+1584356578.415333 /dev/pts/0: \r
+1584356578.415338 /dev/pts/0: \n
+1584356578.415343 /dev/pts/0: \033[K
+1584356578.415348 tty_clear_line: 238 at 0,29
+1584356578.415353 /dev/pts/0: \r
+1584356578.415358 /dev/pts/0: \n
+1584356578.415362 /dev/pts/0: \033[K
+1584356578.415368 tty_clear_line: 238 at 0,30
+1584356578.415372 /dev/pts/0: \r
+1584356578.415377 /dev/pts/0: \n
+1584356578.415382 /dev/pts/0: \033[K
+1584356578.415387 tty_clear_line: 238 at 0,31
+1584356578.415392 /dev/pts/0: \r
+1584356578.415396 /dev/pts/0: \n
+1584356578.415401 /dev/pts/0: \033[K
+1584356578.415406 tty_clear_line: 238 at 0,32
+1584356578.415411 /dev/pts/0: \r
+1584356578.415416 /dev/pts/0: \n
+1584356578.415420 /dev/pts/0: \033[K
+1584356578.415426 tty_clear_line: 238 at 0,33
+1584356578.415432 /dev/pts/0: \r
+1584356578.415437 /dev/pts/0: \n
+1584356578.415442 /dev/pts/0: \033[K
+1584356578.415449 tty_clear_line: 238 at 0,34
+1584356578.415454 /dev/pts/0: \r
+1584356578.415458 /dev/pts/0: \n
+1584356578.415463 /dev/pts/0: \033[K
+1584356578.415468 tty_clear_line: 238 at 0,35
+1584356578.415473 /dev/pts/0: \r
+1584356578.415478 /dev/pts/0: \n
+1584356578.415482 /dev/pts/0: \033[K
+1584356578.415488 tty_clear_line: 238 at 0,36
+1584356578.415493 /dev/pts/0: \r
+1584356578.415498 /dev/pts/0: \n
+1584356578.415502 /dev/pts/0: \033[K
+1584356578.415508 tty_clear_line: 238 at 0,37
+1584356578.415513 /dev/pts/0: \r
+1584356578.415517 /dev/pts/0: \n
+1584356578.415522 /dev/pts/0: \033[K
+1584356578.415527 tty_clear_line: 238 at 0,38
+1584356578.415533 /dev/pts/0: \r
+1584356578.415538 /dev/pts/0: \n
+1584356578.415543 /dev/pts/0: \033[K
+1584356578.415548 tty_clear_line: 238 at 0,39
+1584356578.415554 /dev/pts/0: \r
+1584356578.415558 /dev/pts/0: \n
+1584356578.415563 /dev/pts/0: \033[K
+1584356578.415569 tty_clear_line: 238 at 0,40
+1584356578.415574 /dev/pts/0: \r
+1584356578.415579 /dev/pts/0: \n
+1584356578.415584 /dev/pts/0: \033[K
+1584356578.415590 tty_clear_line: 238 at 0,41
+1584356578.415595 /dev/pts/0: \r
+1584356578.415600 /dev/pts/0: \n
+1584356578.415605 /dev/pts/0: \033[K
+1584356578.415610 tty_clear_line: 238 at 0,42
+1584356578.415616 /dev/pts/0: \r
+1584356578.415620 /dev/pts/0: \n
+1584356578.415625 /dev/pts/0: \033[K
+1584356578.415632 tty_clear_line: 238 at 0,43
+1584356578.415636 /dev/pts/0: \r
+1584356578.415642 /dev/pts/0: \n
+1584356578.415646 /dev/pts/0: \033[K
+1584356578.415651 tty_clear_line: 238 at 0,44
+1584356578.415656 /dev/pts/0: \r
+1584356578.415661 /dev/pts/0: \n
+1584356578.415667 /dev/pts/0: \033[K
+1584356578.415672 tty_clear_line: 238 at 0,45
+1584356578.415677 /dev/pts/0: \r
+1584356578.415683 /dev/pts/0: \n
+1584356578.415687 /dev/pts/0: \033[K
+1584356578.415693 tty_clear_line: 238 at 0,46
+1584356578.415698 /dev/pts/0: \r
+1584356578.415703 /dev/pts/0: \n
+1584356578.415708 /dev/pts/0: \033[K
+1584356578.415713 tty_clear_line: 238 at 0,47
+1584356578.415717 /dev/pts/0: \r
+1584356578.415722 /dev/pts/0: \n
+1584356578.415727 /dev/pts/0: \033[K
+1584356578.415732 tty_clear_line: 238 at 0,48
+1584356578.415736 /dev/pts/0: \r
+1584356578.415741 /dev/pts/0: \n
+1584356578.415746 /dev/pts/0: \033[K
+1584356578.415753 tty_clear_line: 238 at 0,49
+1584356578.415758 /dev/pts/0: \r
+1584356578.415763 /dev/pts/0: \n
+1584356578.415785 /dev/pts/0: \033[K
+1584356578.415790 tty_clear_line: 238 at 0,50
+1584356578.415794 /dev/pts/0: \r
+1584356578.415798 /dev/pts/0: \n
+1584356578.415802 /dev/pts/0: \033[K
+1584356578.415807 tty_clear_line: 238 at 0,51
+1584356578.415811 /dev/pts/0: \r
+1584356578.415815 /dev/pts/0: \n
+1584356578.415819 /dev/pts/0: \033[K
+1584356578.415823 tty_clear_line: 238 at 0,52
+1584356578.415827 /dev/pts/0: \r
+1584356578.415832 /dev/pts/0: \n
+1584356578.415835 /dev/pts/0: \033[K
+1584356578.415840 tty_clear_line: 238 at 0,53
+1584356578.415844 /dev/pts/0: \r
+1584356578.415849 /dev/pts/0: \n
+1584356578.415853 /dev/pts/0: \033[K
+1584356578.415857 tty_clear_line: 238 at 0,54
+1584356578.415861 /dev/pts/0: \r
+1584356578.415866 /dev/pts/0: \n
+1584356578.415870 /dev/pts/0: \033[K
+1584356578.415874 tty_clear_line: 238 at 0,55
+1584356578.415878 /dev/pts/0: \r
+1584356578.415889 /dev/pts/0: \n
+1584356578.415893 /dev/pts/0: \033[K
+1584356578.415899 /dev/pts/0: \r
+1584356578.415903 /dev/pts/0: \n
+1584356578.415919 /dev/pts/0: \033[30m
+1584356578.415925 /dev/pts/0: \033[42m
+1584356578.415980 /dev/pts/0: [0] 0:bash*                                                                                                                                                                                                    "dawit-VLT-WX0" 12:02 16-Mar-20
+1584356578.415989 /dev/pts/0: \033(B\033[m
+1584356578.415996 /dev/pts/0: redraw added 540 bytes
+1584356578.416003 /dev/pts/0: \033[1;1H
+1584356578.416008 /dev/pts/0: \033[?12l\033[?25h
+1584356578.416014 @0 active pane not changed
+1584356578.416044 /dev/pts/0: wrote 558 bytes (of 558)
+1584356578.416050 /dev/pts/0: waiting for redraw, 0 bytes left
+1584356578.416054 redraw timer fired
+1584356578.416059 cmdq_next <global>: empty
+1584356578.416065 cmdq_next <0x561361e1d350>: empty
+1584356578.416071 @0 active pane not changed
+1584356578.423456 /dev/pts/0: read 7 bytes (already 0)
+1584356578.423477 /dev/pts/0: keys are 7 (\033[?62;c)
+1584356578.423483 /dev/pts/0: received DA \033[?62;c (VT220)
+1584356578.423488 /dev/pts/0: complete key \033[?62;c 0xfffe00000000
+1584356578.423495 cmdq_next <global>: empty
+1584356578.423500 cmdq_next <0x561361e1d350>: empty
+1584356578.423510 @0 active pane not changed
+1584356578.666588 %0 has 80 bytes
+1584356578.666600 @0 alerts timer reset 0
+1584356578.666605 screen_write_start: size 238x56, pane %0
+1584356578.666610 input_parse: %0 ground, 80 bytes: (base) dawit@dawit-VLT-WX0:~/Desktop/Datalogi/MIDICompiler/midicompiler/config$ 
+1584356578.666615 screen_write_collect_end: 80 (base) dawit@dawit-VLT-WX0:~/Desktop/Datalogi/MIDICompiler/midicompiler/config$  (at 0,0)
+1584356578.666636 /dev/pts/0: (base) dawit@dawit-VLT-WX0:~/Desktop/Datalogi/MIDICompiler/midicompiler/config$ 
+1584356578.666641 screen_write_collect_flush: flushed 1 items (80 bytes)
+1584356578.666644 screen_write_stop: 80 cells (80 written, 0 skipped)
+1584356578.666648 cmdq_next <global>: empty
+1584356578.666650 cmdq_next <0x561361e1d350>: empty
+1584356578.666656 @0 active pane changed
+1584356578.666707 format '#{pane_current_command}' -> 'bash'
+1584356578.666711 format '' -> ''
+1584356578.666715 format '#{?pane_in_mode,[tmux],#{pane_current_command}}#{?pane_dead,[dead],}' -> 'bash'
+1584356578.666722 @0 name not changed (still bash)
+1584356578.666733 /dev/pts/0: wrote 80 bytes (of 80)
+1584356578.666735 cmdq_next <global>: empty
+1584356578.666737 cmdq_next <0x561361e1d350>: empty
+1584356578.666741 @0 active pane not changed
+1584356579.679117 /dev/pts/0: read 1 bytes (already 0)
+1584356579.679171 /dev/pts/0: keys are 1 (e)
+1584356579.679186 /dev/pts/0: next key is 1 (e) (expired=0)
+1584356579.679201 /dev/pts/0: complete key e 0x65
+1584356579.679220 session 0 activity 1584356579.679211 (last 1584356578.411897)
+1584356579.679236 cmd_find_from_session: s=$0
+1584356579.679248 cmd_find_from_session: wl=0 1 w=@0 bash
+1584356579.679258 cmd_find_from_session: wp=%0
+1584356579.679267 cmd_find_from_session: idx=none
+1584356579.679278 session 0 not pasting
+1584356579.679292 key table root (pane %0)
+1584356579.679303 not found in key table root
+1584356579.679317 writing key 0x65 (e) to %0
+1584356579.679337 cmdq_next <global>: empty
+1584356579.679350 cmdq_next <0x561361e1d350>: empty
+1584356579.679369 @0 active pane not changed
+1584356579.679423 cmdq_next <global>: empty
+1584356579.679436 cmdq_next <0x561361e1d350>: empty
+1584356579.679448 @0 active pane not changed
+1584356579.679799 %0 has 1 bytes
+1584356579.679839 @0 alerts timer reset 0
+1584356579.679862 screen_write_start: size 238x56, pane %0
+1584356579.679878 input_parse: %0 ground, 1 bytes: e
+1584356579.679892 screen_write_collect_end: 1 e (at 80,0)
+1584356579.679909 /dev/pts/0: e
+1584356579.679924 screen_write_collect_flush: flushed 1 items (1 bytes)
+1584356579.679936 screen_write_stop: 1 cells (1 written, 0 skipped)
+1584356579.679983 cmdq_next <global>: empty
+1584356579.679997 cmdq_next <0x561361e1d350>: empty
+1584356579.680014 @0 active pane changed
+1584356579.680248 format '#{pane_current_command}' -> 'bash'
+1584356579.680269 format '' -> ''
+1584356579.680285 format '#{?pane_in_mode,[tmux],#{pane_current_command}}#{?pane_dead,[dead],}' -> 'bash'
+1584356579.680315 @0 name not changed (still bash)
+1584356579.680366 /dev/pts/0: wrote 1 bytes (of 1)
+1584356579.680379 cmdq_next <global>: empty
+1584356579.680390 cmdq_next <0x561361e1d350>: empty
+1584356579.680405 @0 active pane not changed
+1584356579.735434 /dev/pts/0: read 1 bytes (already 0)
+1584356579.735488 /dev/pts/0: keys are 1 (x)
+1584356579.735502 /dev/pts/0: next key is 1 (x) (expired=0)
+1584356579.735517 /dev/pts/0: complete key x 0x78
+1584356579.735535 session 0 activity 1584356579.735527 (last 1584356579.679211)
+1584356579.735552 cmd_find_from_session: s=$0
+1584356579.735564 cmd_find_from_session: wl=0 1 w=@0 bash
+1584356579.735573 cmd_find_from_session: wp=%0
+1584356579.735582 cmd_find_from_session: idx=none
+1584356579.735593 session 0 not pasting
+1584356579.735606 key table root (pane %0)
+1584356579.735617 not found in key table root
+1584356579.735631 writing key 0x78 (x) to %0
+1584356579.735651 cmdq_next <global>: empty
+1584356579.735664 cmdq_next <0x561361e1d350>: empty
+1584356579.735683 @0 active pane not changed
+1584356579.735732 cmdq_next <global>: empty
+1584356579.735744 cmdq_next <0x561361e1d350>: empty
+1584356579.735756 @0 active pane not changed
+1584356579.736155 %0 has 1 bytes
+1584356579.736195 @0 alerts timer reset 0
+1584356579.736218 screen_write_start: size 238x56, pane %0
+1584356579.736234 input_parse: %0 ground, 1 bytes: x
+1584356579.736249 screen_write_collect_end: 1 x (at 81,0)
+1584356579.736266 /dev/pts/0: x
+1584356579.736281 screen_write_collect_flush: flushed 1 items (1 bytes)
+1584356579.736293 screen_write_stop: 1 cells (1 written, 0 skipped)
+1584356579.736342 cmdq_next <global>: empty
+1584356579.736356 cmdq_next <0x561361e1d350>: empty
+1584356579.736373 @0 active pane changed
+1584356579.736385 @0 name timer queued (443670 left)
+1584356579.736437 /dev/pts/0: wrote 1 bytes (of 1)
+1584356579.736448 cmdq_next <global>: empty
+1584356579.736458 cmdq_next <0x561361e1d350>: empty
+1584356579.736470 @0 active pane changed
+1584356579.736481 @0 name timer already queued (443573 left)
+1584356579.829645 /dev/pts/0: read 1 bytes (already 0)
+1584356579.829693 /dev/pts/0: keys are 1 (i)
+1584356579.829706 /dev/pts/0: next key is 1 (i) (expired=0)
+1584356579.829719 /dev/pts/0: complete key i 0x69
+1584356579.829754 session 0 activity 1584356579.829727 (last 1584356579.735527)
+1584356579.829771 cmd_find_from_session: s=$0
+1584356579.829782 cmd_find_from_session: wl=0 1 w=@0 bash
+1584356579.829790 cmd_find_from_session: wp=%0
+1584356579.829798 cmd_find_from_session: idx=none
+1584356579.829807 session 0 not pasting
+1584356579.829819 key table root (pane %0)
+1584356579.829829 not found in key table root
+1584356579.829841 writing key 0x69 (i) to %0
+1584356579.829859 cmdq_next <global>: empty
+1584356579.829870 cmdq_next <0x561361e1d350>: empty
+1584356579.829887 @0 active pane changed
+1584356579.829897 @0 name timer already queued (350157 left)
+1584356579.829938 cmdq_next <global>: empty
+1584356579.829949 cmdq_next <0x561361e1d350>: empty
+1584356579.829960 @0 active pane changed
+1584356579.829968 @0 name timer already queued (350084 left)
+1584356579.830227 %0 has 1 bytes
+1584356579.830243 @0 alerts timer reset 0
+1584356579.830269 screen_write_start: size 238x56, pane %0
+1584356579.830282 input_parse: %0 ground, 1 bytes: i
+1584356579.830294 screen_write_collect_end: 1 i (at 82,0)
+1584356579.830308 /dev/pts/0: i
+1584356579.830320 screen_write_collect_flush: flushed 1 items (1 bytes)
+1584356579.830331 screen_write_stop: 1 cells (1 written, 0 skipped)
+1584356579.830348 cmdq_next <global>: empty
+1584356579.830357 cmdq_next <0x561361e1d350>: empty
+1584356579.830368 @0 active pane changed
+1584356579.830377 @0 name timer already queued (349676 left)
+1584356579.830407 /dev/pts/0: wrote 1 bytes (of 1)
+1584356579.830416 cmdq_next <global>: empty
+1584356579.830425 cmdq_next <0x561361e1d350>: empty
+1584356579.830457 @0 active pane changed
+1584356579.830466 @0 name timer already queued (349586 left)
+1584356579.918509 /dev/pts/0: read 1 bytes (already 0)
+1584356579.918536 /dev/pts/0: keys are 1 (t)
+1584356579.918546 /dev/pts/0: next key is 1 (t) (expired=0)
+1584356579.918558 /dev/pts/0: complete key t 0x74
+1584356579.918578 session 0 activity 1584356579.918566 (last 1584356579.829727)
+1584356579.918590 cmd_find_from_session: s=$0
+1584356579.918599 cmd_find_from_session: wl=0 1 w=@0 bash
+1584356579.918607 cmd_find_from_session: wp=%0
+1584356579.918615 cmd_find_from_session: idx=none
+1584356579.918655 session 0 not pasting
+1584356579.918670 key table root (pane %0)
+1584356579.918680 not found in key table root
+1584356579.918691 writing key 0x74 (t) to %0
+1584356579.918706 cmdq_next <global>: empty
+1584356579.918715 cmdq_next <0x561361e1d350>: empty
+1584356579.918728 @0 active pane changed
+1584356579.918737 @0 name timer already queued (261316 left)
+1584356579.918769 cmdq_next <global>: empty
+1584356579.918779 cmdq_next <0x561361e1d350>: empty
+1584356579.918788 @0 active pane changed
+1584356579.918796 @0 name timer already queued (261256 left)
+1584356579.919143 %0 has 1 bytes
+1584356579.919158 @0 alerts timer reset 0
+1584356579.919191 screen_write_start: size 238x56, pane %0
+1584356579.919203 input_parse: %0 ground, 1 bytes: t
+1584356579.919215 screen_write_collect_end: 1 t (at 83,0)
+1584356579.919228 /dev/pts/0: t
+1584356579.919240 screen_write_collect_flush: flushed 1 items (1 bytes)
+1584356579.919250 screen_write_stop: 1 cells (1 written, 0 skipped)
+1584356579.919266 cmdq_next <global>: empty
+1584356579.919275 cmdq_next <0x561361e1d350>: empty
+1584356579.919286 @0 active pane changed
+1584356579.919294 @0 name timer already queued (260758 left)
+1584356579.919324 /dev/pts/0: wrote 1 bytes (of 1)
+1584356579.919333 cmdq_next <global>: empty
+1584356579.919342 cmdq_next <0x561361e1d350>: empty
+1584356579.919351 @0 active pane changed
+1584356579.919359 @0 name timer already queued (260693 left)
+1584356580.022977 /dev/pts/0: read 1 bytes (already 0)
+1584356580.022996 /dev/pts/0: keys are 1 (\r)
+1584356580.023001 /dev/pts/0: next key is 1 (\r) (expired=0)
+1584356580.023006 /dev/pts/0: complete key \r 0xd
+1584356580.023014 session 0 activity 1584356580.023009 (last 1584356579.918566)
+1584356580.023020 cmd_find_from_session: s=$0
+1584356580.023024 cmd_find_from_session: wl=0 1 w=@0 bash
+1584356580.023027 cmd_find_from_session: wp=%0
+1584356580.023029 cmd_find_from_session: idx=none
+1584356580.023033 session 0 not pasting
+1584356580.023037 key table root (pane %0)
+1584356580.023041 not found in key table root
+1584356580.023045 writing key 0xd (Enter) to %0
+1584356580.023052 cmdq_next <global>: empty
+1584356580.023057 cmdq_next <0x561361e1d350>: empty
+1584356580.023063 @0 active pane changed
+1584356580.023067 @0 name timer already queued (156985 left)
+1584356580.023083 cmdq_next <global>: empty
+1584356580.023087 cmdq_next <0x561361e1d350>: empty
+1584356580.023091 @0 active pane changed
+1584356580.023094 @0 name timer already queued (156957 left)
+1584356580.023221 %0 has 2 bytes
+1584356580.023236 @0 alerts timer reset 0
+1584356580.023244 screen_write_start: size 238x56, pane %0
+1584356580.023249 input_parse: %0 ground, 2 bytes: \r\n
+1584356580.023253 input_c0_dispatch: '\r'
+1584356580.023256 input_c0_dispatch: '\n'
+1584356580.023259 screen_write_linefeed: at 0,0 (region 0-55)
+1584356580.023263 screen_write_collect_flush: flushed 0 items (0 bytes)
+1584356580.023267 screen_write_stop: 0 cells (0 written, 0 skipped)
+1584356580.023272 cmdq_next <global>: empty
+1584356580.023276 cmdq_next <0x561361e1d350>: empty
+1584356580.023282 /dev/pts/0: \r
+1584356580.023286 /dev/pts/0: \n
+1584356580.023290 @0 active pane changed
+1584356580.023294 @0 name timer already queued (156758 left)
+1584356580.023304 %0 has 8 bytes
+1584356580.023308 @0 alerts timer reset 0
+1584356580.023312 screen_write_start: size 238x56, pane %0
+1584356580.023316 input_parse: %0 ground, 8 bytes: logout\r\n
+1584356580.023321 screen_write_collect_end: 6 logout (at 0,1)
+1584356580.023334 input_c0_dispatch: '\r'
+1584356580.023337 input_c0_dispatch: '\n'
+1584356580.023341 screen_write_linefeed: at 0,1 (region 0-55)
+1584356580.023345 /dev/pts/0: logout
+1584356580.023350 screen_write_collect_flush: flushed 1 items (6 bytes)
+1584356580.023354 screen_write_stop: 6 cells (6 written, 0 skipped)
+1584356580.023369 /dev/pts/0: wrote 8 bytes (of 8)
+1584356580.023374 cmdq_next <global>: empty
+1584356580.023377 cmdq_next <0x561361e1d350>: empty
+1584356580.023381 /dev/pts/0: \r
+1584356580.023383 /dev/pts/0: \n
+1584356580.023388 @0 active pane changed
+1584356580.023392 @0 name timer already queued (156660 left)
+1584356580.023402 /dev/pts/0: wrote 2 bytes (of 2)
+1584356580.023406 cmdq_next <global>: empty
+1584356580.023409 cmdq_next <0x561361e1d350>: empty
+1584356580.023413 @0 active pane changed
+1584356580.023416 @0 name timer already queued (156635 left)
+1584356580.023632 %0 error
+1584356580.024704 cmd_find_from_window: s=$0
+1584356580.024718 cmd_find_from_window: wl=0 1 w=@0 bash
+1584356580.024721 cmd_find_from_window: wp=%0
+1584356580.024725 cmd_find_from_window: idx=0
+1584356580.024730 cmd_find_from_pane: s=$0
+1584356580.024735 cmd_find_from_pane: wl=0 1 w=@0 bash
+1584356580.024737 cmd_find_from_pane: wp=%0
+1584356580.024741 cmd_find_from_pane: idx=0
+1584356580.024745 session_add_ref: 0 notify_add, now 2
+1584356580.024753 cmd_find_from_window: s=$0
+1584356580.024757 cmd_find_from_window: wl=0 1 w=@0 bash
+1584356580.024760 cmd_find_from_window: wp=%0
+1584356580.024763 cmd_find_from_window: idx=0
+1584356580.024767 window_add_ref: @0 notify_add, now 2
+1584356580.024771 session_add_ref: 0 notify_add, now 3
+1584356580.024775 window_lost_pane: @0 pane %0
+1584356580.024789 cmd_find_from_session_window: s=$0
+1584356580.024795 cmd_find_from_session_window: wl=0 1 w=@0 bash
+1584356580.024797 cmd_find_from_session_window: wp=none
+1584356580.024801 cmd_find_from_session_window: idx=0
+1584356580.024805 session_add_ref: 0 notify_add, now 4
+1584356580.024809 window_add_ref: @0 notify_add, now 3
+1584356580.024813 session_add_ref: 0 notify_add, now 5
+1584356580.024817 window_remove_ref: @0 winlink_remove, now 2
+1584356580.024821 session 0 destroyed (session_detach)
+1584356580.024827 session_add_ref: 0 notify_add, now 6
+1584356580.024831 session_remove_ref: 0 session_destroy, now 5
+1584356580.024842 cmdq_next <global>: enter
+1584356580.024847 cmdq_next <global>: callback[notify_callback] (1), flags 0
+1584356580.024851 notify_callback: pane-exited
+1584356580.024854 session_remove_ref: 0 notify_callback, now 4
+1584356580.024861 cmdq_next <global>: callback[notify_callback] (1), flags 0
+1584356580.024865 notify_callback: window-layout-changed
+1584356580.024868 window_remove_ref: @0 notify_callback, now 1
+1584356580.024871 session_remove_ref: 0 notify_callback, now 3
+1584356580.024876 cmdq_next <global>: callback[notify_callback] (1), flags 0
+1584356580.024880 notify_callback: window-unlinked
+1584356580.024884 session_remove_ref: 0 notify_callback, now 2
+1584356580.024887 window_remove_ref: @0 notify_callback, now 0
+1584356580.024889 window @0 destroyed (0 references)
+1584356580.024893 session_remove_ref: 0 notify_callback, now 1
+1584356580.024897 cmdq_next <global>: callback[notify_callback] (1), flags 0
+1584356580.024899 notify_callback: session-closed
+1584356580.024904 session_remove_ref: 0 notify_callback, now 0
+1584356580.024907 cmdq_next <global>: exit (empty)
+1584356580.024911 cmdq_next <0x561361e1d350>: empty
+1584356580.024914 cmdq_next <global>: empty
+1584356580.024917 cmdq_next <0x561361e1d350>: empty
+1584356580.024921 sending message 203 to peer 0x561361e1dba0 (4 bytes)
+1584356580.024932 session 0 freed (0 references)
+1584356580.024956 server_signal: Child exited
+1584356580.024974 cmdq_next <global>: empty
+1584356580.024978 cmdq_next <0x561361e1d350>: empty
+1584356580.025150 peer 0x561361e1dba0 message 205
+1584356580.025226 sending message 204 to peer 0x561361e1dba0 (0 bytes)
+1584356580.025233 cmdq_next <global>: empty
+1584356580.025237 cmdq_next <0x561361e1d350>: empty
+1584356580.025248 cmdq_next <global>: empty
+1584356580.025257 cmdq_next <0x561361e1d350>: empty
+1584356580.025563 lost client 0x561361e1d350
+1584356580.025582 remove peer 0x561361e1dba0
+1584356580.025597 unref client 0x561361e1d350 (1 references)
+1584356580.025610 free client 0x561361e1d350 (0 references)
+1584356580.025614 cmdq_next <global>: empty
+1584356580.025618 server loop exit
