@@ -2,12 +2,11 @@
 module Calc.Parser where
 
 import Calc.Lexer
+
+
 }
 
---%monad { E } { thenE } { returnE }
-
-
-
+%monad { Either String } {>>= } {return }
 
 --tree
 
@@ -18,66 +17,82 @@ import Calc.Lexer
 %error { parseError }
 
 %token
-  num  {TNum  $$}
-  note {TNote $$}
-  chord {TChord $$}
-  '{'  {TOBracket $$}
-  '}'  {TCBracket $$}
-  ctxWord {TCtxWord $$}
-  '=' {TEq $$}
-  inputK {TInputK $$}
-  chordK {TChordK $$}
-  '"' {TQuote $$}
-  ',' {TComma $$}
-  '.' {TDot $$}
-  '/' {TDiv $$}
-  '+' {TPlus $$}
-  '-' {TMinus $$}
-  '#' {TSharp $$}
-  minor {TMin $$}
-  flat {TFlat $$}
-  '_' {TUnderscore $$}
-  R {TR $$}
-  var {TVar $$}
-  eof	   {TEOF $$}
+  num  {T _ TNum _}
+  note {T _ TNote _}
+  chord {T _ TChord _ }
+  '{'  {T _ TOBracket _}
+  '}'  {T _ TCBracket _}
+  ctxWord {T _ TCtxWord _}
+  '=' {T _ TEq _ }
+  ',' {T _ TComma _}
+  '.' {T _ TDot _}
+  ';'  {T _ TSemi _ }
+--  eof	   {T _ TEOF _}
+--  '/' {T _ TDiv _}
+--  '+' {T _ TPlus _}
+--  '-' {T _ TMinus _}
+--  '#' {T _ TSharp _}
+--  minor {T _ TMin _}
+--  flat {T _ TFlat _}
+--  '_' {T _ TUnderscore _}
+--  R {T _ TR _ }
+--  var {T _ TVar _}
 
 %%
 
 
-Stmts :: {Stmts}
-        : Stmt         {[$1]}
-        | Stmts Stmt   {$2:$1}
+Exp :: {Exp}
+        : Composition Context {In $1 $2}
 
-Stmt :: {Stmt}
-        : VAssignment {$1}
-        | CAssignment           {$1}
---        | Command      {$1}
+Composition :: {Composition}
+	: note num {NoteN $1 $2}
+        | Composition '.' {Dotted $1}
+	| Composition Composition {Concatted $1 $2}
 
-VAssignment :: {Stmt}
-        : Variable '=' Term {VAssgn $1 $3 }
+Context :: {Context}
+	: '{' CtxAssignments '}' {reverse $2}
 
+CtxAssignments :: {[(Token,Token)]}
+	      : CtxAssignments ';' CtxAssignment {$3:$1}
+	      | CtxAssignment {[$1]}
 
-Variable :: {Variable}
-        : var        {Var (fst $1) (snd $1)}
+CtxAssignment :: {(Token,Token)}
+	: ctxWord '=' CtxVal {($1,$3)}
 
-CAssignment :: {Stmt}
-        : ContextWord'=' Term {CAssgn $1 $3 }
-
-ContextWord :: {ContextWord}
-        : ctxWord {CtxWord (fst $1) (snd $1)}
-
-Term :: {Term}
-        : num       {Num (fst $1) (snd $1)}
-        | note      {Note (fst $1) (snd $1)}
-        | Term '#'  {Sharp $1}
-        | '{' CAssignments '}'  {Struct $2}
-
-CAssignments :: {Stmts}
-        : CAssignment {[$1]}
-        | CAssignments ',' CAssignment  {$3:$1}
+CtxVal :: {CtxVal}
+       : num    {$1}
 
 
---        | chord    {($1,Chord (snd chord))}
+-- Stmt :: {Stmt}
+--         : VAssignment {$1}
+--         | CAssignment           {$1}
+-- --        | Command      {$1}
+-- 
+-- VAssignment :: {Stmt}
+--         : Variable '=' Term {Assgn $1 $3 }
+-- 
+-- 
+-- Variable :: {Location}
+--         : var        {parseVar $1 }
+-- 
+-- CAssignment :: {Stmt}
+--         : ContextWord'=' Term {Assgn $1 $3 }
+-- 
+-- ContextWord :: {Location}
+--         : ctxWord {parseCtx $1}
+-- 
+-- Term :: {Term}
+--         : num       {parseNum $1}
+--         | note      {parseNote $1}
+--         | Term '#'  {Unary $1 Sharp}
+--         | '{' CAssignments '}'  {Struct $ reverse $2}
+-- 
+-- CAssignments :: {Stmts}
+--         : CAssignment {[$1]}
+--         | CAssignments ',' CAssignment  {$3:$1}
+-- 
+-- 
+--        | chord    {tokenVal $1}
 --        | '{'  BAssignments  '}' {($1, Struct $2) }
 --        | Command           {$1}
 --        | String            {$1}
@@ -94,75 +109,56 @@ CAssignments :: {Stmts}
 --
 --
 {
---data Program = Stmts
-type Stmts = [Stmt]
-data Stmt = VAssgn Variable Term | CAssgn ContextWord Term
-        deriving(Show,Eq)
-data Variable = Var AlexPosn String
-        deriving(Show,Eq)
-data ContextWord = CtxWord AlexPosn String
-        deriving(Show,Eq)
-data Term = Num AlexPosn Integer | Note AlexPosn Char | Sharp Term  
-        | Struct Stmts
-        deriving(Show,Eq)
-parseError _ = error "Parse error"
+--parseVar (T p TVar s) = Var p s
+--parseCtx (T p TCtxWord s) =  CtxWord p s
+--parseNum (T p TNum s) =  Num p (read s)
+--parseNote (T p TNote s) = Note p s
 
 
+--------------------------------------------
+data Exp = In Composition Context -- | In Composition Context Exp
+  deriving(Eq,Show)
 
---data ValueToken = TNum (AlexPosn,Integer) | TNote (AlexPosn,String) | TChord (AlexPosn,String) | TVar (AlexPosn,String)
---type Value = Integer | String
+--type Pos = (Int,Int)
 
---tokenPos :: Token -> AlexPosn
---tokenPos (TNum (p,_)) -> p
---tokenPos (TNote (p,_)) -> p
---tokenPos (TChord (p,_)) -> p
---tokenPos (TOBracket p) -> p
---tokenPos (TCBracket p) -> p
---tokenPos (TQuant p)  -> p     
---tokenPos (TTempo p)  -> p
---tokenPos (TKey p)-> p
---tokenPos (TOctavePos p) -> p
---tokenPos (TEq p) -> p
---tokenPos (TInputK p) -> p
---tokenPos (TChordK p) -> p
---tokenPos (TQuote p) -> p
---tokenPos (TComma p) -> p
---tokenPos (TDot p) -> p
---tokenPos (TDiv p) -> p
---tokenPos (TPlus p) -> p
---tokenPos (TMinus p) -> p
---tokenPos (TSharp p) -> p
---tokenPos (TMin p) -> p
---tokenPos (TFlat p) -> p
---tokenPos (TUnderscore p) -> p
---tokenPos (TR p) -> p
---tokenPos (TVar (p, _)  -> p
+data Composition = NoteN Token Token | Dotted Composition | Concatted Composition Composition
+  deriving(Eq,Show)
+
+type Context = [(Token,Token)]
+
+type CtxLabel = Token
+
+type CtxVal = Token
+------------------------------------------------
+
+--type Stmts = [Stmt]
 --
---tokenValue :: ValueToken -> Value
---tokenValue TNum (p,v) -> v
---tokenValue TNote (p,s) -> s
---tokenValue TChord (p,s) -> s
---tokenValue TVar (p,s) -> s
+--
+--data Stmt = Term | Assgn Location Term
+--        deriving(Show,Eq)
+--
+--
+--data Location = Var AlexPosn String| CtxWord AlexPosn String
+--        deriving(Show,Eq)
+--
+--type Args = [Term]
+--
+--data CType = Notes | Seq 
+--    deriving (Show,Eq)
+--        
+--data Term = Num AlexPosn Integer | Note AlexPosn String  | Chord AlexPosn String
+--        | Struct Stmts | CommaTs [Term] | DotTs [Term] | Unary Term Op | R | Extended Term Term |
+--          Command CType Args
+--
+--        deriving(Show,Eq)
+--
+--data Op = Plus | Minus | Sharp | Flat | Underscore
+--        deriving(Show,Eq)
 
+parseError tokens = let (T p _ s)=(head tokens)
+		    in let (AlexPn _ l c)=p
+		       in let msg = "Parse error on line " ++ (show l) ++ ", column "++(show c)++" during parsing of "++s
+			  in Left msg
+parseError [] = Left "empty token list but failed"
 
-
---data E a = Ok a | Failed String
---
---thenE :: E a -> (a -> E b) -> E b
---m `thenE` k = 
---   case m of 
---       Ok a -> k a
---	 Failed e -> Failed e
---
---returnE :: a -> E a
---returnE a = Ok a
---
---failE :: String -> E a
---failE err = Failed err
---
---catchE :: E a -> (String -> E a) -> E a
---catchE m k = 
---   case m of
---      Ok a -> OK a
---	Failed e -> k e
 }

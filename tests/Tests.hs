@@ -2,8 +2,8 @@ module Main where
 
 import Test.Tasty
 import Test.Tasty.HUnit
-import LexerTests
+--import LexerTests
 import ParserTests
 
 main = do
-  defaultMain (testGroup "All tests" [lexerGroup,parserGroup])
+  defaultMain (testGroup "All tests" [parserGroup]) --lexerGroup

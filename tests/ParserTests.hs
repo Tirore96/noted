@@ -11,24 +11,45 @@ import Definitions
 
 
 
-parserGroup = testGroup "Parser tests" [firstTest]
+parserGroup = testGroup "Parser tests" [recordTest]
 
 
-buildVAssgn s t = VAssgn (Var testPos s) t
+buildAssgn s t = Assgn (buildVar s) t
 
-buildCAssgn s t = CAssgn (buildCtxW s) t
+buildVar :: String -> Location
+buildVar s = if elem s ["quantization","tempo","key","octave_pos"]
+                  then CtxWord testPos s
+                  else Var testPos s
 
-
-buildCtxW :: String -> ContextWord
-buildCtxW s = CtxWord testPos s
-
+--Terms
 buildNum n = Num testPos n
+buildNums nums = map buildNum nums
+
+buildNote s = Note testPos s
+
+buildChord s = Chord testPos s
+
+buildStruct vars terms = let zipped = zip vars terms
+                         in let assignments = map (\(var,term)->buildAssgn var term) zipped
+                            in Struct assignments
+                        
 
 
-firstTest = testCase "initial test" $
+
+
+recordTest = testCase "initial test" $
                 do testHappy input @=? expected
-                where input = "$con1 = {quantization=8,\n tempo=120,key=c#,octave_pos=4"
-                      struct = Struct [buildCAssgn "quantization" (buildNum 8),
-                                       buildCAssgn "tempo" (buildNum 120),
-                                       buildCAssgn "key" (Sharp $ Note testPos 'c')]
-                      expected = [buildVAssgn"$con1" struct]
+                where input = "$con1 = {quantization=8,\n tempo=120,key=c#,octave_pos=4}"
+                      expected = return $ [buildAssgn "$con1" 
+                                          (buildStruct ["quantization","tempo","key","octave_pos"]
+                                          [buildNum 8,buildNum 120, Unary (buildNote "c") Sharp,buildNum 4])]
+
+chordTest = testCase "tests: CommaTs, Chord" $ 
+                  do testHappy input @=? expected
+                  where input = "$chrdA = notes \"1,3,5,6\" $con1"
+                        expected = Right $ [buildAssgn "$chrdA" (Command Notes (buildNums [1,3,5,6]))]
+
+dotTest = testCase "chord test, nums and R" $ 
+                  do testHappy input @=? expected
+                  where input = "$chrdA = seq \"1...2..\" $con1"
+                        expected = Right $ [buildAssgn "$chrdA" (Command Seq (buildNums [1,3,5,6]))]

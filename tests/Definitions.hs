@@ -10,37 +10,42 @@ import Calc.Parser
 testPos = AlexPn 0 0 0
 
 
-makeTokenTestable :: Token -> Token
-makeTokenTestable (TNum (_,n)) = TNum (testPos, n)
-makeTokenTestable (TNote(_,c)) = TNote (testPos, c)
-makeTokenTestable (TChord (_,s)) = TChord (testPos, s)
-makeTokenTestable (TOBracket _) = TOBracket testPos
-makeTokenTestable (TCBracket _) = TCBracket testPos
-makeTokenTestable (TCtxWord (_,s)) = TCtxWord (testPos,s)
-makeTokenTestable (TEq _) = TEq testPos
-makeTokenTestable (TInputK _) = TInputK testPos
-makeTokenTestable (TChordK _) = TChordK testPos
-makeTokenTestable (TQuote _) = TQuote testPos
-makeTokenTestable (TComma _) = TComma testPos
-makeTokenTestable (TDot _)  = TDot testPos
-makeTokenTestable (TDiv _)  = TDiv testPos
-makeTokenTestable (TPlus _) = TPlus testPos
-makeTokenTestable (TMinus _)  = TMinus testPos
-makeTokenTestable (TSharp _) = TSharp testPos
-makeTokenTestable (TMin _)  = TMin testPos
-makeTokenTestable (TFlat _) = TFlat testPos
-makeTokenTestable (TUnderscore _) = TUnderscore testPos
-makeTokenTestable (TVar (_,s)) = TVar (testPos,s)
-makeTokenTestable (TR _) = TR testPos
-makeTokenTestable (TEOF _) = TEOF testPos
+--makeTokenTestable :: Token -> Token
+--makeTokenTestable (TNum (_,n)) = TNum (testPos, n)
+--makeTokenTestable (TNote(_,c)) = TNote (testPos, c)
+--makeTokenTestable (TChord (_,s)) = TChord (testPos, s)
+--makeTokenTestable (TOBracket _) = TOBracket testPos
+--makeTokenTestable (TCBracket _) = TCBracket testPos
+--makeTokenTestable (TCtxWord (_,s)) = TCtxWord (testPos,s)
+--makeTokenTestable (TEq _) = TEq testPos
+--makeTokenTestable (TInputK _) = TInputK testPos
+--makeTokenTestable (TChordK _) = TChordK testPos
+--makeTokenTestable (TQuote _) = TQuote testPos
+--makeTokenTestable (TComma _) = TComma testPos
+--makeTokenTestable (TDot _)  = TDot testPos
+--makeTokenTestable (TDiv _)  = TDiv testPos
+--makeTokenTestable (TPlus _) = TPlus testPos
+--makeTokenTestable (TMinus _)  = TMinus testPos
+--makeTokenTestable (TSharp _) = TSharp testPos
+--makeTokenTestable (TMin _)  = TMin testPos
+--makeTokenTestable (TFlat _) = TFlat testPos
+--makeTokenTestable (TUnderscore _) = TUnderscore testPos
+--makeTokenTestable (TVar (_,s)) = TVar (testPos,s)
+--makeTokenTestable (TR _) = TR testPos
+--makeTokenTestable (TEOF _) = TEOF testPos
 
 
-makeTokensTestable :: [Token] -> [Token]
-makeTokensTestable tokens = map makeTokenTestable tokens
+makeTokenTestable (T _ c s) = T testPos c s
 
-testAlex = makeTokensTestable . alexScanTokens 
 
-testHappy = parseTokens . testAlex
+makeTokensTestable :: Either String [Token] ->  Either String [Token]
+makeTokensTestable (Right tokens) = Right $ map makeTokenTestable tokens
+makeAbSynTestable (Left s) = Left s
+
+testAlex = makeTokensTestable . scanner
+
+testHappy str = do tokens <- testAlex str 
+                   parseTokens tokens
 
 
 --makeAbSynTestable :: a ->  a 

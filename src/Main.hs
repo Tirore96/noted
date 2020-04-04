@@ -9,7 +9,7 @@ main = do
   case args of
     [file] -> do
 	s <- readFile file
-    	let tokenized = alexScanTokens s;
+    	let tokenized = scanner s;
     	putStrLn $ show tokenized
     _ -> putStrLn "Wrong number of arguments"
 
