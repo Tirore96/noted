@@ -19,11 +19,20 @@ strToNoteFun "h" = b
 
 
 
-evaluate (In comp con) = case comp of 
-			  NoteN note n _ -> case Map.lookup Quantization con of
-                                             Just (Num q _)->  let dur = 1%q
-                                                                   fun = strToNoteFun note
-                                                               in fun (fromIntegral n) dur
-                                             Nothing -> undefined
-                          _ -> undefined
+evaluate (In comp con) = evaluateComp comp con 1
+
+safeLookup key con = case Map.lookup key con of 
+                      Just n -> Right n
+                      Nothing -> Left "internal error-label dependency not met"
+
+evaluateComp (NoteN note n _) con nominator = do Num q _ <- safeLookup Quantization con
+                                                 Right ((strToNoteFun note) (fromIntegral n) (nominator%q))
+
+evaluateComp (Dotted comp) con nominator = evaluateComp comp con (nominator+1)
+
+evaluateComp (Concatted comp1 comp2) con nominator = do m1 <- evaluateComp comp1 con nominator
+                                                        m2 <- evaluateComp comp2 con nominator
+                                                        Right (m1 :+: m2)
+
+                 
 

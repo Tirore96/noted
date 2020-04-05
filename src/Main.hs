@@ -16,7 +16,7 @@ main = do
             result = do tokenized <- eitherTokenized
                         exp <- parseTokens tokenized 
                         typeCheck exp 
-                        Right $ evaluate exp
+                        evaluate exp
             in case result of 
                Right music -> Eu.playDev 2 music
                Left error -> putStrLn error
