@@ -6,27 +6,27 @@ import Control.Monad
 import Data.Set as Set
 
 import Calc.Lexer (AlexPosn)
+import Calc.Parser
+
 --Temporary data structure for AbSyn
---data Exp = Let Variable Assignable Exp | Variable | In Composition Context 
-data Exp = In Composition Context -- | In Composition Context Exp
-  deriving(Eq,Show)
-
-type Pos = (Int,Int)
-
-data Composition = NoteN String Integer Pos | Dotted Composition | Concatted Composition Composition
-  deriving(Eq,Show)
-
-type Context = Map CtxLabel CtxVal
-
-data CtxLabel = Quantization Pos
-  deriving(Eq,Show,Ord)
-
-data CtxVal = Int AlexPosn
-  deriving(Eq,Show)
+--data Exp = In Composition Context -- | In Composition Context Exp
+--  deriving(Eq,Show)
+--
+--type Pos = (Int,Int)
+--
+--data Composition = NoteN String Integer Pos | Dotted Composition | Concatted Composition Composition
+--  deriving(Eq,Show)
+--
+--type Context = Map CtxLabel CtxVal
+--
+--data CtxLabel = Quantization Pos
+--  deriving(Eq,Show,Ord)
+--
+--data CtxVal = Int AlexPosn
+--  deriving(Eq,Show)
 
 
 --Changes: Note, CtxVal, CtxLabel
-
 
 --Data structure for types
 data Type = TMusic | TComposition | TInt | TKey | TContext
@@ -104,10 +104,12 @@ failM str =SEM (\state -> Left str)
 assertNotParallelComp :: TComposition -> String -> SEM ()
 assertNotParallelComp (TExp TParallel _ _) s = failM ("Parallel compositions are not allowed here"++s)
 assertNotParallelComp _ _ = return ()
-assertEqualComps :: TComposition -> TComposition -> String -_> SEM ()
+assertEqualComps :: TComposition -> TComposition -> String -> SEM ()
 assertEqualComps c1 c2 s = if c1 == c2 then return () else failM ("Compositions are not equal"++s)
 
 
+typeCheck :: Exp -> Either String ((),StateData)
+typeCheck exp = runSEM (typeCheckExp exp) Map.empty
 typeCheckExp :: Exp -> SEM ()
 typeCheckExp (In comp con) = do compT <- typeCheckComp comp
 				conT <- typeCheckCon con
@@ -125,16 +127,16 @@ dependencyLabels (TExp _ TByLetter TPositioned ) = Set.fromList [Quantization]
 dependencyLabels (TExp _ TByNum TPositioned) = Set.fromList [Quantization]
 
 showCodeWithPos :: Composition -> String
-showCodeWithPos comp = (showCode comp)++" at: "++(findFirstPos comp)
+showCodeWithPos comp = (showCode comp)++" at: "++(show (findFirstPos comp))
 
 showCode :: Composition -> String
-showCode (NoteN n s p) = s++(show n)
+showCode (NoteN note n p) = note++(show n)
 showCode (Dotted comp) = (showCode comp)++"."
 showCode (Concatted c1 c2) = (showCode c1)++(showCode c2)
 
 findFirstPos :: Composition -> Pos
 findFirstPos (NoteN n s p) = p
-findFirstPos (Dotted comp) = comp
+findFirstPos (Dotted comp) = findFirstPos comp
 findFirstPos (Concatted c1 c2) = findFirstPos c1
 
 

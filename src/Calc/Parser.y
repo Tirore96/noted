@@ -1,7 +1,8 @@
 {
 module Calc.Parser where
-
 import Calc.Lexer
+import qualified Data.Map as Map
+
 
 
 }
@@ -12,7 +13,7 @@ import Calc.Lexer
 
 
 
-%name parseTokens
+%name buildAST
 %tokentype { Token }
 %error { parseError }
 
@@ -22,7 +23,7 @@ import Calc.Lexer
   chord {T _ TChord _ }
   '{'  {T _ TOBracket _}
   '}'  {T _ TCBracket _}
-  ctxWord {T _ TCtxWord _}
+  ctxWord {T _ TCtxLabel _}
   '=' {T _ TEq _ }
   ',' {T _ TComma _}
   '.' {T _ TDot _}
@@ -41,25 +42,25 @@ import Calc.Lexer
 %%
 
 
-Exp :: {Exp}
-        : Composition Context {In $1 $2}
+PExp :: {PExp}
+        : PComposition PContext {PIn $1 $2}
 
-Composition :: {Composition}
-	: note num {NoteN $1 $2}
-        | Composition '.' {Dotted $1}
-	| Composition Composition {Concatted $1 $2}
+PComposition :: {PComposition}
+	: note num {PNoteN $1 $2}
+        | PComposition '.' {PDotted $1}
+	| PComposition PComposition {PConcatted $1 $2}
 
-Context :: {Context}
+PContext :: {PContext}
 	: '{' CtxAssignments '}' {reverse $2}
 
-CtxAssignments :: {[(Token,Token)]}
+CtxAssignments :: {PContext}
 	      : CtxAssignments ';' CtxAssignment {$3:$1}
 	      | CtxAssignment {[$1]}
 
 CtxAssignment :: {(Token,Token)}
-	: ctxWord '=' CtxVal {($1,$3)}
+	: ctxWord '=' PCtxVal {($1,$3)}
 
-CtxVal :: {CtxVal}
+PCtxVal :: {PCtxVal}
        : num    {$1}
 
 
@@ -108,28 +109,86 @@ CtxVal :: {CtxVal}
 --
 --
 --
-{
+
+--{
 --parseVar (T p TVar s) = Var p s
 --parseCtx (T p TCtxWord s) =  CtxWord p s
 --parseNum (T p TNum s) =  Num p (read s)
 --parseNote (T p TNote s) = Note p s
 
+--tokenToCtxLabel :: Token -> Either String CtxLabel
+--tokenToCtxLabel (T _ TCtxWord s) = case s of
+--				    "quantization -> Right Quantization
+--				    _ -> Left "Unidentified context-label"
+--tokenToCtxLabel _ = Left "
+{
+
+parseTokens  :: [Token] -> Either String Exp 
+parseTokens tokens = do pExp <- buildAST tokens
+		        return $ parsePExp pExp
+
+
+parsePExp :: PExp -> Exp
+parsePExp (PIn pComp pCon) = In (parsePComp pComp) (parsePCon pCon)
+
+parsePComp :: PComposition -> Composition
+parsePComp (PNoteN t1 t2) = let (T p1 _ s1)=t1
+                                (T p2 _ s2)=t2
+                            in NoteN s1 (read s2) (parseAlexPosn p1)
+parsePComp (PDotted pComp) = Dotted (parsePComp pComp)
+parsePComp (PConcatted pComp1 pComp2) = Concatted (parsePComp pComp1) (parsePComp pComp2)
+
+
+parsePCon :: PContext -> Context
+parsePCon pCon = let ctxLsCtxVals = map (\(l,v) -> (parsePCtxLabel l,parsePCtxVal v)) pCon
+		 in Map.fromList ctxLsCtxVals
+
+
+parsePCtxLabel :: PCtxLabel -> CtxLabel
+parsePCtxLabel (T _ TCtxLabel s) = case s of
+                                   "quantization" -> Quantization
+                                   _ -> undefined
+
+
+parsePCtxVal :: PCtxVal -> CtxVal
+parsePCtxVal (T p TNum s) = Num (read s) (parseAlexPosn p)
+parseAlexPosn :: AlexPosn -> Pos
+parseAlexPosn (AlexPn _ line column) = (line,column)
+
 
 --------------------------------------------
+data PExp = PIn PComposition PContext -- | In Composition Context Exp
+  deriving(Eq,Show)
+
+data PComposition = PNoteN Token Token | PDotted PComposition | PConcatted PComposition PComposition
+  deriving(Eq,Show)
+
+type PContext = [(Token,Token)]
+
+type PCtxLabel = Token
+
+type PCtxVal = Token
+
+------------------------------------------------
 data Exp = In Composition Context -- | In Composition Context Exp
   deriving(Eq,Show)
 
---type Pos = (Int,Int)
 
-data Composition = NoteN Token Token | Dotted Composition | Concatted Composition Composition
+data Composition = NoteN String Integer Pos | Dotted Composition | Concatted Composition Composition
   deriving(Eq,Show)
 
-type Context = [(Token,Token)]
+type Context = Map.Map CtxLabel CtxVal
 
-type CtxLabel = Token
 
-type CtxVal = Token
-------------------------------------------------
+data CtxLabel = Quantization 
+  deriving(Eq,Show,Ord)
+
+
+data CtxVal = Num Integer Pos
+  deriving(Eq,Show)
+
+type Pos = (Int,Int)
+
 
 --type Stmts = [Stmt]
 --

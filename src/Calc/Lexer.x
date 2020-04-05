@@ -18,7 +18,7 @@ $whitespace = [\ \t\f\v\r]
 --  (A|[C-H])                                      {\p s -> TChord (p,s)}
 --  \{                                             {\p s -> TOBracket p}
 --  \}                                             {\p s -> TCBracket p}
---  quantization | tempo | key | octave\_pos       {\p s -> TCtxWord (p,s)}
+--  quantization | tempo | key | octave\_pos       {\p s -> TCtxLabel (p,s)}
 --  =                                              {\p s -> TEq p}
 --  input                                          {\p s -> TInputK p}
 --  chord                                          {\p s -> TChordK p}
@@ -36,14 +36,14 @@ $whitespace = [\ \t\f\v\r]
 --  \$ $alpha ($alpha|$digit|\_)*                  {\p s -> TVar (p, s)}
 
 tokens :-
-  $whitespace+                                        {skip}
+  $white+                                        {skip} -- change to whitespace later
   "//".*                                         {skip}
   $digit+                                        {mkL TNum}
   (a|[c-h])                                      {mkL TNote}
   (A|[C-H])                                      {mkL TChord}
   \{                                             {mkL TOBracket}
   \}                                             {mkL TCBracket}
-  quantization                                   {mkL TCtxWord}
+  quantization                                   {mkL TCtxLabel}
   =                                              {mkL TEq}
   \;                                              {mkL TSemi}
 --  input                                          {mkL TSeq}
@@ -73,7 +73,7 @@ data TokenClass =
     TChord |
     TOBracket |
     TCBracket |
-    TCtxWord      |
+    TCtxLabel |
     TEq |
     TSemi|
     TEOF |
