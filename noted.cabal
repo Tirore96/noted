@@ -1,8 +1,8 @@
-name:                midicompiler
+name:                noted
 version:             0.1.0.0
 -- synopsis:
 -- description:
-homepage:            https://github.com/githubuser/midicompiler#readme
+homepage:            https://github.com/githubuser/noted#readme
 license:             BSD3
 license-file:        LICENSE
 author:              Author name here
@@ -13,7 +13,7 @@ build-type:          Simple
 cabal-version:       >=1.10
 extra-source-files:  README.md
 
-executable midicompiler-exe
+executable noted-exe
   hs-source-dirs:      src
   main-is:             Main.hs
   default-language:    Haskell2010
