@@ -9,11 +9,8 @@ import qualified Data.Map as Map
 
 %monad { Either String } {>>= } {return }
 
---tree
 
-
-
-%name buildAST
+%name parseTokens
 %tokentype { Token }
 %error { parseError }
 
@@ -23,11 +20,19 @@ import qualified Data.Map as Map
   chord {T _ TChord _ }
   '{'  {T _ TOBracket _}
   '}'  {T _ TCBracket _}
-  ctxWord {T _ TCtxLabel _}
+  '('  {T _ TOPara _}
+  ')'  {T _ TCPara _}
+  ctxWord {T _ TCtxWord _}
+  ctxNum {T _ TCtxNum _}
+  ctxKey {T _ TCtxNote _}
+  ctxSig {T _ TCtxNote _}
+ xSlash {T _ TCtxSlash _ }
+
   '=' {T _ TEq _ }
   ',' {T _ TComma _}
   '.' {T _ TDot _}
   ';'  {T _ TSemi _ }
+  var {T _ TVar _}
 --  eof	   {T _ TEOF _}
 --  '/' {T _ TDiv _}
 --  '+' {T _ TPlus _}
@@ -37,182 +42,95 @@ import qualified Data.Map as Map
 --  flat {T _ TFlat _}
 --  '_' {T _ TUnderscore _}
 --  R {T _ TR _ }
---  var {T _ TVar _}
 
 %%
 
 
-PExp :: {PExp}
-        : PComposition PContext {PIn $1 $2}
+Exp :: {Exp}
+        : var '=' Term Exp {Assign (parseBase $1) $3 $4}
+        | Term {Term $1}
 
-PComposition :: {PComposition}
-	: note num {PNoteN $1 $2}
-        | PComposition '.' {PDotted $1}
-	| PComposition PComposition {PConcatted $1 $2}
+Term :: {Term}
+        : Term1 '(' Term1 ')' {Application $1 $3}
+        | Term1 '{' ListPairs '}' {Application $1 (Context $3)}
+        | Term1 {$1}
 
-PContext :: {PContext}
-	: '{' CtxAssignments '}' {reverse $2}
+Term1 :: {Term}
+        : Term1 ',' Term2 {Commaed $1 $3}
+        | Term2 {$1}
 
-CtxAssignments :: {PContext}
-	      : CtxAssignments ';' CtxAssignment {$3:$1}
-	      | CtxAssignment {[$1]}
-
-CtxAssignment :: {(Token,Token)}
-	: ctxWord '=' PCtxVal {($1,$3)}
-
-PCtxVal :: {PCtxVal}
-       : num    {$1}
+Term2 :: {Term}
+        : num {Num (parseBaseInt $1)}
+        | note {Note (parseBase $1)}
+        | note num {NoteN (parseNoteN $1 $2)}
+        | Term2 '.' {Dotted $1}
+        | Term2 Term2 {Concatted $1 $2}
+        | var {Variable (parseBase $1)}
 
 
--- Stmt :: {Stmt}
---         : VAssignment {$1}
---         | CAssignment           {$1}
--- --        | Command      {$1}
--- 
--- VAssignment :: {Stmt}
---         : Variable '=' Term {Assgn $1 $3 }
--- 
--- 
--- Variable :: {Location}
---         : var        {parseVar $1 }
--- 
--- CAssignment :: {Stmt}
---         : ContextWord'=' Term {Assgn $1 $3 }
--- 
--- ContextWord :: {Location}
---         : ctxWord {parseCtx $1}
--- 
--- Term :: {Term}
---         : num       {parseNum $1}
---         | note      {parseNote $1}
---         | Term '#'  {Unary $1 Sharp}
---         | '{' CAssignments '}'  {Struct $ reverse $2}
--- 
--- CAssignments :: {Stmts}
---         : CAssignment {[$1]}
---         | CAssignments ',' CAssignment  {$3:$1}
--- 
--- 
---        | chord    {tokenVal $1}
---        | '{'  BAssignments  '}' {($1, Struct $2) }
---        | Command           {$1}
---        | String            {$1}
---        | Term '/' Term  {(fst $1, Inverted $1 $2)}
+ListPairs :: {[(Label,CtxValue)]}
+	      : ListPairs ';' Pair {$3:$1}
+	      | Pair {[$1]}
 
---
---Command :: {Command}
---        : chordK Term   {ChordK1 (fst chordK) $2 }
---        | ChordK1 Term  {ChordK2 $2 ()}
---
---
---t : num {Int (fst $1) (snd $2)}
---
---
---
-
---{
---parseVar (T p TVar s) = Var p s
---parseCtx (T p TCtxWord s) =  CtxWord p s
---parseNum (T p TNum s) =  Num p (read s)
---parseNote (T p TNote s) = Note p s
-
---tokenToCtxLabel :: Token -> Either String CtxLabel
---tokenToCtxLabel (T _ TCtxWord s) = case s of
---				    "quantization -> Right Quantization
---				    _ -> Left "Unidentified context-label"
---tokenToCtxLabel _ = Left "
+Pair :: {(Label,CtxValue)}
+	: ctxWord '=' CtxValue {(parseCtxWord $1,$3)}
+CtxValue :: {CtxValue}
+         : ctxNum    {parseCNum $1}
+         | ctxKey    {parseCNote $1}
+         | ctxNum xSlash ctxNum {parseSig $1 $3}
 {
+parseBaseInt :: Token -> (Integer,Pos)
+parseBaseInt (T pos _ str) = (read str,parseAlexPosn pos)
 
-parseTokens  :: [Token] -> Either String Exp 
-parseTokens tokens = do pExp <- buildAST tokens
-		        return $ parsePExp pExp
+parseBase :: Token -> (String,Pos)
+parseBase (T pos _ str) = (str,parseAlexPosn pos)
 
+parseNoteN (T pos _ str1) (T _ _ str2) = (str1,read str2,parseAlexPosn pos)
 
-parsePExp :: PExp -> Exp
-parsePExp (PIn pComp pCon) = In (parsePComp pComp) (parsePCon pCon)
+parseCtxWord :: Token -> Label
+parseCtxWord (T _ TCtxWord str) = case str of 
+                                   "bars" -> Bars
+                                   "key" -> Key 
+                                   "time" -> Time
+                                   "octave_pos" -> OctavePos
 
-parsePComp :: PComposition -> Composition
-parsePComp (PNoteN t1 t2) = let (T p1 _ s1)=t1
-                                (T p2 _ s2)=t2
-                            in NoteN s1 (read s2) (parseAlexPosn p1)
-parsePComp (PDotted pComp) = Dotted (parsePComp pComp)
-parsePComp (PConcatted pComp1 pComp2) = Concatted (parsePComp pComp1) (parsePComp pComp2)
+                                   _  -> undefined
 
-
-parsePCon :: PContext -> Context
-parsePCon pCon = let ctxLsCtxVals = map (\(l,v) -> (parsePCtxLabel l,parsePCtxVal v)) pCon
-		 in Map.fromList ctxLsCtxVals
-
-
-parsePCtxLabel :: PCtxLabel -> CtxLabel
-parsePCtxLabel (T _ TCtxLabel s) = case s of
-                                   "quantization" -> Quantization
-                                   _ -> undefined
-
-
-parsePCtxVal :: PCtxVal -> CtxVal
-parsePCtxVal (T p TNum s) = Num (read s) (parseAlexPosn p)
 parseAlexPosn :: AlexPosn -> Pos
 parseAlexPosn (AlexPn _ line column) = (line,column)
 
-
---------------------------------------------
-data PExp = PIn PComposition PContext -- | In Composition Context Exp
-  deriving(Eq,Show)
-
-data PComposition = PNoteN Token Token | PDotted PComposition | PConcatted PComposition PComposition
-  deriving(Eq,Show)
-
-type PContext = [(Token,Token)]
-
-type PCtxLabel = Token
-
-type PCtxVal = Token
-
-------------------------------------------------
-data Exp = In Composition Context -- | In Composition Context Exp
-  deriving(Eq,Show)
+parseCNum (T pos _ str) = CNum (read str,parseAlexPosn pos)
+parseCNote (T pos _ str) = CNote (str,parseAlexPosn pos)
+parseSig (T pos _ str1) (T _ _ str2) = Signature (read str1,read str2,parseAlexPosn pos)
 
 
-data Composition = NoteN String Integer Pos | Dotted Composition | Concatted Composition Composition
-  deriving(Eq,Show)
-
-type Context = Map.Map CtxLabel CtxVal
 
 
-data CtxLabel = Quantization 
-  deriving(Eq,Show,Ord)
+----------------------------------------------
 
-
-data CtxVal = Num Integer Pos
+data Exp = Assign (String,Pos) Term Exp | Term Term 
   deriving(Eq,Show)
 
 type Pos = (Int,Int)
 
+data Term = Num (Integer,Pos)
+             | Note (String,Pos)
+             | NoteN (String,Integer,Pos)
+             | Dotted Term 
+             | Concatted Term Term
+             | Commaed Term Term
+             | Variable (String,Pos)
+             | Context [(Label,CtxValue)] 
+             | Application Term Term
+  deriving(Eq,Show)
 
---type Stmts = [Stmt]
---
---
---data Stmt = Term | Assgn Location Term
---        deriving(Show,Eq)
---
---
---data Location = Var AlexPosn String| CtxWord AlexPosn String
---        deriving(Show,Eq)
---
---type Args = [Term]
---
---data CType = Notes | Seq 
---    deriving (Show,Eq)
---        
---data Term = Num AlexPosn Integer | Note AlexPosn String  | Chord AlexPosn String
---        | Struct Stmts | CommaTs [Term] | DotTs [Term] | Unary Term Op | R | Extended Term Term |
---          Command CType Args
---
---        deriving(Show,Eq)
---
---data Op = Plus | Minus | Sharp | Flat | Underscore
---        deriving(Show,Eq)
+data Label = Bars | Key | Time | OctavePos 
+  deriving(Eq,Show,Ord)
+
+data CtxValue = CNum (Integer,Pos) | CNote (String,Pos) | Signature (Integer, Integer,Pos)
+  deriving(Eq,Show)
+
+
 
 parseError tokens = let (T p _ s)=(head tokens)
 		    in let (AlexPn _ l c)=p

@@ -23,12 +23,21 @@ $chrd1 =  1,3,5,6 {quantization = 4}
 //Input
 //Mix of abs and rel input not allowed
 //A serial expression can contain parallel variables
-a = "Cm7....Cm7...Cm7/g...Cm7..." in $con1
+a = "Cm7....Cm7...Cm7/g...Cm7..."  {bars=4,signature=4/4,octave_pos=4}
 b = "Ch1...2...3...4..." in $con1
 c = "$chrd1...$chrd2..$chrd2." in $con1
 
 //Patterns
-modulate = "n -> 2"
+funkify = n -> xx.x
+
+$round = funkify C...G...Am...F $con?
+
+//Transformations can only be done on music. Backend, create list of music instead of what you currently do.
+$res = funkify $round
+//$res = CC.CGG.GAmAm.AmFF.F
+$a = funkify(C) 
+
+modulate = n -> 2
 add3rds = "n -> 1,3"
 lick   = "n -> 12321"
 3rdsTo4ths= "5 -> 1,3,5,7" 

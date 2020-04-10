@@ -9,6 +9,7 @@ module Calc.Lexer where
 $digit = 0-9-- digits
 $alpha = [a-zA-Z]   -- alphabetic characters
 $whitespace = [\ \t\f\v\r] 
+@note = a|[c-h]
 
 --tokens :-
 --  $white+                                        ; 
@@ -18,7 +19,7 @@ $whitespace = [\ \t\f\v\r]
 --  (A|[C-H])                                      {\p s -> TChord (p,s)}
 --  \{                                             {\p s -> TOBracket p}
 --  \}                                             {\p s -> TCBracket p}
---  quantization | tempo | key | octave\_pos       {\p s -> TCtxLabel (p,s)}
+--  quantization | tempo | key | octave\_pos       {\p s -> TCtxWord (p,s)}
 --  =                                              {\p s -> TEq p}
 --  input                                          {\p s -> TInputK p}
 --  chord                                          {\p s -> TChordK p}
@@ -36,16 +37,23 @@ $whitespace = [\ \t\f\v\r]
 --  \$ $alpha ($alpha|$digit|\_)*                  {\p s -> TVar (p, s)}
 
 tokens :-
-  $white+                                        {skip} -- change to whitespace later
-  "//".*                                         {skip}
-  $digit+                                        {mkL TNum}
-  (a|[c-h])                                      {mkL TNote}
-  (A|[C-H])                                      {mkL TChord}
-  \{                                             {mkL TOBracket}
-  \}                                             {mkL TCBracket}
-  quantization                                   {mkL TCtxLabel}
-  =                                              {mkL TEq}
+<0>  $white+                                        {skip} -- change to whitespace later
+<0>  "//".*                                         {skip}
+<0>  $digit+                                        {mkL TNum}
+<0>  (a|[c-h])                                      {mkL TNote}
+<0>  (A|[C-H])                                      {mkL TChord}
+<0>  \{                                             {mkL TOBracket `andBegin` struct}
+<struct>  \}                                             {mkL TCBracket `andBegin` 0}
+<0>  \(                                             {mkL TOPara}
+<0>  \)                                             {mkL TCPara}
+   =                                              {mkL TEq}
   \;                                              {mkL TSemi}
+<0> \$$alpha ($alpha|$digit|\_)*                   {mkL TVar}
+<struct> bars | key | time |octave\_pos                             {mkL TCtxWord}
+<struct> $digit+                                     {mkL TCtxNum}
+<struct> @note (\#|b)?                             {mkL TCtxNote}
+<struct> \/                              {mkL TCtxSlash}
+
 --  input                                          {mkL TSeq}
 --  chord                                          {mkL TNotes}
 --  \"                                             {mkL TQuote}
@@ -59,7 +67,6 @@ tokens :-
 --  b                                              {mkL TFlat}
 --  \_ $digit                                      {mkL TUnderscore}
 --  R                                              {mkL TR}
---  \$ $alpha ($alpha|$digit|\_)*                  {mkL TVar}
 
 
 {
@@ -73,12 +80,20 @@ data TokenClass =
     TChord |
     TOBracket |
     TCBracket |
-    TCtxLabel |
+    TCtxWord |
+    TCtxNum|
+    TCtxNote|
+    TCtxSig |
+    TCtxSlash|
+
     TEq |
     TSemi|
     TEOF |
     TComma |
-    TDot 
+    TDot |
+    TOPara |
+    TCPara |
+    TVar
 
 --    TSeq |
 --    TNotes |
