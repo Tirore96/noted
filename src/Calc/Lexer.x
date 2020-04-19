@@ -40,14 +40,20 @@ tokens :-
 <0> (\ )+                                           {mkL TSpace} -- change to whitespace later
 <0> (\n)+                                           {mkL TNewLine}
 <0>  $whitespace+                                   {skip}     
-<0>  "//".*                                         {skip}
+<0>  "//".* \n                                         {skip}
 <0>  [1-8]                                        {mkL TNum}
+<para>  [1-8] (\ )*                                {mkL TNum}
 <0>  (a|[c-h])                                      {mkL TNote}
+<para> (a|[c-h]) (\ )*                             {mkL TNote}
+
 <0>  (A|[C-H])                                      {mkL TChord}
 <0>  \{                                             {mkL TOBracket `andBegin` struct}
 <struct>  \}                                             {mkL TCBracket `andBegin` 0}
-<0>  \(                                             {mkL TOPara}
-<0>  \)                                             {mkL TCPara}
+--<0>  \( (\ )+                                            {mkL TOPara `andBegin` para }
+<0>  \( (\ )*                                        {begin para}
+--<0>  \)                                             {mkL TCPara `andBegin` 0}
+<para>  \)                                             {begin 0}
+
    =                                              {mkL TEq}
   \;                                              {mkL TSemi}
 <0> \$$alpha ($alpha|$digit|\_)*                   {mkL TVar}

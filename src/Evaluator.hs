@@ -50,7 +50,6 @@ getType (SContext t _ ) = t
 type Env = Map.Map String STerm
 type SEM a = StateT Env (Either String) a
 
-failM :: String -> SEM ()
 failM str = StateT (\s -> Left str)
 
 bindVar :: String -> STerm -> SEM ()
@@ -92,7 +91,28 @@ substituteTerm (T.Variable _ str ) = lookupVar str
 substituteTerm (T.Context t val) = return $ SContext t val
 substituteTerm (T.Application t t1 t2) = do sT1 <- substituteTerm t1 
                                             sT2 <- substituteTerm t2
-                                            return $ SApplication t sT1 sT2
+                                            updatedsT2 <- ifContextFilter sT2 (getType sT1) ----Filtering of context
+                                            return $ SApplication t sT1 updatedsT2 
+
+
+ifContextFilter :: STerm -> T.Type-> SEM STerm
+ifContextFilter (SContext t args) (T.Fun types) = do newArgs <-  filterArgs args (init types)
+                                                     return $ SContext t newArgs
+ifContextFilter sTerm  _ = return sTerm
+
+typeOfCtxVal (T.Dur _) = T.TDur
+typeOfCtxVal (T.Key _) = T.TKey
+typeOfCtxVal (T.Octave _) = T.TOctave
+
+
+
+filterArgs [] [] = return []
+filterArgs [] _ = failM "application not satisfied"
+filterArgs _ [] = return []
+filterArgs (first:rest) (firstType:restTypes) = if (typeOfCtxVal first) == firstType
+                                                        then do rest <- filterArgs rest restTypes
+                                                                return (first:rest)
+                                                        else filterArgs rest (firstType:restTypes)
 
 --data Fun = NumFun (P.CtxValue -> P.CtxValue -> P.CtxValue -> Eu.Music Eu.Pitch)
 --         | NoteFun (P.CtxValue -> P.CtxValue -> Eu.Music Eu.Pitch)
@@ -260,10 +280,10 @@ errMsg val str = "Failed with "++(show val)++". "++str
 --noteNT = TMusicalExp TByLetter TPositioned
 
 scale = ["c","d","e","f","g","a","h"]
-numToNote :: Integer -> String -> String
+numToNote :: Integer -> String -> (Int,String)
 numToNote n key = let Just offset = List.elemIndex key scale
-                  in let index = (offset+(fromIntegral n)) `mod` 7
-                     in scale!!index
+                  in let (octave,index)= quotRem (offset+(fromIntegral n))  7
+                     in (octave,scale!!index)
 
 strToNoteFun :: String -> Eu.Octave -> Eu.Dur -> Eu.Music Eu.Pitch
 strToNoteFun "a" = Eu.a
@@ -279,9 +299,9 @@ strToNoteFun "h" = Eu.b
 buildFun :: STerm -> Either String Fun
 buildFun (SNum t n) = Right $ NumFun (\args -> case args of
                                                  [T.Dur dur,T.Key key,T.Octave octave] -> 
-                                                       let note = numToNote n key
+                                                       let (ocOffset,note) = numToNote n key
                                                        in let fun = strToNoteFun note
-                                                          in Right $ fun octave dur
+                                                          in Right $ fun (octave+ocOffset) dur
                                                  _ -> Left "error in NumFun")
 
 
@@ -304,7 +324,7 @@ buildFun (SNoteN t note octave) = Right $ NoteNFun (\args ->
                                                 [T.Dur dur] ->
                                                       let fun = strToNoteFun note
                                                       in Right $ fun octave dur
-                                                _ -> Left "error in NoteNFun")
+                                                val -> Left $ "error in NoteNFun, was given "++(show val))
 
 
 

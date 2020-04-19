@@ -83,6 +83,19 @@ Term2 :: {Term}
         | Term2 Term2 {Concatted $1 $2}
         | var {Variable (parseBase $1)}
         | '{' ListPairs '}' {Context (sortPairs $2)}
+--        | '(' Term3 ')' {$2}
+
+--Term3 :: {Term}
+--        : Term1 space ',' space Term3 {Commaed $1 $5}
+--        | Term1 ',' space Term3 {Commaed $1 $4}
+--        | Term1 space ',' Term3 {Commaed $1 $4}
+--        | Term1 ',' Term3 {Commaed $1 $3}
+--        | Term4 {$1}
+--
+--Term4 :: {Term}
+--        : Term1 space Term4 {Concatted $1 $3}
+--        | Term1 Term4 {Concatted $1 $2}
+--        | Term2 {$1}
 
 
 ListPairs :: {[(Label,CtxValue)]}
