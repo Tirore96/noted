@@ -2,16 +2,16 @@ module TypeChecker where
 --Possibly type check for repeating labels. ie {quantization=10;quantization=20} shouldn't be allowed
 
 import Data.Map as Map
-import Control.Monad 
+import Control.Monad.State.Lazy
 import Data.Set as Set
 
 import Calc.Lexer (AlexPosn)
-import Calc.Parser
+import qualified Calc.Parser as P
+import qualified Euterpea  as Eu (Dur)
+import qualified Data.List as List
+import qualified Data.Map as Map
+import Data.Ratio
 
---Temporary data structure for AbSyn
---data Exp = In Composition Context -- | In Composition Context Exp
---  deriving(Eq,Show)
---
 --type Pos = (Int,Int)
 --
 --data Composition = NoteN String Integer Pos | Dotted Composition | Concatted Composition Composition
@@ -27,11 +27,13 @@ import Calc.Parser
 
 
 --Changes: Note, CtxVal, CtxLabel
-data Type = TInt
+data Type = TDur
            | TKey
-           | TSignature
-           | TMusicExp TSymbol TPosition
-           | TContext (Set Label)
+           | TOctave
+           | Fun [Type]
+           | Arg [Type]
+--           | TMusicExp TSymbol TPosition
+           | TContext [P.Label]
            | TMusic
   deriving(Eq,Show)
 --Data structure for types
@@ -41,8 +43,7 @@ data TSymbol = ByLetter | ByNum
   deriving(Eq,Show)
 data TPosition = Positioned | NotPositioned
   deriving(Eq,Show)
---
---
+
 --data TComposition =  TExp TDirection TSymbol TPosition
 --  deriving(Eq,Show)
 --data TDirection = TSerial | TParallel | TNote
@@ -80,29 +81,31 @@ data TPosition = Positioned | NotPositioned
 --data ReadData = Exp | Composition | Context | CtxAssignment
 type StateData = Map String Type
 
-newtype SEM a =  SEM {runSEM :: StateData -> Either String (a,StateData) } 
+type SEM a = StateT StateData (Either String) a
 
---emptyStateData :: StateData
---emptyStateData = StateData {gamma=empty,constraints=[]}
-
-instance Monad SEM where
-  return a = SEM (\stateData -> Right (a,stateData) )
-  m >>= f = SEM (\stateData -> do (a1,s1) <- (runSEM m) stateData
-                                  (a2,s2) <- runSEM (f a1) s1
-			          Right (a2,s2) 
-		)
-
-instance Functor SEM where 
-  fmap = liftM
-
-instance Applicative SEM where
-  pure = return;(<*>) = ap
+--newtype SEM a =  SEM {runSEM :: StateData -> Either String (a,StateData) } 
+--
+----emptyStateData :: StateData
+----emptyStateData = StateData {gamma=empty,constraints=[]}
+--
+--instance Monad SEM where
+--  return a = SEM (\stateData -> Right (a,stateData) )
+--  m >>= f = SEM (\stateData -> do (a1,s1) <- (runSEM m) stateData
+--                                  (a2,s2) <- runSEM (f a1) s1
+--			          Right (a2,s2) 
+--		)
+--
+--instance Functor SEM where 
+--  fmap = liftM
+--
+--instance Applicative SEM where
+--  pure = return;(<*>) = ap
 
 updateState :: String -> Type ->  SEM ()
-updateState str t = SEM (\s -> Right ((),Map.insert str t s))
+updateState str t = StateT (\s -> Right ((),Map.insert str t s))
 
 lookupVar :: String -> SEM Type
-lookupVar str = SEM (\s -> case Map.lookup str s of 
+lookupVar str = StateT (\s -> case Map.lookup str s of 
                             Just t -> Right (t,s)
                             Nothing -> Left "bad variable lookup")
 
@@ -111,75 +114,156 @@ assertSameType t1 t2 = if t1 == t2
                          then return ()
                          else failM "the types don't work"
 
+data TypedExp = Assign String TypedTerm TypedExp | TypedTerm TypedTerm
+  deriving (Show)
 
-typeCheck :: Exp -> Either String ((),StateData)
-typeCheck exp = runSEM (typeCheckExp exp) Map.empty
-typeCheckExp :: Exp -> SEM ()
-typeCheckExp (Assign (str,pos) term exp) = do termT <- typeCheckTerm term
-                                              updateState str termT
-                                              typeCheckExp exp
-typeCheckExp (Term term) = do termT <- typeCheckTerm term
-                              assertSameType termT TMusic
+data TypedTerm = Num Type Integer
+               | Note Type String
+               | NoteN Type String Int
+               | Dotted Type TypedTerm
+               | Concatted Type TypedTerm TypedTerm
+               | Commaed Type TypedTerm TypedTerm
+               | Variable Type String
+               | Context Type [TypedCtxValue]
+               | Application Type TypedTerm TypedTerm
+  deriving (Show)
 
-typeCheckTerm :: Term -> SEM Type
-typeCheckTerm (Num _) = return $ TMusicExp ByNum Positioned
-typeCheckTerm (Note _) = return $ TMusicExp ByLetter NotPositioned
-typeCheckTerm (NoteN _) = return $ TMusicExp ByLetter Positioned
-typeCheckTerm (Dotted term) = typeCheckTerm term
-typeCheckTerm (Concatted term1 term2) = do term1T <- typeCheckTerm term1
-                                           term2T <- typeCheckTerm term2
-                                           assertSameType term1T term2T
-                                           return term1T
-typeCheckTerm (Commaed term1 term2)= do term1T <- typeCheckTerm term1
-                                        term2T <- typeCheckTerm term2
-                                        assertSameType term1T term2T
-                                        return term1T
-typeCheckTerm (Variable (str,_)) = lookupVar str
-typeCheckTerm (Context labelPairs) = do mapM_ typeCheckLabelPair labelPairs 
-                                        let labels = fst $ unzip labelPairs
-                                        return $ TContext (Set.fromList labels) --Set.fromList
+data TypedCtxValue = Dur Eu.Dur | Octave Int | Key String
+  deriving(Eq,Show)
+
+instance Ord TypedCtxValue where
+  compare (Dur _) (Dur _) = EQ
+  compare (Key _) (Key _) = EQ
+  compare (Octave _) (Octave _) = EQ
+  compare (Dur _) _ = GT
+  compare (Key _) (Dur _) = LT
+  compare (Key _) _ = LT
+  compare (Octave _) _ = LT
+
+getType :: TypedTerm -> Type
+getType (Num t _) = t
+getType (Note t _) = t
+getType (NoteN t _ _ ) = t
+getType (Dotted t _ ) = t
+getType (Concatted t _ _ ) = t
+getType (Commaed t _ _ )= t
+getType (Variable t _ ) = t
+getType (Context t _ ) = t
+getType (Application t _ _) = t
+
+typeCheck :: P.Exp -> Either String TypedExp
+typeCheck exp = case runStateT (typeCheckExp exp) Map.empty of
+                 Left err -> Left err
+                 Right (typedExp,_) -> Right typedExp
+
+typeCheckExp :: P.Exp -> SEM TypedExp
+typeCheckExp (P.Assign (str,pos) term exp) = do typedTerm <- typeCheckTerm term
+                                                updateState str (getType typedTerm)
+                                                typedExp <- typeCheckExp exp
+                                                return $ Assign str typedTerm typedExp
+
+typeCheckExp (P.Term term) = do typedTerm <- typeCheckTerm term
+                                assertSameType (getType typedTerm) TMusic
+                                return $ TypedTerm typedTerm 
+                              
+
+--fix getType
+typeCheckTerm :: P.Term -> SEM TypedTerm
+typeCheckTerm (P.Num (n,_)) = let termType = Fun [TDur,TKey,TOctave,TMusic]
+                              in return $ Num termType n
+
+typeCheckTerm (P.Note (str,_)) = let termType = Fun [TDur,TOctave,TMusic]
+                                 in return $ Note termType str
+
+typeCheckTerm (P.NoteN (str,n,_)) = let termType = Fun [TDur,TMusic]
+                                    in return $ NoteN termType str (fromIntegral n)
+
+typeCheckTerm (P.Dotted term) = do typedTerm <- typeCheckTerm term
+                                   return $ Dotted (getType typedTerm) typedTerm
+
+typeCheckTerm (P.Concatted term1 term2) = do typed1 <- typeCheckTerm term1
+                                             typed2 <- typeCheckTerm term2
+                                             assertSameType (getType typed1) (getType typed2)
+                                             return $ Concatted (getType typed1) typed1 typed2
+
+typeCheckTerm (P.Commaed term1 term2)= do typed1<- typeCheckTerm term1
+                                          typed2 <- typeCheckTerm term2
+                                          assertSameType (getType typed1) (getType typed2)
+                                          return $ Commaed (getType typed1) typed1 typed2
+
+typeCheckTerm (P.Variable (str,_)) = do varType <- lookupVar str
+                                        return $ Variable varType str
+
+typeCheckTerm (P.Context labelPairs) = do typedArgs <- mapM typeCheckLabelPair labelPairs 
+                                          let unzipped =  unzip typedArgs
+                                          let types = fst unzipped
+                                              args = snd unzipped
+                                          return $ Context (Arg types) args
+
+
+typeCheckTerm (P.Application term1 term2) = do typed1 <- typeCheckTerm term1
+                                               assertIsFun (getType typed1)
+                                               typed2 <- typeCheckTerm term2
+                                               retType <- applicationReturnType (getType typed1) (getType typed2)
+                                               return $ Application retType typed1 typed2
+
+assertIsFun (Fun _) = return ()
+assertIsFun _ = failM "arg is not fun"
+
+applicationReturnType (Fun fun) (Arg arg) =  
+                                if (init fun) == arg
+                                   then
+                                     return (last fun)
+                                   else
+                                     failM "invalid application"
+applicationReturnType_ _ = failM "invalid application 2"
+
+--typeCheckLabelPairHelper (P.Bars,val) expectedT  = do valT <- typeCheckCtxVal val
+--                                                      assertSameType valT expectedT
+--typeCheckCtxVal (P.CNum _ ) = return TInt
+--typeCheckCtxVal (P.CNote _ ) = return TKey
+--typeCheckCtxVal (P.Signature _ ) = return TSignature
 
 
 
-typeCheckTerm (Application term1 term2) = do term1T <- typeCheckTerm term1
-                                             term2T <- typeCheckTerm term2
-                                             assertApplicationSatisfied term1T term2T
-typeCheckLabelPairHelper (Bars,val) expectedT  = do valT <- typeCheckCtxVal val
-                                                    assertSameType valT expectedT
-typeCheckCtxVal (CNum _ ) = return TInt
-typeCheckCtxVal (CNote _ ) = return TKey
-typeCheckCtxVal (Signature _ ) = return TSignature
+typeCheckLabelPair (P.Bars,val) = case val of
+                                   P.CNum (n,_) -> return $ (TDur,Dur (1%n))
+                                   _ -> failM "bars is associated with non cnum"
+typeCheckLabelPair (P.Key,val) = case val of
+                                   P.CNote (str,_) -> return $ (TKey,Key str)
+                                   _ -> failM "Key is associated with non CNote"
+typeCheckLabelPair (P.OctavePos,val) = 
+                                 case val of
+                                   P.CNum (n,_) -> return $ (TOctave, Octave (fromIntegral n))
+                                   _ -> failM "Key is associated with non CNote"
+
+--typeCheckLabelPairHelper (P.Bars,val) TInt
+--typeCheckLabelPair (P.Key,val) = typeCheckLabelPairHelper (P.Key,val) TKey
+--typeCheckLabelPair (P.Time ,val) = typeCheckLabelPairHelper (P.Time,val) TSignature
+--typeCheckLabelPair (P.OctavePos,val) = typeCheckLabelPairHelper (P.OctavePos,val) TInt
 
 
-
-typeCheckLabelPair (Bars,val) = typeCheckLabelPairHelper (Bars,val) TInt
-typeCheckLabelPair (Key,val) = typeCheckLabelPairHelper (Bars,val) TKey
-typeCheckLabelPair (Time ,val) = typeCheckLabelPairHelper (Bars,val) TSignature
-typeCheckLabelPair (OctavePos,val) = typeCheckLabelPairHelper (Bars,val) TInt
-
-
-assertTCtxContains (TContext tCtx) label = if Set.member label tCtx
-                                    then return ()
-                                    else failM "something went wrong"
-
-assertTCtxContains _ _ = failM "assertTCtxContains applied on non-context"
+--assertTCtxContains (TContext tCtx) label = if Set.member label tCtx
+--                                    then return ()
+--                                    else failM "something went wrong"
+--
+--assertTCtxContains _ _ = failM "assertTCtxContains applied on non-context"
 
 
-assertApplicationSatisfied (TMusicExp ByLetter Positioned) term2T = return TMusic 
-assertApplicationSatisfied (TMusicExp ByNum Positioned) term2T = do assertTCtxContains term2T Key
-                                                                    return TMusic
-assertApplicationSatisfied (TMusicExp ByLetter NotPositioned) term2T = do assertTCtxContains term2T OctavePos
-                                                                          return TMusic
-assertApplicationSatisfied (TMusicExp ByNum NotPositioned) term2T = do assertTCtxContains term2T Key
-                                                                       assertTCtxContains term2T OctavePos
-                                                                       return TMusic
-
+--assertApplicationSatisfied (TMusicExp ByLetter Positioned) term2T = return TMusic 
+--assertApplicationSatisfied (TMusicExp ByNum Positioned) term2T = do assertTCtxContains term2T P.Key
+--                                                                    return TMusic
+--assertApplicationSatisfied (TMusicExp ByLetter NotPositioned) term2T = do assertTCtxContains term2T P.OctavePos
+--                                                                          return TMusic
+--assertApplicationSatisfied (TMusicExp ByNum NotPositioned) term2T = do assertTCtxContains term2T P.Key
+--                                                                       assertTCtxContains term2T P.OctavePos
+--                                                                       return TMusic
+--
 --asSerial :: TComposition -> TComposition
 --asSerial (TExp _ symbol position) = TExp TSerial symbol position
 
 
-failM :: String -> SEM ()
-failM str =SEM (\state -> Left str)
+failM str = StateT (\state -> Left str)
 
 
 --assertNotParallelComp :: TComposition -> String -> SEM ()

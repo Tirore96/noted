@@ -8,7 +8,7 @@ module Calc.Lexer where
 
 $digit = 0-9-- digits
 $alpha = [a-zA-Z]   -- alphabetic characters
-$whitespace = [\ \t\f\v\r] 
+$whitespace = [\t\f\v\r] 
 @note = a|[c-h]
 
 --tokens :-
@@ -37,9 +37,11 @@ $whitespace = [\ \t\f\v\r]
 --  \$ $alpha ($alpha|$digit|\_)*                  {\p s -> TVar (p, s)}
 
 tokens :-
-<0>  $white+                                        {skip} -- change to whitespace later
+<0> (\ )+                                           {mkL TSpace} -- change to whitespace later
+<0> (\n)+                                           {mkL TNewLine}
+<0>  $whitespace+                                   {skip}     
 <0>  "//".*                                         {skip}
-<0>  $digit+                                        {mkL TNum}
+<0>  [1-8]                                        {mkL TNum}
 <0>  (a|[c-h])                                      {mkL TNote}
 <0>  (A|[C-H])                                      {mkL TChord}
 <0>  \{                                             {mkL TOBracket `andBegin` struct}
@@ -85,7 +87,6 @@ data TokenClass =
     TCtxNote|
     TCtxSig |
     TCtxSlash|
-
     TEq |
     TSemi|
     TEOF |
@@ -93,7 +94,9 @@ data TokenClass =
     TDot |
     TOPara |
     TCPara |
-    TVar
+    TVar |
+    TSpace|
+    TNewLine
 
 --    TSeq |
 --    TNotes |

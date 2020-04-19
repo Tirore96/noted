@@ -2,6 +2,8 @@
 module Calc.Parser where
 import Calc.Lexer
 import qualified Data.Map as Map
+import qualified Data.List
+import qualified Data.Function
 
 
 
@@ -33,6 +35,9 @@ import qualified Data.Map as Map
   '.' {T _ TDot _}
   ';'  {T _ TSemi _ }
   var {T _ TVar _}
+  space {T _ TSpace _}
+  newline {T _ TNewLine _}
+
 --  eof	   {T _ TEOF _}
 --  '/' {T _ TDiv _}
 --  '+' {T _ TPlus _}
@@ -47,13 +52,24 @@ import qualified Data.Map as Map
 
 
 Exp :: {Exp}
-        : var '=' Term Exp {Assign (parseBase $1) $3 $4}
-        | Term {Term $1}
+        : var space '=' space Term newline Exp {Assign (parseBase $1) $5 $7}
+        | var '=' space Term newline Exp {Assign (parseBase $1) $4 $6}
+        | var space '=' Term newline Exp {Assign (parseBase $1) $4 $6}
+        | var '=' Term newline Exp {Assign (parseBase $1) $3 $5}
+
+
+
+        | Term newline {Term $1}
+
+--Term :: {Term}
+--        : Term1 '(' Term1 ')' {Application $1 $3}
+--        | Term1 '{' ListPairs '}' {Application $1 (Context (sortPairs $3))}
+--        | Term1 {$1}
 
 Term :: {Term}
-        : Term1 '(' Term1 ')' {Application $1 $3}
-        | Term1 '{' ListPairs '}' {Application $1 (Context $3)}
+        : Term1 space Term {Application $1 $3}
         | Term1 {$1}
+
 
 Term1 :: {Term}
         : Term1 ',' Term2 {Commaed $1 $3}
@@ -66,6 +82,7 @@ Term2 :: {Term}
         | Term2 '.' {Dotted $1}
         | Term2 Term2 {Concatted $1 $2}
         | var {Variable (parseBase $1)}
+        | '{' ListPairs '}' {Context (sortPairs $2)}
 
 
 ListPairs :: {[(Label,CtxValue)]}
@@ -79,6 +96,8 @@ CtxValue :: {CtxValue}
          | ctxKey    {parseCNote $1}
          | ctxNum xSlash ctxNum {parseSig $1 $3}
 {
+sortPairs :: [(Label,CtxValue)] ->  [(Label,CtxValue)]
+sortPairs labels = Data.List.sortBy (flip compare `Data.Function.on` fst) labels
 parseBaseInt :: Token -> (Integer,Pos)
 parseBaseInt (T pos _ str) = (read str,parseAlexPosn pos)
 
@@ -91,7 +110,6 @@ parseCtxWord :: Token -> Label
 parseCtxWord (T _ TCtxWord str) = case str of 
                                    "bars" -> Bars
                                    "key" -> Key 
-                                   "time" -> Time
                                    "octave_pos" -> OctavePos
 
                                    _  -> undefined
@@ -124,15 +142,26 @@ data Term = Num (Integer,Pos)
              | Application Term Term
   deriving(Eq,Show)
 
-data Label = Bars | Key | Time | OctavePos 
-  deriving(Eq,Show,Ord)
+data Label = Bars | Key | OctavePos 
+  deriving(Eq,Show)
+
+instance Ord Label where
+  compare Bars Bars = EQ
+  compare Key Key = EQ
+  compare OctavePos OctavePos = EQ
+  compare Bars _ = GT
+  compare Key Bars = LT
+  compare Key _ = GT
+  compare OctavePos _ = LT
+
+
 
 data CtxValue = CNum (Integer,Pos) | CNote (String,Pos) | Signature (Integer, Integer,Pos)
   deriving(Eq,Show)
 
 
 
-parseError tokens = let (T p _ s)=(head tokens)
+parseError (first:rest)= let (T p _ s)=first
 		    in let (AlexPn _ l c)=p
 		       in let msg = "Parse error on line " ++ (show l) ++ ", column "++(show c)++" during parsing of "++s
 			  in Left msg
