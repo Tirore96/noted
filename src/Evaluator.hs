@@ -100,7 +100,7 @@ ifContextFilter (SContext t args) (T.Fun types) = do newArgs <-  filterArgs args
                                                      return $ SContext t newArgs
 ifContextFilter sTerm  _ = return sTerm
 
-typeOfCtxVal (T.Dur _) = T.TDur
+typeOfCtxVal (T.Dur _ _) = T.TDur
 typeOfCtxVal (T.Key _) = T.TKey
 typeOfCtxVal (T.Octave _) = T.TOctave
 
@@ -298,10 +298,10 @@ strToNoteFun "h" = Eu.b
 
 buildFun :: STerm -> Either String Fun
 buildFun (SNum t n) = Right $ NumFun (\args -> case args of
-                                                 [T.Dur dur,T.Key key,T.Octave octave] -> 
+                                                 [T.Dur num denom,T.Key key,T.Octave octave] -> 
                                                        let (ocOffset,note) = numToNote n key
                                                        in let fun = strToNoteFun note
-                                                          in Right $ fun (octave+ocOffset) dur
+                                                          in Right $ fun (octave+ocOffset) (num%denom)
                                                  _ -> Left "error in NumFun")
 
 
@@ -311,9 +311,9 @@ buildFun (SNum t n) = Right $ NumFun (\args -> case args of
 --                                                 in fun octave dur)
 buildFun (SNote t note) = Right $ NoteFun (\args -> 
                                               case args of
-                                                [T.Dur dur,T.Octave octave] ->
+                                                [T.Dur num denom,T.Octave octave] ->
                                                       let fun = strToNoteFun note
-                                                      in Right $ fun octave dur
+                                                      in Right $ fun octave (num %denom)
                                                 _ -> Left "error in NoteFun")
 
 --buildFun (SNote t note) = Right $ NoteFun (\(T.Dur dur) (T.Octave octave) -> 
@@ -321,9 +321,9 @@ buildFun (SNote t note) = Right $ NoteFun (\args ->
 --                                              in fun octave dur)
 buildFun (SNoteN t note octave) = Right $ NoteNFun (\args -> 
                                               case args of
-                                                [T.Dur dur] ->
+                                                [T.Dur num denom] ->
                                                       let fun = strToNoteFun note
-                                                      in Right $ fun octave dur
+                                                      in Right $ fun octave (num%denom)
                                                 val -> Left $ "error in NoteNFun, was given "++(show val))
 
 
@@ -366,9 +366,9 @@ commaFuns (NoteFun inner1) (NoteFun inner2) = Right $ NoteFun $ commaInnerFuns i
 commaFuns (NoteNFun inner1) (NoteNFun inner2) = Right $ NoteNFun $ commaInnerFuns inner1 inner2
 commaFuns _ _ = Left "error in commaFuns"
 
-dotInner innerFun = (\((T.Dur dur):rest)-> let newDur = T.Dur (incDur dur) 
-                                           in let newArgs = newDur:rest
-                                              in innerFun newArgs)
+dotInner innerFun = (\((T.Dur num denom):rest)-> let newDur = T.Dur (num+1) denom
+                                                 in let newArgs = newDur:rest
+                                                     in innerFun newArgs)
 
 dot (NumFun fun) =  NumFun $ dotInner fun 
 dot (NoteFun fun) = NoteFun $ dotInner fun
@@ -376,7 +376,8 @@ dot (NoteNFun fun) = NoteNFun $ dotInner fun
 
 
 incDur :: Eu.Dur -> Eu.Dur
-incDur dur = (1+(numerator dur)) % (denominator dur)
+incDur dur = let num = numerator dur
+             in  (1+(numerator dur)) % (denominator dur)
 
 
 

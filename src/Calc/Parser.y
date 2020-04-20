@@ -67,7 +67,7 @@ Exp :: {Exp}
 --        | Term1 {$1}
 
 Term :: {Term}
-        : Term1 space Term {Application $1 $3}
+        : Term1 space Term {Application $1 $3} 
         | Term1 {$1}
 
 
@@ -83,7 +83,7 @@ Term2 :: {Term}
         | Term2 Term2 {Concatted $1 $2}
         | var {Variable (parseBase $1)}
         | '{' ListPairs '}' {Context (sortPairs $2)}
---        | '(' Term3 ')' {$2}
+        | '(' Term ')' {$2}
 
 --Term3 :: {Term}
 --        : Term1 space ',' space Term3 {Commaed $1 $5}

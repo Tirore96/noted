@@ -57,15 +57,15 @@ data TypedTerm = Num Type Integer
                | Application Type TypedTerm TypedTerm
   deriving (Show)
 
-data TypedCtxValue = Dur Eu.Dur | Octave Int | Key String
+data TypedCtxValue = Dur Integer Integer | Octave Int | Key String
   deriving(Eq,Show)
 
 instance Ord TypedCtxValue where
-  compare (Dur _) (Dur _) = EQ
+  compare (Dur _ _ ) (Dur _ _) = EQ
   compare (Key _) (Key _) = EQ
   compare (Octave _) (Octave _) = EQ
-  compare (Dur _) _ = GT
-  compare (Key _) (Dur _) = LT
+  compare (Dur _ _) _ = GT
+  compare (Key _) (Dur _ _) = LT
   compare (Key _) _ = LT
   compare (Octave _) _ = LT
 
@@ -150,7 +150,7 @@ assertValidApplication _ _ = failM "invalid application 2"
 
 
 typeCheckLabelPair (P.Bars,val) = case val of
-                                   P.CNum (n,_) -> return $ (TDur,Dur (1%n))
+                                   P.CNum (n,_) -> return $ (TDur,Dur 1 4)
                                    _ -> failM "bars is associated with non cnum"
 typeCheckLabelPair (P.Key,val) = case val of
                                    P.CNote (str,_) -> return $ (TKey,Key str)
