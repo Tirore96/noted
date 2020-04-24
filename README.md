@@ -9,5 +9,5 @@ $chrd3= 6,1,3<br>
 $chrd4= 4,6,1<br>
 $con = {bars=4;octave_pos=5;key=c}<br>
 $m1 = [$chrd1. $chrd1.. $chrd1 $chrd1...] $con<br>
-$m2 = [12 122 111] $con
+$m2 = [12 122 111] $con <br>
 $m1,$m2 <br>
