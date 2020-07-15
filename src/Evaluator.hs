@@ -9,571 +9,180 @@ import Control.Monad.State.Lazy
 import qualified Data.List as List
 import qualified TypeChecker as T
 
---evaluate :: T.TypedExp -> Eu.Music Eu.Pitch
---evaluate typedExp = 
---
---evaluate :: T.TypedExp -> SEM (Eu.Music Eu.Pitch)
---evaluate (T.Assign str typedTerm typedExp) = case T.getType typedTerm of
---                                              TMusicExp sym pos
---                                              TContext labels
---                                              TMusic -> evaluateTerm typedTerm
-
---data STerm = SNum Integer 
---           | SNote String 
---           | SNoteN String Integer 
---           | SDotted STerm 
---           | SConcatted STerm STerm 
---           | SCommaed STerm STerm 
---           | SContext [(Pa.Label,Pa.CtxValue)]
---           | SApplication STerm STerm
-
-data STerm = SNum T.Type Integer
-           | SNote T.Type String
-           | SNoteN T.Type String Int
-           | SDotted T.Type STerm
-           | SConcatted T.Type STerm STerm 
-           | SCommaed T.Type STerm STerm
-           | SContext T.Type [T.TypedCtxValue]
-           | SApplication T.Type STerm STerm
- deriving (Show)
-
-getType :: STerm -> T.Type
-getType (SNum t _) = t
-getType (SNote t _) = t
-getType (SNoteN t _ _ ) = t
-getType (SDotted t _ ) = t
-getType (SConcatted t _ _ ) = t
-getType (SCommaed t _ _ )= t
-getType (SContext t _ ) = t
-
-
-type Env = Map.Map String STerm
-type SEM a = StateT Env (Either String) a
-
-failM str = StateT (\s -> Left str)
-
-bindVar :: String -> STerm -> SEM ()
-bindVar str sTerm = do env <- get
-                       put (Map.insert str sTerm env)
-
-lookupVar :: String -> SEM STerm
-lookupVar str = StateT (\s -> case Map.lookup str s of
-                                Just val -> Right (val,s)
-                                Nothing -> Left "var not present")
-
-substitute :: T.TypedExp -> Either String STerm
-substitute exp = case  runStateT (substituteExp exp) Map.empty of
-                  Left err -> Left err
-                  Right (sTerm,s) -> Right sTerm
-
-substituteExp :: T.TypedExp -> SEM STerm
-substituteExp (T.Assign str term exp) = do sTerm <- substituteTerm term
-                                           bindVar str sTerm
-                                           substituteExp exp
-
-substituteExp (T.TypedTerm term) = substituteTerm term
-
-substituteTerm :: T.TypedTerm -> SEM STerm
-substituteTerm (T.Num t n) = return $ SNum t n
-substituteTerm (T.Note t str) = return $ SNote t str
-substituteTerm (T.NoteN t str n) = return $ SNoteN t str n
-substituteTerm (T.Dotted t term) = do sTerm <- substituteTerm term
-                                      return $ SDotted t sTerm
-substituteTerm (T.Concatted t t1 t2) = do sT1 <- substituteTerm t1 
-                                          sT2 <- substituteTerm t2
-                                          return $ SConcatted t sT1 sT2
-
-substituteTerm (T.Commaed t t1 t2) = do sT1 <- substituteTerm t1 
-                                        sT2 <- substituteTerm t2
-                                        return $ SCommaed t sT1 sT2
-
-substituteTerm (T.Variable _ str ) = lookupVar str
-substituteTerm (T.Context t val) = return $ SContext t val
-substituteTerm (T.Application t t1 t2) = do sT1 <- substituteTerm t1 
-                                            sT2 <- substituteTerm t2
-                                            updatedsT2 <- ifContextFilter sT2 (getType sT1) ----Filtering of context
-                                            return $ SApplication t sT1 updatedsT2 
-
-
-ifContextFilter :: STerm -> T.Type-> SEM STerm
-ifContextFilter (SContext t args) (T.Fun types) = do newArgs <-  filterArgs args (init types)
-                                                     return $ SContext t newArgs
-ifContextFilter sTerm  _ = return sTerm
-
-typeOfCtxVal (T.Dur _ _) = T.TDur
-typeOfCtxVal (T.Key _) = T.TKey
-typeOfCtxVal (T.Octave _) = T.TOctave
-
-
-
-filterArgs [] [] = return []
-filterArgs [] _ = failM "application not satisfied"
-filterArgs _ [] = return []
-filterArgs (first:rest) (firstType:restTypes) = if (typeOfCtxVal first) == firstType
-                                                        then do rest <- filterArgs rest restTypes
-                                                                return (first:rest)
-                                                        else filterArgs rest (firstType:restTypes)
-
---data Fun = NumFun (P.CtxValue -> P.CtxValue -> P.CtxValue -> Eu.Music Eu.Pitch)
---         | NoteFun (P.CtxValue -> P.CtxValue -> Eu.Music Eu.Pitch)
---         | NoteNFun (P.CtxValue-> Eu.Music Eu.Pitch) 
-data Fun = NumFun ([T.TypedCtxValue] -> Either String (Eu.Music Eu.Pitch))
-         | NoteFun ([T.TypedCtxValue]-> Either String (Eu.Music Eu.Pitch))
-         | NoteNFun ([T.TypedCtxValue]->Either String (Eu.Music Eu.Pitch))
-
-         
---instance Eq Fun where
---  (NumFun f1)==(NumFun f2)=True
---  (NoteFun f1)==(NoteFun f2)=True
---  (NoteNFun f1)==(NoteNFun f2)=True
---  _ == _ = False
-
-
-
-durKeyOcL = [T.TDur,T.TKey,T.TOctave]
-durOcL = [T.TDur,T.TOctave]
-durL = [T.TDur]
-
-
-
-
-evaluateToMusic :: STerm -> Either String (Eu.Music Eu.Pitch)
-evaluateToMusic (SApplication T.TMusic term1 term2) = 
-  case getType term1 of
-   T.Fun [T.TDur,T.TKey,T.TOctave,T.TMusic] -> 
-                do builtFun <-  buildFun term1 
-                   case (builtFun,term2) of
-                     (NumFun fun,SContext durKeyOcL args) -> fun args
-                     _ -> Left "error 1"
-
-   T.Fun [T.TDur,T.TOctave,T.TMusic] -> 
-                do builtFun <-  buildFun term1 
-                   case (builtFun,term2) of
-                     (NoteFun fun,SContext durOcL args) -> fun args
-                     _ -> Left "error 2"
-
-
-   T.Fun [T.TDur,T.TMusic]-> 
-                do builtFun <-  buildFun term1 
-                   case (builtFun,term2) of
-                     (NoteNFun fun,SContext durL args) -> fun args
-                     _ -> Left "error 3"
-
-
-
-   _ ->  Left "first argument of application is not a function"
-
-
-
-evaluateToMusic (SConcatted T.TMusic term1 term2) = do m1 <- evaluateToMusic term1 
-                                                       m2 <- evaluateToMusic term2
-                                                       return $ (Eu.:+:) m1 m2
-
-evaluateToMusic (SCommaed T.TMusic term1 term2) = do m1 <- evaluateToMusic term1 
-                                                     m2 <- evaluateToMusic term2
-                                                     return $ (Eu.:=:) m1 m2 
-
-evaluateToMusic arg = Left $ errMsg arg "Called in evaluate"
-
-
-evaluate :: T.TypedExp -> Either String (Eu.Music Eu.Pitch)
-evaluate typedExp = do substituted <- substitute typedExp
-                       evaluateToMusic substituted
-
-
---getLabels :: [Pa.Label] -> Map.Map Pa.Labl Pa.CtxValue -> Either String [Pa.CtxValue]
---getLabels labels con = mapM (\l -> case Map.lookup l con of
---                                    Just val -> Right val
---                                    Nothing -> left "label not present") con
-
---applyArgs :: (TypedCtxValue -> b) ->[TypedCtxValue]
---applyArgs fun (first:rest) = applyArgs (fun first) rest
---applyArgs fun [] = fun
-
-errMsg :: (Show a) => a -> String -> String
-errMsg val str = "Failed with "++(show val)++". "++str
-
---------------------------------------------------------------------------------------------------
---
-----dur -> note -> key?
---data KeyOcBars = KeyOcBars 
---data OcBars = OcBars
---data Bars =  Bars
-----Comp defined in terms of its' dependencies
---
---
---data Comp =
---    Num (Eu.Dur -> String -> Eu.Octave -> Eu.Music Eu.Pitch)
---  | Note (Eu.Dur -> Eu.Octave -> Eu.Music Eu.Pitch)
---  | NoteN  (Eu.Dur-> Eu.Music Eu.Pitch) 
-----    Concatted ::  (Comp a) -> (Comp a) -> Comp a
-----    Commaed ::  (Comp a) -> (Comp a) -> Comp a
---
---data Music = ApplicationKeyOcBars Comp String Int Int 
---           | ApplicationOcBars Comp Int Int
---           | ApplicationBars Comp Int 
---           | MConcatted Music  Music   
---           | MCommaed Music  Music 
---
---constrain :: STerm -> Either String Music
---constrain (SApplication comp (Pa.Context labelPairs) ) = 
---        do sComp <- combineComp comp
---           let conMap = simplifyCon labelPairs
---           case sComp of
---            Num fun -> do KeyF k <- key conMap
---                          BarsF b <- bars conMap
---                          OctaveF o <- octave conMap
---                          Right $ ApplicationKeyOcBars sComp k b o
---            Note fun -> do BarsF b <- bars conMap
---                           OctaveF o <- octave conMap
---                           Right $ ApplicationOcBars sComp b o
---            NoteN fun -> do BarsF b <- bars conMap
---                            Right $ ApplicationBars sComp b
---
---constrain arg = Left (errMsg arg "unknown reason")
-----Missing case: Concat and Comma of Music without Application
---
--------------------------Context
---data SimpleValue = BarsF Int | OctaveF Int | KeyF String
---
---ctxValMapFun :: (Pa.Label,Pa.CtxValue) -> (Pa.Label,SimpleValue)
---ctxValMapFun (Pa.Bars,Pa.CNum (n,_)) =(Pa.Bars,BarsF $ fromIntegral n)
---ctxValMapFun (Pa.OctavePos,Pa.CNum (n,_)) =(Pa.OctavePos,OctaveF $ fromIntegral n)
---ctxValMapFun (Pa.Key,Pa.CNote (str,_)) =(Pa.Key,KeyF str)
---
---
---simplifyCon :: [(Pa.Label,Pa.CtxValue)]-> Map.Map Pa.Label SimpleValue 
---simplifyCon labelPairs = Map.fromList (map ctxValMapFun labelPairs)
---
---lookupLabel :: Pa.Label -> Map.Map Pa.Label SimpleValue -> Either String SimpleValue
---lookupLabel label con = case Map.lookup label con of
---                         Just val -> Right val
---                         Nothing -> Left (errMsg label) "not present in context"
---
---key = lookupLabel Pa.Key
---bars = lookupLabel Pa.Bars
---octave = lookupLabel Pa.OctavePos
---
-----class Combinable a where
-----  combine j
----------------------------------------
---
---
----------------------combineComp
---joinComps (Num fun1) (Num fun2) op = Right $ Num (\dur key octave -> (fun1 dur key octave) `op` (fun2 dur key octave))
-
---class CompFun a where
---  build :: STerm -> Either String a
---  increment :: a -> a
---  dot :: -> a -> a
---  combine :: a -> a-> (Music a -> Music a -> Music a) -> a
---  concat :: a -> a -> a
---  comma :: a -> a -> a
-
---data NumFun = NumFun (P.CtxValue -> P.CtxValue -> P.CtxValue -> Eu.Music Eu.Pitch)
---data NoteFun = NoteFun (P.CtxValue -> P.CtxValue -> Eu.Music Eu.Pitch)
---data NoteNFun = NoteNFun (P.CtxValue-> Eu.Music Eu.Pitch) 
-
-
---numT = TMusicalExp TByNum TNotPositioned
---noteT = TMusicalExp TByLetter TNotPositioned
---noteNT = TMusicalExp TByLetter TPositioned
-
-scale = ["c","d","e","f","g","a","h"]
-numToNote :: Integer -> String -> (Int,String)
-numToNote n key = let Just offset = List.elemIndex key scale
-                  in let (octave,index)= quotRem (offset+(fromIntegral n))  7
-                     in (octave,scale!!index)
-
-strToNoteFun :: String -> Eu.Octave -> Eu.Dur -> Eu.Music Eu.Pitch
-strToNoteFun "a" = Eu.a
-strToNoteFun "c" = Eu.c
-strToNoteFun "d" = Eu.d
-strToNoteFun "e" = Eu.e
-strToNoteFun "f" = Eu.f
-strToNoteFun "g" = Eu.g
-strToNoteFun "h" = Eu.b
-
-
-
-buildFun :: STerm -> Either String Fun
-buildFun (SNum t n) = Right $ NumFun (\args -> case args of
-                                                 [T.Dur num denom,T.Key key,T.Octave octave] -> 
-                                                       let (ocOffset,note) = numToNote n key
-                                                       in let fun = strToNoteFun note
-                                                          in Right $ fun (octave+ocOffset) (num%denom)
-                                                 _ -> Left "error in NumFun")
-
-
---buildFun (SNum t n) = Right $ NumFun (\(T.Dur dur) (T.Key key) (T.Octave octave)-> 
---                                              let note = numToNote n key
---                                              in let fun = strToNoteFun note
---                                                 in fun octave dur)
-buildFun (SNote t note) = Right $ NoteFun (\args -> 
-                                              case args of
-                                                [T.Dur num denom,T.Octave octave] ->
-                                                      let fun = strToNoteFun note
-                                                      in Right $ fun octave (num %denom)
-                                                _ -> Left "error in NoteFun")
-
---buildFun (SNote t note) = Right $ NoteFun (\(T.Dur dur) (T.Octave octave) -> 
---                                              let fun = strToNoteFun note
---                                              in fun octave dur)
-buildFun (SNoteN t note octave) = Right $ NoteNFun (\args -> 
-                                              case args of
-                                                [T.Dur num denom] ->
-                                                      let fun = strToNoteFun note
-                                                      in Right $ fun octave (num%denom)
-                                                val -> Left $ "error in NoteNFun, was given "++(show val))
-
-
-
---buildFun (SNoteN t note n) = Right $ NoteNFun (\(T.Dur dur)-> 
---                                              let fun = strToNoteFun note
---                                              in fun (fromIntegral n) dur)
-
-buildFun (SConcatted _ val1 val2) = 
-                                   do fun1 <- buildFun val1 
-                                      fun2 <- buildFun val2
-                                      concatFuns fun1 fun2
-buildFun (SCommaed _ val1 val2) = 
-                                   do fun1 <- buildFun val1 
-                                      fun2 <- buildFun val2
-                                      commaFuns fun1 fun2
-
-buildFun (SDotted t val) = do fun <- buildFun val
-                              Right $ dot fun
-
-buildFun _ = Left "error in buildFun"
+type StateData = Map.Map String EvalTerm
+
+type SEME a = StateT StateData (Either String) a
+
+updateState :: String -> EvalTerm ->  SEME ()
+updateState str t = StateT (\s -> Right ((),Map.insert str t s))
+
+lookupVar :: String -> SEME EvalTerm
+lookupVar str = StateT (\s -> case Map.lookup str s of 
+                            Just t -> Right (t,s)
+                            Nothing -> Left "bad variable lookup")
+
+data Position = NumPos Integer | LetterPos Letter
+type Letter = (Char,Signature) 
+data Signature = Sharp | Flat | Natural
+data NoteStruct = NoteStruct { 
+                   duration :: Maybe Integer,
+                   position :: Maybe Position,
+                   octave   :: Maybe Int
+                 }
+data Notes = Note NoteStruct 
+              | Notes P.CompType Notes Notes 
+
+data EvalTerm = EConstant Integer
+                | ENotes Notes
+                | EMusic (Eu.Music Eu.Pitch)
+                | EContext [(P.Label,EvalTerm)]
+                | EPosition Position
+
+evaluate :: P.Program -> Either String (Eu.Music Eu.Pitch)
+evaluate program = let m = do mapM updateStore program
+                              lookupVar "main"
+                   in case runStateT m Map.empty of
+                        Right (EMusic m,_) -> Right m
+                        Left err -> Left err
+
+updateStore :: P.Assignment -> SEME ()
+updateStore (P.Assignment (var,_) term) = do
+  t <- evaluateTerm term
+  updateState var t
   
-
-combineInnerFuns innerFun1 innerFun2 op =  (\args -> do val1 <- innerFun1 args
-                                                        val2 <- innerFun2 args
-                                                        Right $ val1 `op` val2 )
-
-concatInnerFuns innerFun1 innerFun2  = combineInnerFuns innerFun1 innerFun2 (Eu.:+:)
-commaInnerFuns innerFun1 innerFun2  = combineInnerFuns innerFun1 innerFun2 (Eu.:=:)
-
-
-
-concatFuns (NumFun inner1) (NumFun inner2) = Right $ NumFun $ concatInnerFuns inner1 inner2
-concatFuns (NoteFun inner1) (NoteFun inner2) = Right $ NoteFun $ concatInnerFuns inner1 inner2
-concatFuns (NoteNFun inner1) (NoteNFun inner2) = Right $ NoteNFun $ concatInnerFuns inner1 inner2
-concatFuns _ _ = Left "error in concatFuns"
-
-commaFuns (NumFun inner1) (NumFun inner2) = Right $ NumFun $ commaInnerFuns inner1 inner2
-commaFuns (NoteFun inner1) (NoteFun inner2) = Right $ NoteFun $ commaInnerFuns inner1 inner2
-commaFuns (NoteNFun inner1) (NoteNFun inner2) = Right $ NoteNFun $ commaInnerFuns inner1 inner2
-commaFuns _ _ = Left "error in commaFuns"
-
-dotInner innerFun = (\((T.Dur num denom):rest)-> let newDur = T.Dur (num+1) denom
-                                                 in let newArgs = newDur:rest
-                                                     in innerFun newArgs)
-
-dot (NumFun fun) =  NumFun $ dotInner fun 
-dot (NoteFun fun) = NoteFun $ dotInner fun
-dot (NoteNFun fun) = NoteNFun $ dotInner fun 
+evaluateTerm :: P.Term -> SEME EvalTerm
+evaluateTerm (P.Num (n,_)) =return (EConstant n)  -- might become ENote when sorroundings are known
+evaluateTerm (P.Dur (n,_)) = return $ ENotes $ Note $ 
+                               NoteStruct (Just n) Nothing Nothing
+--evaluateTerm (P.Letter (s,_)) = undefined
+evaluateTerm (P.Composition compType t1 t2) = do
+  t1_temp_eval <- evaluateTerm t1 
+  t2_temp_eval <- evaluateTerm t2
+  let t1_eval = constToEnote t1_temp_eval
+      t2_eval = constToEnote t2_temp_eval
+  case (t1_eval,t2_eval) of
+    (ENotes en1, ENotes en2) -> return (ENotes (Notes compType en1 en2 ))
+    (EMusic m1,EMusic m2) -> case compType of
+                              P.Serial -> return $ EMusic  ((Eu.:+:) m1 m2)
+                              P.Parallel-> return $ EMusic ((Eu.:=:) m1 m2)
 
 
-incDur :: Eu.Dur -> Eu.Dur
-incDur dur = let num = numerator dur
-             in  (1+(numerator dur)) % (denominator dur)
+evaluateTerm (P.Variable (var,_))= lookupVar var
+evaluateTerm (P.Context ctx) = let (labels,values) = unzip ctx
+                               in let newValues = map evaluateCtxValue values
+                                  in let newCtx = zip labels newValues
+                                     in do return $ EContext newCtx
+evaluateTerm (P.Application (P.ToNotes,_) terms) = do
+  durations_eval <- evaluateTerm (terms!!0)
+  positions_temp <- evaluateTerm (terms!!1)
+  let positions_eval = constToEnote (positions_temp)
+  case (durations_eval,positions_eval) of
+    (ENotes durations,ENotes positions) -> return $ ENotes $ joinDurPos durations positions
+    _ -> failM "failed"
+
+evaluateTerm (P.Application (P.ToMusic,_) terms) = do
+  notes_eval <- evaluateTerm (terms!!0)  --Not safe
+  ctx_eval <- evaluateTerm (terms!!1)   --Not safe
+  case (notes_eval,ctx_eval) of
+    (ENotes notes,EContext ctx) -> 
+       let ctx_map = Map.fromList ctx
+       in let Just (EConstant octave) = Map.lookup P.Octave ctx_map    --Not safe
+          in let notes_w_octave = addOctave notes (fromIntegral octave) --TODO
+             in do case typeOfNotes notes of
+                     T.Lettered-> return $ EMusic (buildMusic notes )
+                     T.Numbered->let Just (EPosition (LetterPos l)) = Map.lookup P.Key ctx_map
+                                 in let notes_w_o_l = numberedToLettered notes_w_octave l ---cut corner, not --handled sflats
+                                    in return $ EMusic (buildMusic notes_w_o_l) 
+    _ -> failM "failed"
+evaluateCtxValue :: P.Term -> EvalTerm
+--evaluateCtxValue (P.Variable (v,_)) = do evalTerm <- lookupVar v     --- variables not allowed in struct
+--                                         return $ evaluateCtxValue evalTerm
+evaluateCtxValue (P.Num (n,_)) = EConstant n
+evaluateCtxValue (P.Letter (s,_)) = if length s == 1
+                                      then EPosition (LetterPos (head s,Natural))
+                                      else if s!!1 == '#'
+                                             then EPosition (LetterPos (head s,Sharp))
+                                             else EPosition (LetterPos (head s,Flat))
+
+addOctave :: Notes -> Int -> Notes
+addOctave (Notes compType n1 n2) octave = 
+  Notes compType (addOctave n1 octave) (addOctave n2 octave)
+addOctave (Note struct) octave = 
+  let dur = duration struct
+      pos = position struct
+      oc = Just octave
+  in Note (NoteStruct dur pos oc)
+
+buildMusic :: Notes -> Eu.Music Eu.Pitch
+buildMusic (Note struct) =
+  let Just dur = duration struct
+      Just oc = octave struct
+      Just (LetterPos pos) = position struct --Not safe
+  in (letterToNoteFun pos) oc (1%dur)    --For now ignore signature
+
+buildMusic (Notes P.Serial en1 en2) = 
+  let m1 = (buildMusic en1) 
+      m2 = (buildMusic en2)
+  in (Eu.:+:) m1 m2
+
+buildMusic (Notes P.Parallel en1 en2) = 
+  let m1 = (buildMusic en1) 
+      m2 = (buildMusic en2)
+  in (Eu.:=:) m1 m2
 
 
+typeOfNotes :: Notes -> T.PosType
+typeOfNotes (Note struct ) = case position struct of
+                               Just (LetterPos _) ->  T.Lettered
+                               _ ->  T.Numbered
+
+typeOfNotes (Notes _ en _) = typeOfNotes en -- Recurse left
 
 
---Right $ NumFun (\args -> do val1 <- fun1 args
---                                                                     val2 <- fun2 args
---                                                                     Right $ val1 (Eu.:+:)val2 )
+joinDurPos :: Notes -> Notes -> Notes 
+joinDurPos (Notes compType dur_en1 dur_en2) (Notes _ pos_en1 pos_en2) = 
+  Notes compType (joinDurPos dur_en1 pos_en1) (joinDurPos dur_en2 pos_en2)
 
---concatFuns (NoteFun fun1) (NoteFun fun2) = Right $ NoteFun (\args -> do val1 <- fun1 args
---                                                                       val2 <- fun2 args
---                                                                       Right $ val1 (Eu.:=:)val2 )
---
---concatFuns (NoteNFun fun1) (NoteNFun fun2) = Right $ NoteNFun (\dur -> (fun1 dur ) (Eu.:+:) (fun2 dur ))
---concatFuns arg1 arg2 = Left $ errMsg (arg1,arg2) "failed in concat"
---
---commaFuns (NumFun fun1) (NumFun fun2) = Right $ NumFun (\dur key octave -> (fun1 dur key octave) (Eu.:=:) (fun2 dur key octave))
---commaFuns (NoteFun fun1) (NoteFun fun2) = Right $ NoteFun (\dur octave -> (fun1 dur octave) (Eu.:=:) (fun2 dur octave))
---commaFuns (NoteNFun fun1) (NoteNFun fun2) = Right $ NoteNFun (\dur -> (fun1 dur ) (Eu.:=:) (fun2 dur ))
---commaFuns arg1 arg2 = Left $ errMsg (arg1,arg2) "failed in comma"
+joinDurPos (Note struct1) (Note struct2) =   --Assumes octave not used yet
+  let dur = duration struct1
+      pos = position struct2
+  in Note $ NoteStruct dur pos Nothing 
+
+joinDurPos (Note struct) (Notes P.Parallel n1 n2) =
+  let n1_new = joinDurPos (Note struct) n1
+      n2_new = joinDurPos (Note struct) n2
+  in Notes P.Parallel n1_new n2_new
 
 
+constToEnote :: EvalTerm -> EvalTerm
+constToEnote (EConstant n) = ENotes (Note $  NoteStruct Nothing (Just (NumPos n)) Nothing)
+constToEnote evalTerm = evalTerm
 
+scale = ['c','d','e','f','g','a','h']
+numToNote :: Integer -> Letter -> (Int,Letter)
+numToNote n (key,sig) = let Just offset = List.elemIndex key scale   --possibly return tuple in the future
+                        in let (octave,index)= quotRem (offset+(fromIntegral n))  7
+                           in (octave,(scale!!index,sig))
 
+numberedToLettered :: Notes -> Letter -> Notes
+numberedToLettered (Note struct) letter = 
+  let dur = duration struct
+      Just (NumPos pos_num) = position struct  --not safe
+      (oc_offset,c) = numToNote pos_num letter
+  in let Just oc = octave struct
+         pos = Just $ LetterPos c
+     in Note $ NoteStruct dur pos (Just (oc + oc_offset))
 
+numberedToLettered (Notes compType en1 en2) key = 
+  Notes compType (numberedToLettered en1 key)  (numberedToLettered en2 key)
 
+letterToNoteFun :: Letter -> Eu.Octave -> Eu.Dur -> Eu.Music Eu.Pitch
+letterToNoteFun ('a',_) = Eu.a
+letterToNoteFun ('c',_) = Eu.c
+letterToNoteFun ('d',_) = Eu.d
+letterToNoteFun ('e',_) = Eu.e
+letterToNoteFun ('f',_) = Eu.f
+letterToNoteFun ('g',_) = Eu.g
+letterToNoteFun ('h',_) = Eu.b  
 
---buildGeneric :: (CompFun a) => STerm
---instance CompFun NumFun where
---  build (SNum t n) = NumFun (\(Dur dur) (Key key) (Octave octave)-> 
---                                                let note = numToNote n key
---                                                in let fun = strToNoteFun note
---                                                   in fun octave dur)
-----maybe specify t?
---  build (SConcatted numT val1 val2) = 
---                                   do fun1 <- build val1 
---                                      fun2 <- build val2
---                                      concat fun1 fun2
---  build (Scommaed numT val1 val2) = do fun1 <- build val1 
---                                       fun2 <- build val2
---                                       comma fun1 fun2
---  build (SDotted numT val) = do fun <- build val
---                                dot fun
---  build _ = Left "tried to build non NumFun"
---  increment (NumFun fun) = NumFun (\(Dur dur)-> fun $ Dur (incDur dur))
---  dot = increment
---  combine (NumFun fun1) (NumFun fun2) op =  
---         NumFun (\dur key octave -> (fun1 dur key octave) `op` (fun2 dur key octave))
---
---  concat val1 val2  = combine val1 val2 (Eu.:+:)
---  comma val1 val2  = combine val1 val2 (Eu.:=:)
---
---
---instance CompFun NoteFun where
---  build (SNote note) = NoteFun (\(Dur dur) (Octave octave) -> 
---                                              let fun = strToNoteFun note
---                                              in fun octave dur)
---  build (SConcatted t val1 val2) = do fun1 <- build val1 
---                                      fun2 <- build val2
---                                      concat fun1 fun2
---  build (Scommaed t val1 val2) = do fun1 <- build val1 
---                                    fun2 <- build val2
---                                    comma fun1 fun2
---  build (SDotted t val) = do fun <- build val
---                             dot fun
---
---  build _ = Left "tried to build non NoteFun"
---  dot = increment
---
---  increment (NoteFun fun) =  NoteFun (\(Dur dur) -> fun $ Dur (incDur dur))
---
---  combine (NumFun fun1) (NumFun fun2) op =  
---         NumFun (\dur octave -> (fun1 dur octave) `op` (fun2 dur octave))
---
---  concat val1 val2  = combine val1 val2 (Eu.:+:)
---  comma val1 val2  = combine val1 val2 (Eu.:=:)
---
---
---instance CompFun NoteFun where
---  build (SNoteN note n) = Right $ NoteFun (\(Dur dur)-> 
---                                                   let fun = strToNoteFun note
---                                                   in fun (fromIntegral n) dur)
---  build (SConcatted t val1 val2) = do fun1 <- build val1 
---                                      fun2 <- build val2
---                                      concat fun1 fun2
---  build (Scommaed t val1 val2) = do fun1 <- build val1 
---                                    fun2 <- build val2
---                                    comma fun1 fun2
---  build (SDotted t val) = do fun <- build val
---                             dot fun
---
---  build _ = Left "tried to build non NoteFun"
---  build _ = Left "tried to build non NoteNFun"
---  dot = increment
---
---  increment (NoteNFun fun) = NoteNFun (\(Dur dur)-> fun (Dur (incDur dur)))
---
---  combine (NumFun fun1) (NumFun fun2) op =  
---         NumFun (\dur -> (fun1 dur ) `op` (fun2 dur ))
---
---  concat val1 val2  = combine val1 val2 (Eu.:+:)
---  comma val1 val2  = combine val1 val2 (Eu.:=:)
-
-
-
-----data Comp =
-----    Num (Eu.Dur -> String -> Eu.Octave -> Eu.Music Eu.Pitch)
-----  | Note (Eu.Dur -> Eu.Octave -> Eu.Music Eu.Pitch)
-----  | NoteN  (Eu.Dur-> Eu.Music Eu.Pitch) 
---
---
---incrementTerm :: (Comp a)-> Comp a
---incrementTerm (Num fun) =  Num (\dur -> fun (incDur dur))
---incrementTerm (Note fun) = Note (\dur -> fun (incDur dur))
---incrementTerm (NoteN fun) = NoteN (\dur -> fun (incDur dur))
-----incrementTerm arg  = Left (errMsg arg) "at final definition of incrementTerm"
---
---
---
---buildFun :: STerm -> Either String (
---combineComp :: STerm -> Either String (Comp a)
---combineComp (SNum n) = Right $ Num (\dur key octave -> let note = numToNote n key
---                                                         in let fun = strToNoteFun note
---                                                            in fun octave dur)
-----remember change pattern match in substitution
---combineComp (SNote str) t = Right $ Note (\dur octave -> let fun = strToNoteFun str
---                                                         in fun octave dur)
---
---combineComp (SNoteN str n) t = Right $ NoteN (\dur ->  let fun = strToNoteFun str
---                                                       in fun (fromIntegral n) dur)
---
---combineComp (SDotted term) t = do sTerm <- combineComp term t
---                                  Right $ incrementTerm sTerm
---
---combineComp (SConcatted t1 t2) t = do sT1 <- combineComp t1 t
---                                      sT2 <- combineComp t2 t
---                                      joinComps sT1 sT2 (Eu.:+:)
---
---combineComp (SCommaed t1 t2) t = do sT1 <- combineComp t1 t
---                                    sT2 <- combineComp t2 t
---                                    joinComps sT1 sT2 (Eu.:=:)
---
---combineComp arg t = Left (errMsg arg "Reason: non-comp given as argument to combineComp")
-------------------------------------------------
-----
-----
-----
-----
-----
-----
-----evaluateMusic :: Music -> Either String (Eu.Music Eu.Pitch)
-----
-----joinComps (Num fun1) (Num fun2) op = Right $ Num (\dur key octave -> (fun1 dur key octave) `op` (fun2 dur key octave))
-----joinComps (Note fun1) (Note fun2) op = Right $ Note (\dur octave -> (fun1 dur octave) `op` (fun2 dur octave))
-----joinComps (NoteN fun1) (NoteN fun2) op = Right $ NoteN (\dur -> (fun1 dur) `op` (fun2 dur))
-----joinComps arg1 arg2 = Left $ (errMsg arg1 "")++(errMsg arg2 "")
-----
--------reduceComp :: Comp a -> Comp a
----------reduceComp (Concatted sT1 sT2) = joinSimpleTerms sT1 sT2 (Eu.:+:)
----------reduceComp (Commaed sT1 sT2) = joinSimpleTerms sT1 sT2 (Eu.:=:)
--------reduceComp (Num fun) = Num fun
--------reduceComp (Note fun) = Note fun
--------reduceComp (NoteN fun) = NoteN fun
-----
-----evaluateMusic (ApplicationKeyOcBars (Num fun) k o b) = 
-----    Right $ fun k o b
-----
-----evaluateMusic (ApplicationOcBars (Note fun) o b) = 
-----    Right $ fun o b
-----
-----evaluateMusic (ApplicationBars (NoteN fun) b) = 
-----    Right $ fun b
-----
-----evaluateMusic arg = Left (errMsg arg) "at end of evaluateMusic definition"
-----
-----
-----
-----
-------case reduceComp comp of 
-------                                                 Num fun -> let Bars b = bars lp
-------                                                                k = key lp
-------                                                                o = octave lp
-------                                                            in fun (1%b) k o
-------                                                 Note fun -> let Bars b = bars lp
-------                                                                 Octave o = octave lp
-------                                                             in fun (1%b) o
-------                                                 NoteN fun -> let Bars b = bars lp
-------                                                              in fun (1%b)
-------
-----
-----
-----
-----
-----
-----
-----
-----evaluate :: Pa.Exp -> Either String (Eu.Music Eu.Pitch)
-----evaluate exp = do sTerm <- substitute exp
-----                  simpleTerm <- simplify sTerm
-----                  evaluate simpleTerm
+failM str = StateT (\state -> Left str)

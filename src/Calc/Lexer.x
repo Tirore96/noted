@@ -8,73 +8,34 @@ module Calc.Lexer where
 
 $digit = 0-9-- digits
 $alpha = [a-zA-Z]   -- alphabetic characters
-$whitespace = [\t\f\v\r] 
+$whitespace = [\ \t\f\v\r] 
 @note = a|[c-h]
 
---tokens :-
---  $white+                                        ; 
---  "//".*                                         ;
---  $digit+                                        {\p s -> TNum  (p, (read s)) }
---  (a|[c-h])                                      {\p s -> TNote (p, head s)}
---  (A|[C-H])                                      {\p s -> TChord (p,s)}
---  \{                                             {\p s -> TOBracket p}
---  \}                                             {\p s -> TCBracket p}
---  quantization | tempo | key | octave\_pos       {\p s -> TCtxWord (p,s)}
---  =                                              {\p s -> TEq p}
---  input                                          {\p s -> TInputK p}
---  chord                                          {\p s -> TChordK p}
---  \"                                             {\p s -> TQuote p}
---  \,                                             {\p s -> TComma p}
---  \.                                             {\p s -> TDot p}
---  \/                                             {\p s -> TDiv p}
---  \+                                             {\p s -> TPlus p}
---  \-                                             {\p s -> TMinus p}
---  \#                                             {\p s -> TSharp p}
---  \m                                             {\p s -> TMin p}
---  b                                              {\p s -> TFlat p}
---  \_                                             {\p s -> TUnderscore p}
---  R                                              {\p s -> TR p}
---  \$ $alpha ($alpha|$digit|\_)*                  {\p s -> TVar (p, s)}
-
 tokens :-
-<0> (\ )+                                           {mkL TSpace} -- change to whitespace later
+--general tokens
+$whitespace+                                   {skip}     
+=                                              {mkL TEq}
+\,                                              {mkL TComma}
+\|                                              {mkL TParallel}
+\-                                              {mkL TSerial}
+
+\$$alpha ($alpha|$digit|\_)* | main                   {mkL TVar}
+$digit                                        {mkL TNum}
+@note (\#|b)?                             {mkL TLetter}
+"//".* \n                                         {skip}
+
+--Outer scope tokens
 <0> (\n)+                                           {mkL TNewLine}
-<0>  "//".* \n                                         {skip}
-<0>  [1-8]                                        {mkL TNum}
-<0>  (a|[c-h])                                      {mkL TNote}
 <0>  \{                                             {mkL TOBracket `andBegin` struct}
-<0> \[                                       {begin square}      
-<square> \]                                         {begin 0}      
-<square> (\ )+                                           {skip}
-<square>  [1-8] (\ )*                                {mkL TNum}
-<square> (a|[c-h]) (\ )*                             {mkL TNote}
---<0>  (A|[C-H])                                      {mkL TChord}
-<struct> bars | key | time |octave\_pos                             {mkL TCtxWord}
-<struct> $digit+                                     {mkL TCtxNum}
-<struct> @note (\#|b)?                             {mkL TCtxNote}
-<struct> \/                              {mkL TCtxSlash}
+<0> \(                                         {mkL TOPara}
+<0> \)                                             {mkL TCPara}
+<0> wn | hn | qn | en                              {mkL TDur}
+<0> toNotes | toMusic                 {mkL TFun}
+--Struct scope
+<struct> key | octave                             {mkL TCtxLabel}
+<struct> \;                                        {mkL TSemi}
 <struct>  \}                                             {mkL TCBracket `andBegin` 0}
- \(                                         {mkL TOPara}
- \)                                             {mkL TCPara}
- $whitespace+                                   {skip}     
-   =                                              {mkL TEq}
-  \;                                              {mkL TSemi}
-\$$alpha ($alpha|$digit|\_)*                   {mkL TVar}
-
-
---  input                                          {mkL TSeq}
---  chord                                          {mkL TNotes}
---  \"                                             {mkL TQuote}
-  \,                                             {mkL TComma}
-  \.                                             {mkL TDot}
---  \/                                             {mkL TDiv}
---  \+                                             {mkL TPlus}
---  \-                                             {mkL TMinus}
---  \#                                             {mkL TSharp}
---  \m                                             {mkL TMin}
---  b                                              {mkL TFlat}
---  \_ $digit                                      {mkL TUnderscore}
---  R                                              {mkL TR}
+<struct> (\n)                                 {skip} --newlines skipped in struct
 
 
 {
@@ -83,58 +44,36 @@ tokens :-
 --makeState s= AlexState {alex_pos = alexStartPos, alex_inp = s,alex_chr = '\n',alex_bytes=[],alex_scd=0}
 
 data TokenClass = 
+    TDur|
+    TMain|
     TNum   |
-    TNote  | 
-    TChord |
+    TLetter | 
     TOBracket |
     TCBracket |
-    TCtxWord |
-    TCtxNum|
-    TCtxNote|
-    TCtxSig |
-    TCtxSlash|
+    TCtxLabel|
     TEq |
     TSemi|
     TEOF |
-    TComma |
-    TDot |
     TOPara |
     TCPara |
     TVar |
-    TSpace|
-    TNewLine
-
---    TSeq |
---    TNotes |
---    TQuote |
---    TDiv |
---    TPlus |
---    TMinus |
---    TSharp |
---    TMin |
---    TFlat |
---    TUnderscore |
---    TR |
---    TVar  |
-    deriving (Eq,Show)
+    TComma |
+    TNewLine |
+    TParallel|
+    TSerial |
+    TFun
+  deriving (Eq,Show)
+  
 
 data Token = T AlexPosn TokenClass String
-  deriving (Eq,Show)
+  deriving (Eq)
+
+instance Show Token where
+  show (T _ c s) = "("++(show c)++" "++s++")"
 
 --Inspired from https://github.com/simonmar/alex/blob/master/examples/haskell.x
 mkL :: TokenClass -> AlexInput -> Int -> Alex Token
 mkL c (p,_,_,str) len = return (T p c (take len str))
-
---num :: AlexInput -> Int -> Alex Token
---num (p,_,_,s) len = return (TNum (p,read $ take len s))
---note (p,_,_,s) len = return (TNote (p,take len s))
---chord (p,_,_,s) len = return (TChord (p,take len s))
---TI (p,_,_,s) len = return (TChord (p,take len s)
-
-
-
-
-
 
 alexEOF = return $ T undefined TEOF ""
 		

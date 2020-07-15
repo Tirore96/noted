@@ -1,7 +1,0 @@
-$con1 = {quantization=16,
-		tempo=120,
-		octave_pos=4}
-
-$a = input "C....G..." $con1
-$a
-

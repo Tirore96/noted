@@ -4,6 +4,7 @@ import Calc.Lexer
 import qualified Data.Map as Map
 import qualified Data.List
 import qualified Data.Function
+import Data.Ratio
 
 
 
@@ -18,159 +19,162 @@ import qualified Data.Function
 
 %token
   num  {T _ TNum _}
-  note {T _ TNote _}
-  chord {T _ TChord _ }
+  note {T _ TLetter _}
   '{'  {T _ TOBracket _}
   '}'  {T _ TCBracket _}
   '('  {T _ TOPara _}
   ')'  {T _ TCPara _}
-  ctxWord {T _ TCtxWord _}
-  ctxNum {T _ TCtxNum _}
-  ctxKey {T _ TCtxNote _}
-  ctxSig {T _ TCtxNote _}
- xSlash {T _ TCtxSlash _ }
-
+  ctxLabel {T _ TCtxLabel _}
   '=' {T _ TEq _ }
-  ',' {T _ TComma _}
-  '.' {T _ TDot _}
   ';'  {T _ TSemi _ }
+  ','  {T _ TComma _}
+  '-'  {T _ TSerial _}
+  '|'  {T _ TParallel _}
+  dur  {T _ TDur _}
   var {T _ TVar _}
-  space {T _ TSpace _}
-  newline {T _ TNewLine _}
+  main {T _ TMain _}
+  fun {T _ TFun _}
 
---  eof	   {T _ TEOF _}
---  '/' {T _ TDiv _}
---  '+' {T _ TPlus _}
---  '-' {T _ TMinus _}
---  '#' {T _ TSharp _}
---  minor {T _ TMin _}
---  flat {T _ TFlat _}
---  '_' {T _ TUnderscore _}
---  R {T _ TR _ }
+  newline {T _ TNewLine _}
 
 %%
 
-
-Exp :: {Exp}
-        : var space '=' space Term newline Exp {Assign (parseBase $1) $5 $7}
-        | var '=' space Term newline Exp {Assign (parseBase $1) $4 $6}
-        | var space '=' Term newline Exp {Assign (parseBase $1) $4 $6}
-        | var '=' Term newline Exp {Assign (parseBase $1) $3 $5}
+Program :: {[Assignment]}
+        : Assignments LastAssignment {reverse ($2:$1)}
+        | LastAssignment {[$1]}
 
 
+Assignments :: {[Assignment]}
+        : Assignments Assignment {$2:$1}
+        | Assignment {[$1]}
 
-        | Term newline {Term $1}
 
---Term :: {Term}
---        : Term1 '(' Term1 ')' {Application $1 $3}
---        | Term1 '{' ListPairs '}' {Application $1 (Context (sortPairs $3))}
---        | Term1 {$1}
+Assignment :: {Assignment}
+        : var '=' Term newline {Assignment (parseBase $1) $3}
+
+LastAssignment :: {Assignment}
+        : var '=' Term {Assignment (parseBase $1) $3}
+        | Assignment {$1}
+
+
+
 
 Term :: {Term}
-        : Term1 space Term {Application $1 $3} 
+        : fun '(' TermArgs ')' {Application (parseFun $1) (reverse $3)} 
         | Term1 {$1}
+
+TermArgs :: {[Term]}
+          : TermArgs ',' Term {$3:$1}
+          | Term {[$1]}
 
 
 Term1 :: {Term}
-        : Term1 ',' Term2 {Commaed $1 $3}
+        : Term1 '-' Term2 {Composition Serial $1 $3}
         | Term2 {$1}
 
 Term2 :: {Term}
+        : Term2 '|' Term3 {Composition Parallel $1 $3}  -- <--- Remember to add this constructor
+        | Term3 {$1}
+       
+
+Term3 :: {Term}
         : num {Num (parseBaseInt $1)}
-        | note {Note (parseBase $1)}
-        | note num {NoteN (parseNoteN $1 $2)}
-        | Term2 '.' {Dotted $1}
-        | Term2 Term2 {Concatted $1 $2}
+        | dur {Dur (parseDur $1)}
+        | note {Letter (parseBase $1)}
         | var {Variable (parseBase $1)}
         | '{' ListPairs '}' {Context (sortPairs $2)}
         | '(' Term ')' {$2}
 
---Term3 :: {Term}
---        : Term1 space ',' space Term3 {Commaed $1 $5}
---        | Term1 ',' space Term3 {Commaed $1 $4}
---        | Term1 space ',' Term3 {Commaed $1 $4}
---        | Term1 ',' Term3 {Commaed $1 $3}
---        | Term4 {$1}
---
---Term4 :: {Term}
---        : Term1 space Term4 {Concatted $1 $3}
---        | Term1 Term4 {Concatted $1 $2}
---        | Term2 {$1}
-
-
-ListPairs :: {[(Label,CtxValue)]}
+ListPairs :: {[(Label,Term)]}
 	      : ListPairs ';' Pair {$3:$1}
 	      | Pair {[$1]}
 
-Pair :: {(Label,CtxValue)}
-	: ctxWord '=' CtxValue {(parseCtxWord $1,$3)}
-CtxValue :: {CtxValue}
-         : ctxNum    {parseCNum $1}
-         | ctxKey    {parseCNote $1}
-         | ctxNum xSlash ctxNum {parseSig $1 $3}
+Pair :: {(Label,Term)}
+	: ctxLabel '=' Term3 {(parseCtxLabel $1,$3)}
+  
 {
-sortPairs :: [(Label,CtxValue)] ->  [(Label,CtxValue)]
+sortPairs :: [(Label,Term)] ->  [(Label,Term)]
 sortPairs labels = Data.List.sortBy (flip compare `Data.Function.on` fst) labels
+
 parseBaseInt :: Token -> (Integer,Pos)
 parseBaseInt (T pos _ str) = (read str,parseAlexPosn pos)
+
+parseFun :: Token -> (Function,Pos)
+parseFun (T pos _ "toNotes") = (ToNotes,parseAlexPosn pos)
+parseFun (T pos _ "toMusic") = (ToMusic,parseAlexPosn pos)
+
+parseFun _ = undefined
+
+
+durStrToRational :: String -> Integer
+durStrToRational "wn" = 1
+durStrToRational "hn" = 2
+durStrToRational "qn" = 4
+durStrToRational "en" = 8
+
+parseDur :: Token -> (Integer,Pos)
+parseDur (T pos _ str) = (durStrToRational str,parseAlexPosn pos)
 
 parseBase :: Token -> (String,Pos)
 parseBase (T pos _ str) = (str,parseAlexPosn pos)
 
-parseNoteN (T pos _ str1) (T _ _ str2) = (str1,read str2,parseAlexPosn pos)
+parseLetterN (T pos _ str1) (T _ _ str2) = (str1,read str2,parseAlexPosn pos)
 
-parseCtxWord :: Token -> Label
-parseCtxWord (T _ TCtxWord str) = case str of 
-                                   "bars" -> Bars
+parseCtxLabel:: Token -> Label
+parseCtxLabel(T _ TCtxLabel str) = case str of 
                                    "key" -> Key 
-                                   "octave_pos" -> OctavePos
-
+                                   "octave" -> Octave
                                    _  -> undefined
 
 parseAlexPosn :: AlexPosn -> Pos
 parseAlexPosn (AlexPn _ line column) = (line,column)
 
-parseCNum (T pos _ str) = CNum (read str,parseAlexPosn pos)
-parseCNote (T pos _ str) = CNote (str,parseAlexPosn pos)
-parseSig (T pos _ str1) (T _ _ str2) = Signature (read str1,read str2,parseAlexPosn pos)
-
-
-
-
-----------------------------------------------
-
-data Exp = Assign (String,Pos) Term Exp | Term Term 
+type Program = [Assignment]
+data Assignment = Assignment (String,Pos) Term
   deriving(Eq,Show)
+
+data CompType = Serial | Parallel
+  deriving(Eq,Show)
+
 
 type Pos = (Int,Int)
 
 data Term = Num (Integer,Pos)
-             | Note (String,Pos)
-             | NoteN (String,Integer,Pos)
-             | Dotted Term 
-             | Concatted Term Term
-             | Commaed Term Term
+             | Dur (Integer,Pos)
+             | Letter (String,Pos)
+             | Composition CompType Term Term
              | Variable (String,Pos)
-             | Context [(Label,CtxValue)] 
-             | Application Term Term
+             | Context [(Label,Term)] 
+             | Application (Function,Pos) [Term]
   deriving(Eq,Show)
 
-data Label = Bars | Key | OctavePos 
+--instance Show Term where
+--  show (Num (n,_)) = show n
+--  show (Dur (r,_)) = show r
+--  show (Letter (s,_)) = s
+--  show (Composition t t1 t2) = "("++(show t) ++ "composition" ++ (show t1) ++ ";" ++ (show t2)
+--  show (Variable (s,_)) = "Variable "++ s
+--  show (Context ctx)= "Context "++(show ctx) 
+--  show (Application (f,_) terms ) = (show f)++" " ++ (show terms)
+
+
+
+data Label = Bars | Key | Octave
   deriving(Eq,Show)
 
 instance Ord Label where
   compare Bars Bars = EQ
   compare Key Key = EQ
-  compare OctavePos OctavePos = EQ
+  compare Octave Octave = EQ
   compare Bars _ = GT
   compare Key Bars = LT
   compare Key _ = GT
-  compare OctavePos _ = LT
+  compare Octave _ = LT
 
-
-
-data CtxValue = CNum (Integer,Pos) | CNote (String,Pos) | Signature (Integer, Integer,Pos)
+data Function = ToNotes | ToMusic
   deriving(Eq,Show)
+
+
 
 
 
