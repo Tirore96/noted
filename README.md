@@ -3,21 +3,22 @@ A DSL for high-level music composition written in Haskell. It is built on Euterp
 The building blocks are notes, music and contexts. A note must have a duration and a position. A set of notes is created with toNote($duration,$position), with a set of durations and positions.<br> Combining a set of notes with a context yields music. This is done by toMusic($notes,$context). Durations, positions, notes and music can all be combined serially (-) or in parallel (|). 
 
 # Example
-$serial_r= 1,3,5 <br>
-$serial_n= a,b,c <br>
-$serial_np =a4,b4,c4 <br>
-$sequential_r = 1234 <br>
-$squarebracket_sequential_r = \[1 2 3 4\]
-$relative_con = {bars=4;octave_pos=5;key=c}<br>
-$noted_con = {bars=4;octave_pos=5}<br>
-$noted_positioned_con = {bars=4}<br>
-$combined_serial = [$serial_r $sequential $squarebracket_sequential_r]<br>
-$music_1 = $combined_serial $relative_con  //Applying a context to a composition yields music<br>
-$music_2 = $serial_n $noted_con<br>
-$music_3 = $serial_np $noted_positioned_con  //<br>
-$music_4 = $serial_np $relative_con   //a context can contain more labels than needed<br>
-$new_music = [$music_1 $music_2, $music_3]  //Music can be combined the same way compositions can. <br>
-$new_music // The last line of the program must have type Music. This will be the output <br>
+$c1 = 1|3|5 <br>
+$c2 = 2|4|6<br>
+$c3 = 3|5|7<br>
+$dur = qn  - qn   - hn<br>
+$pos = $c1 - $c2  - $c3<br>
+$notes = toNotes($dur,$pos)<br>
+$con = {octave=4;key=c}<br>
+$con2 = {octave=4;key=e}<br>
+$m1 = toMusic($notes,$con)<br>
+$m2 = toMusic($notes,$con2)<br>
+$dur2 = hn  - hn<br>
+$pos2 = $c3 - $c2<br>
+$notes2 = toNotes($dur2,$pos2)<br>
+$m3 = toMusic($notes2,$con2)<br>
+<br>
+main = $m1 - $m2 - $m3<br>
 
 
 # Getting started
