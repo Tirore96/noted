@@ -1,8 +1,6 @@
 # noted
 A DSL for high-level music composition written in Haskell. It is built on Euterpea, the main Haskell library for music composition.<br>
-The building blocks are compositions and contexts. A composition is either an r-composition (relative-composiiton), n-composition (noted-composition) or np-composition (noted-positioned-composition). compositions of the same type can be combined serially (as a chord) by using ',' as a delimiter. To combine sequentially, use no delimiter (see examples). Space between compositions and delimiters are allowed if the composition is enclosed in square brackets.
-A context is a struct containing a subset of the labels "bars","octave\_pos","key". r-compositions can only be applied to a context containing all the labels. n-compositions "bars" and "octave\_pos". np-compositions only require "bars. <br>
-Applying a context to a composition yields music. Music can be combined sequentially or serially as compositions, but a context cannot be applied to Music.
+The building blocks are notes, music and contexts. A note must have a duration and a position. A set of notes is created with toNote($duration,$position), with a set of durations and positions.<br> Combining a set of notes with a context yields music. This is done by toMusic($notes,$context). Durations, positions, notes and music can all be combined serially (-) or in parallel (|). 
 
 # Example
 $serial_r= 1,3,5 <br>
