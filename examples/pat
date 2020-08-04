@@ -1,0 +1,7 @@
+$pos = 1 - 2 - 3
+$pat = 1 - 2 -> 1 |2 
+$pos2 = transform($pos,$pat)
+$con = {key=c,octave=4}
+$dur = qn - qn - qn
+$notes = toNotes($dur,$pos2)
+main = toMusic($notes,$con)

@@ -31,7 +31,7 @@ executable noted-exe
 		    , Calc.Lexer
 		    , Calc.Parser
                     , TypeChecker
-                    , Evaluator
+--                    , Evaluator
 
  
 
@@ -40,15 +40,19 @@ test-suite lib-test
   hs-source-dirs:      tests,
 		       src
   main-is:             Tests.hs
-  other-modules:       Calc
-		     , Calc.Lexer
+  other-modules:      Calc
+		    , Calc.Lexer
 		    , Calc.Parser
---		     , LexerTests
-		     , Definitions
+                    , TypeChecker
+--                    , Evaluator
+--                    , ParserTests
   build-depends:       base
                      , tasty
                      , tasty-hunit
 		     , array
+                     , containers
+                     , mtl
+                     , Euterpea
   build-tool-depends:
 		      alex:alex
 		     , happy:happy

@@ -1,0 +1,53 @@
+Transformations:
+  Polymorphic function:
+    $pos_2 = transform($pos,$pattern)
+    $durs_2 = transform($durs,$pattern)
+    $notes_2 = transform($notes,$pattern)
+  Patterns have types:
+    p_pos = 1 -> 2 (pos -> pos)
+    p_dur = qn -> hn (dur -> dur)
+    p_note = qn 1 -> qn 2  (note -> note)
+  Patterns can have symbols:
+    p_sym_pos = $n -> $n+1 (pos -> pos)
+    p_dur = t -> t*2 (dur -> dur)
+    p_sym_note = t n -> t n+1 (note -> note)
+  A pattern can be a sequence of patterns, so long that p1,p2,p3 has types (a1->a2),(a2->a3),(a3->a4):
+    p_seq = p_pos,p_sym_pos 
+    pos_seq = transform($pos,p_seq)
+  #A sequenced pattern will be applied by applying each of the patterns individually on the input, in the order of the sequence.
+  The previous line is incorrect. How will | and - be flipped by applying | -> - and - -> | in order. Everything will become |. Two options, create two semantics, or apply first pattern in sequence that matches (if none then id)
+  Patterns can be combined. p1 | p2, corresponds to first trying p1, if it doesn't match then p2 and if it doesn't match then identity. p1 - p2 corresponds to first trying p1 (if it doesn't match then identity) and the transformation is again transformed with p2. p must have same type for all patterns p in Parallel combination. 
+  How do we determine that a pattern doesn't match? For values, we check the current leaf in the inorder traversal. Ahh. We do the same as before with the inorder traversal, but we let the substitution be the list the parallel patterns (with identity in the bottom). In theory parallel patterns could contain serial patterns, but the serial patterns would then only range over the current node. In other words it would be a transitive pattern on a node performing a to c if we have patterns a -> b - a->c. 
+  Example:
+    pattern = 1 -> 2 - 2 -> 4 | 2 -> 3 - 3 -> 5
+    Insight = -> should bind tightest
+    Possibly warning for redundant patterns
+    | binds tighter than -, so parenthasis should be used when necessary
+    
+
+Implementation:
+  Patterns can match in 3 ways. 1. By value (leaf notes). 2. By Operator. 3. By ast. AST is the most general and will be used to implement the rest.
+  Patterns can contain concrete values and symbols. It is implemented as doing an in order traversal of the ast, at each step substituting a node if it matches the pattern (otherwise the substitution is the identity)
+  - Values are substituted by matching leaf notes with concrete values. 
+  - Substituting Operators requires one to match on 5 cases.
+      1. Node has two leaf notes. 
+      2. Node has only left note as leaf note. 
+      3. Node has only right note as leaf note
+      4. Node has no leaf notesnote
+  - AST substitutionk
+
+
+Thoughts on Transformation:
+Iteration should always be serial first, then parallel if relevant. A type distinction should be made between note patterns and parallel (chord) patterns. The former iterating on the leaf level, and the latter iterating on the level just before that.
+As their iteration is fundamentally different, each pattern should only allow choice (parallel composition) with its' own type. Symbol matching on parallel composition of notes will make sense in the future, when there exists operations on chords, such as inversion, appregiation, extension.
+Serial matching is not allowed. Does not seem useful
+
+I think this design also allows for serial transformation, such as making all 3rd serial intervals to 4th serial intervals, which would be interesting.
+
+Cases:
+1 | 3 | 5 - 1 | 3 | 5 - 2 | 4 | 6
+n->n+1 (serial first, then parallel)
+1 - 2 - 3 - 4
+n | n_2 | n_3 -> 
+
+I guess it works with the original ast comparison.

@@ -1,0 +1,1 @@
+In the middle of implementing transformations. Gave up on finding a unified design for all kinds of patterns and instead now trying to implement simple value patterns like 3 -> 4. EPattern is a function type. Now P.Composition needs to handle the pattern cases.

@@ -30,7 +30,8 @@ $digit                                        {mkL TNum}
 <0> \(                                         {mkL TOPara}
 <0> \)                                             {mkL TCPara}
 <0> wn | hn | qn | en                              {mkL TDur}
-<0> toNotes | toMusic                 {mkL TFun}
+<0> toNotes | toMusic | transform                 {mkL TFun}
+<0> \-\>                                {mkL TArrow}
 --Struct scope
 <struct> key | octave                             {mkL TCtxLabel}
 <struct> \;                                        {mkL TSemi}
@@ -61,7 +62,8 @@ data TokenClass =
     TNewLine |
     TParallel|
     TSerial |
-    TFun
+    TFun |
+    TArrow
   deriving (Eq,Show)
   
 
