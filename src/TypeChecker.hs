@@ -125,17 +125,22 @@ lookUpGamma var = do state <- get
 
 type TypedTerm = (ActualType,P.Term)
 
-data BaseType = BConst  --fx octave value
+--type LogicalType = BAny -- Used as return value when the type doesn't matter
+--            | BNone
+
+
+data BaseType = BConst
             | BNum 
             | BDur --Model comp base types and possibly cardinality
             | BLetter 
-            | BMusic
-            | BAny -- Used as return value when the type doesn't matter
+            | BAny
             | BNone
             | BSize Integer
+            | BNote BaseType
+            | BMusic
+            | BComp BaseType BaseType
             | BFresh Integer -- OpenType variable
-            | BNote BaseType --Is it num or letter?
-            | BComp BaseType BaseType 
+
   deriving(Show,Eq)
 
 data ExpectedType = EBase BaseType
@@ -176,6 +181,8 @@ typeMatch (EFun l1 r1) ((AFun l2 r2),_) = typeMatch l1 l2 && typeMatch r1 r2
 typeMatch (EList l1) ((AList l2),_) = typeMatchLists l1 l2
 
 typeMatch (EPattern t1 t2) ((APattern t3 t4),_) = typeMatch t1 t3 && typeMatch t2 t4
+
+typeMatch t1 t2 = False
 
 --write bases here -TODO
 typeMatchBases :: [BaseType] -> [BaseType] -> Bool
@@ -280,13 +287,14 @@ genConstraintT :: P.Term -> ConstraintM TypedTerm
 
 genConstraintT term@(P.Num _) = do id <- getId  --Not Pos because might be Const genConstraintT (P.Dur _) = return $ TDur
                                    return (ABase id,term)
-genConstraintT term@(P.Dur _) = return $ (ABase BDur,term)
-genConstraintT term@(P.Letter _) = return $ (ABase BLetter,term)
+genConstraintT term@(P.Dur _) = return $ (ABase $ BComp BDur (BSize 1),term)
+genConstraintT term@(P.Letter _) = return $ (ABase $ BComp BLetter (BSize 1),term)
 genConstraintT term@(P.FlatList ((_,terms,n),_)) = do
   types <- mapM genConstraintT terms
   case types of
     [] -> return (ABase BNone,term)  -- Shouldn't be possible so allow any type, and expect some other constraint will fail
-    ((first,p):rest) -> do addConstraints (map (\t -> Equals (actualToExpectedType first) t) rest) --possibly some helper functions here to extract base
+    ((first,p):rest) -> do let expected_member = EBase $ BComp (actualToBase first) BAny
+                           addConstraints (map (\t -> Equals expected_member t) rest) --possibly some helper functions here to extract base
 --                           addConstraints [Equals (TComp TAny TAny) (first,p)]   --It's a Composotion, but comp of what? 
                            return $ (ABase (BComp (actualToBase first) (BSize n)),term)  --Combine base type from first and cardinality from argument
 
@@ -309,35 +317,39 @@ genConstraintT term@(P.Context (pairs,_)) =
              [(P.Octave,t1),(P.Key,t2)] -> return $ (AContext (AList [(ABase BNum,t1),(ABase BLetter,t2)]),term)  --matches any Pos
              [(P.Octave,t)] -> return $ (AContext (ABase BLetter),term) --matches any Pos
 
+genConstraintT term@(P.ArgList (l,_)) = 
+  do ts <- mapM genConstraintT l 
+     return (AList ts,term)
 
       
 genConstraintT term@(P.Function ("transform",_)) = undefined
     
-genConstraintT term@(P.Application ((P.Function (name,_),terms),_)) =  ---TODO return here
+genConstraintT term@(P.Application ((P.Function (name,_),argsTerm),_)) =  ---TODO return here
   do t1 <- expectedFunctionType name
-     ts <- mapM genConstraintT terms
+     ts <- genConstraintT argsTerm
      id <- getId
-     addConstraints [Equals t1 ((AFun (AList ts) ((ABase id),undefined),term))]
-     return (id,term)
+     let typedTerm= (AFun ts ((ABase id),term),term)
+     addConstraints [Equals t1 typedTerm]
+     return (ABase id,term)
   
 expectedFunctionType "toNotes" =  
   do id1 <- getId
      id2 <- getId
-     let t1 = EBase $ EComp BDur id1
-         t2 = EBase $ EComp id2 id1
-         t3 = EBase $ ENote id2
+     let t1 = EBase $ BComp BDur id1
+         t2 = EBase $ BComp id2 id1
+         t3 = EBase $ BNote id2
      return $ EFun (EList [t1,t2]) t3
 
 expectedFunctionType "toMusic" = 
   do id <- getId
-     let t1 = BNote id
+     let t1 = EBase $ BNote id
          t2 = EContext (EBase id)
-         t3 = BComp BMusic BAny
+         t3 = EBase $ BComp BMusic BAny
      return $ EFun (EList [t1,t2]) t3
 
 expectedFunctionType _ = return $ EBase BNone
 
-splitFunConstraint (Equals (EFun (EList l1) r1) actual@((AFun (AList l2) r2),p)) = 
+splitFunConstraint (Equals (EFun (EList l1) r1) actual@((AFun (AList l2,_) r2),p)) = 
   if length l1 == length l2
     then let cs = map (\(t1,t2) -> Equals t1 t2) (zip l1 l2)
              ret_con = Equals r1 r2
@@ -354,7 +366,7 @@ equalityConstraintsFromList expected actual =
 
 
 labelType :: P.Label -> ExpectedType
-labelType P.Key = EBase BLetter
+labelType P.Key = EBase $ BComp BLetter (BSize 1)
 labelType P.Octave = EBase BConst
 
 --indexPattern :: Integer ->  TypedTerm -> TypedTerm
@@ -370,39 +382,71 @@ substitute n t cons = map (\con -> substituteConstraint n con t) cons
 
 
 substituteConstraint :: Integer -> Constraint -> ExpectedType -> Constraint 
-substituteConstraint n (Equals t1 t2) t= 
-  Equals (substituteExpectedType n t1 t) (substituteActualType n t2 t)
+substituteConstraint n (Equals t1 (t2,p)) t= 
+  Equals (substituteExpectedType n t1 t) (substituteActualType n t2 t,p)
 
-substituteExpectedType :: Integer -> ExpectedType-> ExpectedType-> TypedTerm
+substituteBase :: Integer -> BaseType -> BaseType -> BaseType
+substituteBase n oldBase@(BFresh n2) newBase =
+  if n == n2 then newBase else oldBase
+
+substituteBase n oldBase@(BNote b) newBase =
+  let b_new = substituteBase n b newBase
+  in BNote b_new
+
+substituteBase n oldBase@(BComp b1 b2) newBase =
+  let b_new1 = substituteBase n b1 newBase
+      b_new2 = substituteBase n b2 newBase
+  in BComp b_new1 b_new2
+
+substituteBase _ oldBase _ = oldBase
+
+binarySubstitution con t1 t2 fun n newType = 
+  let t1_new = fun n t1 newType
+      t2_new = fun n t2 newType
+  in con t1 t2
+
+substituteExpectedType :: Integer -> ExpectedType-> ExpectedType-> ExpectedType
 substituteExpectedType n oldType newType =
   case oldType of
-    EBase (BFresh n2) -> 
-                if n == n2
-                  then newType
-                  else oldType
-    EBase (BNote t) -> EBase $ BNote (substituteExpectedType n t newType)
-    BComp t nc -> EBase $ BComp (substituteExpectedType n t newType) (substituteExpectedType n nc newType)
-    EFun (EList l) r -> let l_sub = map (\t -> substituteExpectedType n t newType) l
-                            r_sub = substituteExpectedType n r newType
-                        in EFun (EList l_sub) r_sub
-    _ -> oldType
+    EBase b -> case newType of
+                 EBase bNew -> EBase $ substituteBase n b bNew
+                 _ -> oldType
+                 
+--    EBase (BNote t) -> EBase $ BNote (substituteExpectedType n t newType)
+    ESum l ->  let l_new = map (\t -> substituteExpectedType n t newType) l
+               in ESum l_new
+    EFun t1 t2 -> binarySubstitution EFun t1 t2 substituteExpectedType n newType
+--let t1_new = substituteExpectedType n t1 newType
+--                      t2_new = substituteExpectedType n t2 newType
+--                  in EFun t1 t2
+    EList l -> let l_new = map (\t -> substituteExpectedType n t newType) l
+               in EList l_new
+    EPattern t1 t2 -> binarySubstitution EPattern t1 t2 substituteExpectedType n newType
 
+--let t1_new = substituteExpectedType n t1 newType
+--                          t2_new = substituteExpectedType n t2 newType
+--                      in EPattern t1_new t2_new
+    EContext t -> let t_new = substituteExpectedType n t newType
+                  in EContext t_new
 
-
-substituteActualType :: Integer -> ActualType -> ExpectedType-> TypedTerm
+substituteActualType :: Integer -> ActualType -> ExpectedType-> ActualType
 substituteActualType n oldType newType =
   case oldType of
-    (ABase (BFresh n2),p) -> 
-                if n == n2
-                  then (newType,p)
-                  else oldType
-    (ABase (BNote t),p) -> (ABase $ BNote (substituteActualType n t newType),p)
-    (ABase (BComp t nc),p) -> (ABase $ BComp (substituteActualType n t newType) 
-                                             (substituteActualType n nc newType),p)
-    (EFun (EList l) r,p) -> let l_sub = map (\t -> substituteActualType n t newType) l
-                                r_sub = substituteActualType n r newType
-                        in AFun (AList l_sub) r_sub
-    _ -> oldType
+    ABase b -> case newType of
+                 EBase bNew -> ABase $ substituteBase n b bNew
+                 _ -> oldType
+    ASum l ->  let l_new = map (\(t,p) -> (substituteActualType n t newType,p)) l
+               in ASum l_new
+    AFun (t1,p1) (t2,p2) -> let t1_new = substituteActualType n t1 newType
+                                t2_new = substituteActualType n t2 newType
+                            in AFun (t1_new,p1) (t2_new,p2)
+    AList l -> let l_new = map (\(t,p) -> (substituteActualType n t newType,p)) l
+               in AList l_new
+    APattern (t1,p1) (t2,p2) -> let t1_new = substituteActualType n t1 newType
+                                    t2_new = substituteActualType n t2 newType
+                                in APattern (t1_new,p1) (t2_new,p2)
+    AContext t -> let t_new = substituteActualType n t newType
+                  in AContext t_new
 
 
 
@@ -436,39 +480,40 @@ solve constraints = do
 solveConstraints :: [Constraint] -> SolveResult
 solveConstraints [] = return []
 solveConstraints (first@(Equals expected actual):rest) = --How to handle Equals (expected:fresh) (acftual:t)?
-  if expected == fst actual
+  if typeMatch expected actual 
     then solveConstraints rest
     else solveConstraintsHelper expected actual rest
 
 
 --Recursive
-solveConstraintsHelper (EBase (BNote t1)) ((EBase (BNote t2)),p) rest =
-  solveConstraints ((Equals t1 (t2,p)):rest) --handle recursive types
+solveConstraintsHelper (EBase (BNote t1)) ((ABase (BNote t2)),p) rest =
+  solveConstraints ((Equals (EBase t1) (ABase t2,p)):rest) --handle recursive types
 
-solveConstraintsHelper (EContext t1) (EContext t2,p) rest =
+solveConstraintsHelper (EContext t1) (AContext t2,p) rest =
   solveConstraints (Equals t1 (t2,p):rest)
 
 --Split function
-solveConstraintsHelper expected@(EFun (EList l1) r1) actual@((EFun (EList l2) r2),_) rest =
+solveConstraintsHelper expected@(EFun (EList l1) r1) actual@((AFun (AList l2,_) r2),_) rest =
   let new_cons = splitFunConstraint (Equals expected actual)
   in solveConstraints (new_cons++rest)
 
 --Substitute
-solveConstraintsHelper (EBase (BFresh n1)) t2 rest =
-  let subbed = substitute n1 (fst t2) rest
-      first = Equals (Fresh n1) t2
+solveConstraintsHelper expected@(EBase (BFresh n1)) t2 rest =
+  let t2_expected = actualToExpectedType (fst t2)
+  in let subbed = substitute n1 t2_expected rest
+         first = Equals expected t2
   in do solved_rest <- solveConstraints subbed
         return $ first:solved_rest
 
-solveConstraintsHelper t1 (EBase (BFresh n2),p) rest =
+solveConstraintsHelper t1 actual@(ABase (BFresh n2),p) rest =
   let subbed = substitute n2 t1 rest
-      first = Equals t1 (Fresh n2,p)
+      first = Equals t1 actual
   in do solved_rest <- (solveConstraints subbed)
         return $ first:solved_rest
 
-solveConstraintsHelper expected@(EBase (BComp t11 t12)) actual@((EBase (BComp t21 t22)),p) rest =
-  let c1 = Equals t11 (t21,p) 
-      c2 = Equals t12 (t22,p) 
+solveConstraintsHelper expected@(EBase (BComp t11 t12)) actual@((ABase (BComp t21 t22)),p) rest =
+  let c1 = Equals (EBase t11) (ABase t21,p) 
+      c2 = Equals (EBase t12) (ABase t22,p) 
   in solveConstraints $ c1:c2:rest
 
 solveConstraintsHelper expected actual _ = Left (makeErrorMsg expected actual)

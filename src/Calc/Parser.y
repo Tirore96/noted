@@ -62,7 +62,9 @@ LastAssignment :: {Assignment}
 
 
 Term :: {Term}
-        : Term '(' TermArgs ')' {Application (($1,(reverse $3)),getPos $1)} 
+--        : Term '(' TermArgs ')' {Application (($1,(reverse $3)),getPos $1)} 
+        : '(' TermArgs ')' {ArgList (reverse $2,posFromToken $1)} 
+        | Term Term {Application (($1,$2),getPos $1)}
         | Term1 {$1}
 
 TermArgs :: {[Term]}
@@ -98,6 +100,8 @@ Pair :: {(Label,Term)}
 	: ctxLabel '=' Term4 {(parseCtxLabel $1,$3)}
   
 {
+posFromToken (T pos _ _) = parseAlexPosn pos
+
 sortPairs :: [(Label,Term)] ->  [(Label,Term)]
 sortPairs labels = Data.List.sortBy (flip compare `Data.Function.on` fst) labels
 
@@ -146,7 +150,7 @@ instance Show Assignment where
   show (Assignment (s,p) term )= s ++ "=" ++ (show term)
 
 data CompType = Serial | Parallel
-  deriving(Eq)
+  deriving(Eq,Ord)
 
 instance Show CompType where
   show Serial = "-"
@@ -182,10 +186,12 @@ data Term = Num (Integer,Pos)
 	     | Pattern ((Term,Term),Pos)
              | Variable (String,Pos)
              | Context ([(Label,Term)],Pos)
-             | Application ((Term, [Term]),Pos)
+             | Application ((Term, Term),Pos)
              | Function (String,Pos)
+             | ArgList ([Term],Pos)
+
 --             | ArrowVar (String,Pos)
-  deriving(Eq)
+  deriving(Eq,Ord)
 
 
 buildFlatList :: CompType -> Term -> Term -> Term
@@ -214,9 +220,12 @@ instance Show Term where
   show (FlatList ((t,(first:rest),_),_)) = (show first) ++ (show t) ++  (show (FlatList ((t,rest,0),undefined) ))
   show (Variable (s,_)) = s
   show (Context (ctx,_))= show ctx
-  show (Application ((t1,terms),_)) = (show t1)++"(" ++ (show terms) ++ ")"
+  show (Application ((t1,t2),_)) = (show t1)++"("++(show t2) ++")"
   show (Pattern ((t1,t2),_)) = (show t1) ++ "->" ++ (show t2)
   show (Function (s,_)) = s
+  show (ArgList ([l],_)) = show l
+  show (ArgList (l:rest,p)) = (show l) ++ ","++ (show (ArgList (rest,p)))
+
 
 
 

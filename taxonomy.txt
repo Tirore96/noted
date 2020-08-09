@@ -1,0 +1,29 @@
+Type taxonomy:
+
+Concrete
+  Logical
+    -Any
+    -None
+  Non-Logical
+      -Const
+      -TMusic
+      -TNoteNum
+      -TNoteLetter
+
+    Level 3
+      -Sum Type [Non-recurse]
+
+    Recursive
+      -Fun Non-Recurse Recurse
+      (-List Type)
+      -Pattern Type
+    Context Type
+  
+2. Fresh
+
+
+a:
+Num
+Dur
+Letter
+

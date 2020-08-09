@@ -75,8 +75,8 @@ negativeCompTestLetter =
   in typeCheckTest name str False
 
 positiveCompTestToNotes = 
-  let name = "composing TNums with TLetter and making notes with correct arguments"
-      str = "main = toMusic(toNotes(qn-qn,1|1|1-3|3|3),{octave=4,key=c})"
+  let name = "composing TNums and making notes with correct arguments"
+      str = "$d = qn-qn\nmain = toMusic(toNotes($d,1|1|1-3|3|3),{octave=4,key=c})"
   in typeCheckTest name str True
   
 negativeCompTestToNotes = 
