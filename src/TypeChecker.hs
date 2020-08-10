@@ -227,7 +227,7 @@ typeMatchHelper expecteds actuals fun =
 
 
 
-data Constraint = Equals ExpectedType TypedTerm
+data Constraint = Equals ExpectedType TypedTerm | SolvedEquals ExpectedType TypedTerm
   deriving(Eq)
 
 instance Show Constraint where
@@ -314,8 +314,8 @@ genConstraintT term@(P.Context (pairs,_)) =
            let newConstraints = equalityConstraintsFromList label_types types --TODO
            addConstraints newConstraints
            case sort pairs of
-             [(P.Octave,t1),(P.Key,t2)] -> return $ (AContext (AList [(ABase BNum,t1),(ABase BLetter,t2)]),term)  --matches any Pos
-             [(P.Octave,t)] -> return $ (AContext (ABase BLetter),term) --matches any Pos
+             [(P.Octave,t1),(P.Key,t2)] -> return $ (AContext (AList [(ABase (BComp BNum BAny) ,t1),(ABase (BComp BLetter BAny),t2)]),term)  --matches any Pos
+             [(P.Octave,t)] -> return $ (AContext (ABase (BComp BLetter BAny)),term) --matches any Pos
 
 genConstraintT term@(P.ArgList (l,_)) = 
   do ts <- mapM genConstraintT l 
@@ -384,6 +384,8 @@ substitute n t cons = map (\con -> substituteConstraint n con t) cons
 substituteConstraint :: Integer -> Constraint -> ExpectedType -> Constraint 
 substituteConstraint n (Equals t1 (t2,p)) t= 
   Equals (substituteExpectedType n t1 t) (substituteActualType n t2 t,p)
+
+substituteConstraint n c@(SolvedEquals _ _) _  = c
 
 substituteBase :: Integer -> BaseType -> BaseType -> BaseType
 substituteBase n oldBase@(BFresh n2) newBase =
@@ -467,12 +469,12 @@ substituteActualType n oldType newType =
 --                        in EFun (EList l_sub) r_sub
 --    _ -> oldType
 
-
+verifySolution (SolvedEquals _ _:rest) = verifySolution rest
+verifySolution [] = True
+verifySolution _ = False
 solve constraints = do 
-  one_way_solved <- solveConstraints constraints
-  two_way_solved <- solveConstraints (reverse one_way_solved)
-  let potential_solution = reverse two_way_solved
-  if constraints == potential_solution
+  potential_solution <- solveConstraints constraints
+  if verifySolution potential_solution
     then return potential_solution
     else solve potential_solution
 
@@ -484,37 +486,35 @@ solveConstraints (first@(Equals expected actual):rest) = --How to handle Equals 
     then solveConstraints rest
     else solveConstraintsHelper expected actual rest
 
+solveConstraints (first@(SolvedEquals _ _ ):rest) = solveConstraints rest --How to handle Equals (expected:fresh) (acftual:t)?
+
 
 --Recursive
 solveConstraintsHelper (EBase (BNote t1)) ((ABase (BNote t2)),p) rest =
-  solveConstraints ((Equals (EBase t1) (ABase t2,p)):rest) --handle recursive types
+  Right ((Equals (EBase t1) (ABase t2,p)):rest) --handle recursive types
 
 solveConstraintsHelper (EContext t1) (AContext t2,p) rest =
-  solveConstraints (Equals t1 (t2,p):rest)
+  Right (Equals t1 (t2,p):rest)
 
 --Split function
 solveConstraintsHelper expected@(EFun (EList l1) r1) actual@((AFun (AList l2,_) r2),_) rest =
   let new_cons = splitFunConstraint (Equals expected actual)
-  in solveConstraints (new_cons++rest)
+  in Right $ new_cons++rest
 
 --Substitute
 solveConstraintsHelper expected@(EBase (BFresh n1)) t2 rest =
   let t2_expected = actualToExpectedType (fst t2)
-  in let subbed = substitute n1 t2_expected rest
-         first = Equals expected t2
-  in do solved_rest <- solveConstraints subbed
-        return $ first:solved_rest
+      last = SolvedEquals expected t2
+  in Right $ (substitute n1 t2_expected rest)++[last]
 
 solveConstraintsHelper t1 actual@(ABase (BFresh n2),p) rest =
-  let subbed = substitute n2 t1 rest
-      first = Equals t1 actual
-  in do solved_rest <- (solveConstraints subbed)
-        return $ first:solved_rest
+  let last = SolvedEquals t1 actual
+  in Right $ (substitute n2 t1 rest)++[last]
 
 solveConstraintsHelper expected@(EBase (BComp t11 t12)) actual@((ABase (BComp t21 t22)),p) rest =
   let c1 = Equals (EBase t11) (ABase t21,p) 
       c2 = Equals (EBase t12) (ABase t22,p) 
-  in solveConstraints $ c1:c2:rest
+  in Right $ c1:c2:rest
 
 solveConstraintsHelper expected actual _ = Left (makeErrorMsg expected actual)
 
