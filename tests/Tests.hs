@@ -17,6 +17,7 @@ main = do
                                       positiveCompTestToNotes,
                                       negativeCompTestToNotes,
                                       negativeApplication1, --lexerGroup
+--                                      negativeDur,
                                       negativeApplication2])
 
 
@@ -60,39 +61,44 @@ positiveMusicTest = let name = "basic music test"
 
 
 negativeCompTestNumShort = 
-  let name = "composing TDur with TNum (Short)"
+  let name = "(negative) composing TDur with TNum (Short)"
       str = "main = toMusic(toNotes(qn,qn|1),{octave=4,key=c})"
   in typeCheckTest name str False
 
 negativeCompTestNumLong = 
-  let name = "composing TDur with TNum (Long)"
+  let name = "(negative) composing TDur with TNum (Long)"
       str = "$d=qn\n$p=qn|1\n$n=toNotes($d,$p)\n$c={octave=4,key=c}\nmain=toMusic($n,$c)"
   in typeCheckTest name str False
 
 negativeCompTestLetter = 
-  let name = "composing TDur with TLetter"
+  let name = "(negative) composing TDur with TLetter"
       str = "main = toMusic(toNotes(qn,qn|c),{octave=4,key=c})"
   in typeCheckTest name str False
 
 positiveCompTestToNotes = 
-  let name = "composing TNums and making notes with correct arguments"
+  let name = "(positive) composing TNums and making notes with correct arguments"
       str = "$d = qn-qn\nmain = toMusic(toNotes($d,1|1|1-3|3|3),{octave=4,key=c})"
   in typeCheckTest name str True
   
 negativeCompTestToNotes = 
-  let name = "composing TNums with TLetter and making notes (incorrect arguments)"
+  let name = "(negative) composing TNums with TLetter and making notes (incorrect arguments)"
       str = "main = toMusic(toNotes(qn-qn-qn,1|1|1-3|3|3),{octave=4,key=c})"
   in typeCheckTest name str False
 
 negativeApplication1 = 
-  let name = "negative application"
+  let name = "(negative) application"
       str = "main = toMusic(toNotes(qn-qn-qn,1|1|1-3|3|3),{octave=4})"
   in typeCheckTest name str False
 
 negativeApplication2 = 
-  let name = "negative application toNotes swapped arguments"
+  let name = "(negative) application toNotes swapped arguments"
       str = "main = toMusic(toNotes(1|1|1-3|3|3,qn-qn-qn),{octave=4,key=c})"
   in typeCheckTest name str False
+
+negativeDur = 
+  let name = "(negative) dur test"
+      str = "$d = qn-qn"
+  in typeCheckTest name str 
 
 --                    in typeCheckTest str
 

@@ -265,8 +265,21 @@ actualToExpectedType (APattern t1 t2) = binaryConversion EPattern (fst t1) (fst 
 actualToExpectedType (AContext t) = EContext $ actualToExpectedType t
 
 actualToBase :: ActualType -> BaseType
-actualToBase (ABase t) =t
-actualToBase _ = BNone
+actualToBase (ABase b@(BFresh _)) = b 
+
+actualToBase (ABase (BComp b _)) = case b of 
+                                     BDur -> b
+                                     BNum -> b
+                                     BLetter -> b
+                                     BNote _ -> b
+                                     BMusic -> b
+                                     BFresh _ -> b
+                                     _ -> BNone
+
+
+
+
+actualToBase b = BNone
 
 
 
@@ -293,10 +306,11 @@ genConstraintT term@(P.FlatList ((_,terms,n),_)) = do
   types <- mapM genConstraintT terms
   case types of
     [] -> return (ABase BNone,term)  -- Shouldn't be possible so allow any type, and expect some other constraint will fail
-    ((first,p):rest) -> do let expected_member = EBase $ BComp (actualToBase first) BAny
-                           addConstraints (map (\t -> Equals expected_member t) rest) --possibly some helper functions here to extract base
+    ((first,p):rest) -> let expected_member = EBase $ BComp (actualToBase first) BAny
+                        in let new_cons = map (\t -> Equals expected_member t) rest
+                            in do addConstraints new_cons --possibly some helper functions here to extract base
 --                           addConstraints [Equals (TComp TAny TAny) (first,p)]   --It's a Composotion, but comp of what? 
-                           return $ (ABase (BComp (actualToBase first) (BSize n)),term)  --Combine base type from first and cardinality from argument
+                                  return $ (ABase (BComp (actualToBase first) (BSize n)),term)  --Combine base type from first and cardinality from argument
 
 genConstraintT term@(P.Pattern ((t1,t2),_)) = 
   let validTypes = [EBase BDur,EBase BNum,EBase BLetter]
