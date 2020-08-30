@@ -7,63 +7,53 @@ module Calc.Lexer where
 %wrapper "monad"
 
 $digit = 0-9-- digits
-$alpha = [a-zA-Z]   -- alphabetic characters
+$alpha= [a-zA-Z]   -- alphabetic characters
 $whitespace = [\ \t\f\v\r] 
-@note = a|[c-h]
+@letter = a|[c-h]
 
 tokens :-
 --general tokens
-$whitespace+                                   {skip}     
-=                                              {mkL TEq}
-\,                                              {mkL TComma}
-\|                                              {mkL TParallel}
-\-                                              {mkL TSerial}
-
-\$$alpha ($alpha|$digit|\_)* | main                   {mkL TVar}
-$digit                                        {mkL TNum}
-@note (\#|b)?                             {mkL TLetter}
-"//".* \n                                         {skip}
-
---Outer scope tokens
-<0> (\n)+                                           {mkL TNewLine}
-<0>  \{                                             {mkL TOBracket `andBegin` struct}
-<0> \(                                         {mkL TOPara}
-<0> \)                                             {mkL TCPara}
-<0> wn | hn | qn | en                              {mkL TDur}
-<0> toNotes | toMusic | transform                 {mkL TFun}
-<0> \-\>                                {mkL TArrow}
---Struct scope
-<struct> key | octave                             {mkL TCtxLabel}
-<struct> \;                                        {mkL TSemi}
-<struct>  \}                                             {mkL TCBracket `andBegin` 0}
-<struct> (\n)                                 {skip} --newlines skipped in struct
-
-
+$whitespace+                        {skip}     
+"//".*                              {skip}
+(\n)+                               {mkL TNewLine}
+\(                                  {mkL TOPara}
+\)                                  {mkL TCPara}
+=                                   {mkL TEq}
+\|                                  {mkL TParallel}
+\-                                  {mkL TSerial}
+wn | hn | qn | en                   {mkL TDur}
+o[1-8]                              {mkL TOctave}
+[A-G]                               {mkL TLetter}
+Major | Minor                       {mkL TColor}
+1st | 2nd | 3rd | [4-9] th        {mkL TIndex}
+withDur                             {mkL TWithDur}
+withOctave                          {mkL TWithOctave}
+withScale                           {mkL TWithScale}
+withColor                           {mkL TWithColor}
+[a-z] ($alpha|$digit|\_)*           {mkL TVar}
 {
 
 
 --makeState s= AlexState {alex_pos = alexStartPos, alex_inp = s,alex_chr = '\n',alex_bytes=[],alex_scd=0}
 
 data TokenClass = 
-    TDur|
-    TMain|
-    TNum   |
-    TLetter | 
-    TOBracket |
-    TCBracket |
-    TCtxLabel|
-    TEq |
-    TSemi|
-    TEOF |
+    TNewLine |
     TOPara |
     TCPara |
+    TEq | 
     TVar |
-    TComma |
-    TNewLine |
-    TParallel|
+    TParallel |
     TSerial |
-    TFun |
-    TArrow
+    TDur |
+    TOctave |
+    TLetter |
+    TColor |
+    TIndex |
+    TWithDur |
+    TWithOctave |
+    TWithScale |
+    TWithColor |
+    TEOF
   deriving (Eq,Show)
   
 
@@ -78,12 +68,12 @@ mkL :: TokenClass -> AlexInput -> Int -> Alex Token
 mkL c (p,_,_,str) len = return (T p c (take len str))
 
 alexEOF = return $ T undefined TEOF ""
-		
-alexJoin = alexMonadScan >>= \token -> 
-			  case token of
-	      		      T _ TEOF _ -> return []
-	      		      _       -> alexJoin >>= \tokens -> return (token:tokens)
 
+alexJoin = do myToken <- alexMonadScan
+              case myToken of
+                T _ TEOF _ -> return []
+                _       -> do tokens <- alexJoin
+                              return $ myToken:tokens
+             
 scanner s = runAlex s alexJoin
-	      
 }

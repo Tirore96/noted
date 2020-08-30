@@ -1,4 +1,4 @@
-module Calc (module Calc.Lexer,module Calc.Parser) where
+module Calc  where
 
-import Calc.Lexer
-import Calc.Parser
+import Calc.Lexer()
+import Calc.Parser()

@@ -1,0 +1,7 @@
+backlog.txt
+*.swp
+*.lock
+*.log
+examples/*
+.stack-work/*
+tests/*

@@ -1,6 +1,6 @@
 {
 module Calc.Parser where
-import Calc.Lexer
+import qualified Calc.Lexer as Lex
 import qualified Data.Map as Map
 import qualified Data.List
 import qualified Data.Function
@@ -14,133 +14,155 @@ import Data.Ratio
 
 
 %name parseTokens
-%tokentype { Token }
+%tokentype { Lex.Token }
 %error { parseError }
 
 %token
-  num  {T _ TNum _}
-  note {T _ TLetter _}
-  '{'  {T _ TOBracket _}
-  '}'  {T _ TCBracket _}
-  '('  {T _ TOPara _}
-  ')'  {T _ TCPara _}
-  ctxLabel {T _ TCtxLabel _}
-  '=' {T _ TEq _ }
-  ';'  {T _ TSemi _ }
-  ','  {T _ TComma _}
-  '-'  {T _ TSerial _}
-  '|'  {T _ TParallel _}
-  '->'  {T _ TArrow _}
+   newline {Lex.T _ Lex.TNewLine _}
+   '(' {Lex.T _ Lex.TOPara _}
+   ')'  {Lex.T _ Lex.TCPara _}
+   '='  {Lex.T _ Lex.TEq _}
+   var {Lex.T _ Lex.TVar _}
+   '|' {Lex.T _ Lex.TParallel _}
+   '-' {Lex.T _ Lex.TSerial _}
+   dur {Lex.T _ Lex.TDur _}
+   octave {Lex.T _ Lex.TOctave _}
+   letter {Lex.T _ Lex.TLetter _}
+   color {Lex.T _ Lex.TColor _}
+   index {Lex.T _ Lex.TIndex _}
+   withDur {Lex.T _  Lex.TWithDur _}
+   withOctave {Lex.T _  Lex.TWithOctave _}
+   withScale {Lex.T _ Lex.TWithScale _}
+   withColor {Lex.T _  Lex.TWithColor _}
+   eof {Lex.T _ Lex.TEOF _}
 
-  dur  {T _ TDur _}
-  var {T _ TVar _}
-  main {T _ TMain _}
-  fun {T _ TFun _}
+%left withDur
+%left withOctave 
+%left withScale 
+%left withColor
+%left '-'
+%left '|'
 
-  newline {T _ TNewLine _}
+
+
+
 
 %%
 
 Program :: {[Assignment]}
-        : Assignments LastAssignment {reverse ($2:$1)}
-        | LastAssignment {[$1]}
-
+        : Assignments {reverse $1}
 
 Assignments :: {[Assignment]}
         : Assignments Assignment {$2:$1}
         | Assignment {[$1]}
 
-
 Assignment :: {Assignment}
         : var '=' Term newline {Assignment (parseBase $1) $3}
 
-LastAssignment :: {Assignment}
-        : var '=' Term {Assignment (parseBase $1) $3}
-        | Assignment {$1}
-
-
-
-
+--remember newline check later
 Term :: {Term}
---        : Term '(' TermArgs ')' {Application (($1,(reverse $3)),getPos $1)} 
-        : '(' TermArgs ')' {ArgList (reverse $2,posFromToken $1)} 
-        | Term Term {Application (($1,$2),getPos $1)}
-        | Term1 {$1}
-
-TermArgs :: {[Term]}
-          : TermArgs ',' Term {$3:$1}
-          | Term {[$1]}
-
-Term1 :: {Term}
-        : Term2 '->' Term2 {Pattern (($1,$3),(getPos $1))}  -- <--- Remember to add pattern
-        | Term2 {$1}
-
-Term2 :: {Term}
-        : Term2 '-' Term3 {buildFlatList Serial $1 $3}
-        | Term3 {$1}
-
-Term3 :: {Term}
-        : Term3 '|' Term4 {buildFlatList Parallel $1 $3}
-        | Term4 {$1}
-
-Term4 :: {Term}
-        : num {Num (parseBaseInt $1)}
-        | dur {Dur (parseDur $1)}
-        | note {Letter (parseBase $1)}
-        | var {Variable (parseBase $1)}
-        | fun {Function (parseFun $1)}
-        | '{' ListPairs '}' {parseCon $1 $2}
+        : Term withDur Term     {TWith ((WithDur,$1,$3),getPos $1) }
+        | Term withOctave Term  {TWith ((WithOctave,$1,$3),getPos $1) }
+        | Term withScale Term   {TWith ((WithScale, $1,$3),getPos $1) }
+        | Term withColor Term   {TWith ((WithColor,$1,$3),getPos $1) }
+        | Term '-' Term   {buildFlatList Serial $1 $3}
+        | Term '|' Term   {buildFlatList Parallel $1 $3}
+        | index {TIndex (parseIndex $1)}
+        | dur {TDur (parseDur $1)}
+        | letter {TLetter (parseLetter $1)}
+        | octave {TOctave (parseOctave $1)}
+        | color {TColor (parseColor $1)}
+        | var {TVar (parseBase $1)}
         | '(' Term ')' {$2}
 
-ListPairs :: {[(Label,Term)]}
-	      : ListPairs ',' Pair {$3:$1}
-	      | Pair {[$1]}
-
-Pair :: {(Label,Term)}
-	: ctxLabel '=' Term4 {(parseCtxLabel $1,$3)}
-  
 {
-posFromToken (T pos _ _) = parseAlexPosn pos
-
-sortPairs :: [(Label,Term)] ->  [(Label,Term)]
-sortPairs labels = Data.List.sortBy (flip compare `Data.Function.on` fst) labels
-
-parseCon :: Token -> [(Label,Term)] -> Term
-parseCon (T pos _ _) pairs = let sorted = sortPairs pairs
-                             in Context (sorted,parseAlexPosn pos)
-
-parseBaseInt :: Token -> (Integer,Pos)
-parseBaseInt (T pos _ str) = (read str,parseAlexPosn pos)
-
-parseFun :: Token -> (String,Pos)
-parseFun (T pos _ s) = (s,parseAlexPosn pos)
 
 
-parseFun _ = undefined
+data ColorType = Major | Minor
+  deriving(Eq,Ord,Show)
+
+data WithType = WithDur | WithOctave | WithScale | WithColor
+  deriving(Eq,Ord,Show)
+
+data Letter = A | B | C | D | E | F | G
+  deriving(Eq,Ord,Show)
+
+data Sign = Flat | Sharp | Natural
+  deriving(Eq,Ord,Show)
 
 
-durStrToRational :: String -> Integer
-durStrToRational "wn" = 1
-durStrToRational "hn" = 2
-durStrToRational "qn" = 4
-durStrToRational "en" = 8
+type Pos = (Int,Int)
+data Term = TIndex (Integer,Pos)
+             | TDur (Integer,Pos)
+             | TLetter ((Letter,Sign),Pos)
+             | TOctave (Integer,Pos)
+             | TColor (ColorType,Pos)
+             | TFlatList ((CompType,[Term]),Pos)
+             | TVar (String,Pos)
+             | TWith ((WithType,Term,Term),Pos)
+  deriving(Eq,Ord)
 
-parseDur :: Token -> (Integer,Pos)
-parseDur (T pos _ str) = (durStrToRational str,parseAlexPosn pos)
+getPos :: Term -> Pos
+getPos (TIndex (_,p)) = p
+getPos (TDur (_,p)) = p
+getPos (TLetter (_,p)) = p
+getPos (TOctave (_,p)) = p
+getPos (TColor (_,p)) = p
+getPos (TFlatList (_,p)) = p
+getPos (TVar (_,p)) = p
+getPos (TWith (_,p)) = p
 
-parseBase :: Token -> (String,Pos)
-parseBase (T pos _ str) = (str,parseAlexPosn pos)
+parseAlexPosn :: Lex.AlexPosn -> Pos
+parseAlexPosn (Lex.AlexPn _ line column) = (line,column)
 
-parseLetterN (T pos _ str1) (T _ _ str2) = (str1,read str2,parseAlexPosn pos)
+parseIndex :: Lex.Token -> (Integer,Pos)
+parseIndex (Lex.T pos _ str) = 
+  let num_str = init (init str)
+  in ((read num_str)-1,parseAlexPosn pos) --subtract 1 to make index zero_indexing
 
-parseCtxLabel:: Token -> Label
-parseCtxLabel(T _ TCtxLabel str) = case str of 
-                                   "key" -> Key 
-                                   "octave" -> Octave
-                                   _  -> undefined
+parseDur :: Lex.Token -> (Integer,Pos)
+parseDur (Lex.T pos _ str) = 
+  let num = case str of
+              "wn" -> 1
+              "hn" -> 2
+              "qn" -> 4
+              "en" -> 8
+              _ -> undefined
+  in (num,parseAlexPosn pos)
 
-parseAlexPosn :: AlexPosn -> Pos
-parseAlexPosn (AlexPn _ line column) = (line,column)
+
+parseBase :: Lex.Token -> (String,Pos)
+parseBase (Lex.T pos _ str) = (str,parseAlexPosn pos)
+
+parseLetter (Lex.T pos _ str) = 
+  let letter = case (head str) of
+                 'A' -> A
+                 'B' -> B
+                 'C' -> C
+                 'D' -> D
+                 'E' -> E
+                 'F' -> F
+                 'G' -> G
+                 _ -> undefined
+      sign = case (last str) of
+               '#' -> Sharp
+               'b' -> Flat 
+               _ -> Natural
+
+  in ((letter,sign),parseAlexPosn pos)
+
+
+parseOctave (Lex.T pos _ str) =
+  let num = read (tail str) 
+  in (num,parseAlexPosn pos)
+
+parseColor (Lex.T pos _ str) =
+  let color = case str of
+                "Major" -> Major
+                "Minor" -> Minor
+                _ -> undefined
+  in (color,parseAlexPosn pos)
+
 
 type Program = [Assignment]
 data Assignment = Assignment (String,Pos) Term
@@ -152,104 +174,50 @@ instance Show Assignment where
 data CompType = Serial | Parallel
   deriving(Eq,Ord)
 
+
+---show
+
+
 instance Show CompType where
   show Serial = "-"
   show Parallel = "|"
 
 
 
-type Pos = (Int,Int)
-
-getPos :: Term -> Pos
-getPos (Num (_,p)) = p
-getPos (Dur (_,p)) = p
-getPos (Letter (_,p)) = p
-getPos (FlatList (_,p)) = p
-getPos (Pattern (_,p)) = p
-getPos (Variable (_,p)) = p
-getPos (Context (_,p)) = p
-getPos (Application (_,p)) = p
-getPos (Function (_,p)) = p
-
-
-
-
-
-
-
-
-
-data Term = Num (Integer,Pos)
-             | Dur (Integer,Pos)
-             | Letter (String,Pos)
-             | FlatList ((CompType,[Term],Integer),Pos)
-	     | Pattern ((Term,Term),Pos)
-             | Variable (String,Pos)
-             | Context ([(Label,Term)],Pos)
-             | Application ((Term, Term),Pos)
-             | Function (String,Pos)
-             | ArgList ([Term],Pos)
-
---             | ArrowVar (String,Pos)
-  deriving(Eq,Ord)
 
 
 buildFlatList :: CompType -> Term -> Term -> Term
 buildFlatList compType t1 t2 = 
   let makeFlatListMember flat_notes = case flat_notes of
-                                         FlatList ((compType1,l,n),_) -> 
+                                         TFlatList ((compType1,l),_) -> 
                                               if compType == compType1 
-                                                then (l,n)
-                                                else ([flat_notes],n)
-                                         base -> ([base],1)
-  in let (t1_member,n1) = makeFlatListMember t1
-         (t2_member,n2) = makeFlatListMember t2
-         n = if compType == Serial
-               then n1+n2
-               else 1
-     in FlatList ((compType,(t1_member++t2_member),n),getPos t1)
+                                                then l
+                                                else [flat_notes]
+                                         base -> [base]
+  in let t1_member = makeFlatListMember t1
+         t2_member = makeFlatListMember t2
+     in TFlatList ((compType,(t1_member++t2_member)),getPos t1)
 
 
 instance Show Term where
-  show (Num (n,_)) = show n
-  show (Dur (4,_)) = "qn"
-  show (Dur (1,_)) = "hn"
-  show (Dur (8,_)) = "en"
-  show (Letter (s,_)) = s
-  show (FlatList ((t,[last],_),_)) = (show last) 
-  show (FlatList ((t,(first:rest),_),_)) = (show first) ++ (show t) ++  (show (FlatList ((t,rest,0),undefined) ))
-  show (Variable (s,_)) = s
-  show (Context (ctx,_))= show ctx
-  show (Application ((t1,t2),_)) = (show t1)++"("++(show t2) ++")"
-  show (Pattern ((t1,t2),_)) = (show t1) ++ "->" ++ (show t2)
-  show (Function (s,_)) = s
-  show (ArgList ([l],_)) = show l
-  show (ArgList (l:rest,p)) = (show l) ++ ","++ (show (ArgList (rest,p)))
+  show (TIndex (n,_)) = "(TIndex " ++ (show n)++")"
+  show (TDur (8,_)) = "en"
+  show (TDur (4,_)) = "qn"
+  show (TDur (2,_)) = "hn"
+  show (TDur (1,_)) = "wn"
+  show (TLetter (l,_)) = show l
+  show (TOctave (n,_)) = "(TOctave " ++ (show n) ++")"
+  show (TColor (c,_)) = show c
+  show (TColor (c,_)) = show c
+  show (TFlatList ((t,[last]),_)) = (show last) 
+  show (TFlatList ((t,(first:rest)),_)) = (show first) ++ (show t) ++  (show (TFlatList ((t,rest),undefined) ))
+  show (TVar (s,_)) = "(TVar "++s++")"
+  show (TWith ((tW,t1,t2),_)) = (show t1) ++" " ++ (show tW) ++" " ++  (show t2)
 
 
 
-
-data Label = Bars | Key | Octave
-  deriving(Eq,Show)
-
-instance Ord Label where
-  compare Bars Bars = EQ
-  compare Key Key = EQ
-  compare Octave Octave = EQ
-  compare Bars _ = GT
-  compare Key Bars = LT
-  compare Key _ = GT
-  compare Octave _ = LT
-
---data Function = ToNotes | ToMusic | Transform
---  deriving(Eq,Show)
-
-
-
-
-
-parseError (first:rest)= let (T p _ s)=first
-		    in let (AlexPn _ l c)=p
+parseError (first:rest)= let (Lex.T p _ s)=first
+		    in let (Lex.AlexPn _ l c)=p
 		       in let msg = "Parse error on line " ++ (show l) ++ ", column "++(show c)++" during parsing of "++s
 			  in Left msg
 parseError [] = Left "empty token list but failed"

@@ -1,5 +1,0 @@
-$pos = 1 -2 -3 
-$dur = qn - qn - qn
-$notes = toNotes($dur,$pos)
-$con = {key=c,octave=4}
-main = toMusic($notes,$con)

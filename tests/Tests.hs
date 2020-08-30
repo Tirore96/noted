@@ -10,15 +10,18 @@ import Data.Map as Map
 import TypeChecker
 
 main = do
-  defaultMain (testGroup "All tests" [positiveMusicTest,
-                                      negativeCompTestNumShort,
-                                      negativeCompTestNumLong,
-                                      negativeCompTestLetter,
-                                      positiveCompTestToNotes,
-                                      negativeCompTestToNotes,
-                                      negativeApplication1, --lexerGroup
---                                      negativeDur,
-                                      negativeApplication2])
+  defaultMain (testGroup "All tests" [])
+
+--positiveMusicTest,
+                                      --negativeCompTestNumShort,
+                                      --negativeCompTestNumLong,
+                                      --negativeCompTestLetter,
+                                      --positiveCompTestToNotes,
+                                      --negativeCompTestToNotes,
+                                      --negativeApplication1, --lexerGroup
+--                                    --  negativeDur,
+--                                    --  programTest,
+                                      --negativeApplication2])
 
 
 
@@ -99,6 +102,8 @@ negativeDur =
   let name = "(negative) dur test"
       str = "$d = qn-qn"
   in typeCheckTest name str 
+
+
 
 --                    in typeCheckTest str
 
