@@ -84,17 +84,17 @@ data ColorType = Major | Minor
 data WithType = WithDur | WithOctave | WithScale | WithColor
   deriving(Eq,Ord,Show)
 
-data Letter = A | B | C | D | E | F | G
-  deriving(Eq,Ord,Show)
-
-data Sign = Flat | Sharp | Natural
-  deriving(Eq,Ord,Show)
+--data Letter = A | B | C | D | E | F | G
+--  deriving(Eq,Ord,Show)
+--
+--data Sign = Flat | Sharp | Natural
+--  deriving(Eq,Ord,Show)
 
 
 type Pos = (Int,Int)
 data Term = TIndex (Integer,Pos)
              | TDur (Integer,Pos)
-             | TLetter ((Letter,Sign),Pos)
+             | TLetter (Integer,Pos)
              | TOctave (Integer,Pos)
              | TColor (ColorType,Pos)
              | TFlatList ((CompType,[Term]),Pos)
@@ -135,21 +135,21 @@ parseBase :: Lex.Token -> (String,Pos)
 parseBase (Lex.T pos _ str) = (str,parseAlexPosn pos)
 
 parseLetter (Lex.T pos _ str) = 
-  let letter = case (head str) of
-                 'A' -> A
-                 'B' -> B
-                 'C' -> C
-                 'D' -> D
-                 'E' -> E
-                 'F' -> F
-                 'G' -> G
-                 _ -> undefined
-      sign = case (last str) of
-               '#' -> Sharp
-               'b' -> Flat 
-               _ -> Natural
+  let letter_index = case (head str) of
+                       'A' -> 0
+                       'B' -> 2
+                       'C' -> 3
+                       'D' -> 5
+                       'E' -> 7
+                       'F' -> 8
+                       'G' -> 10
+                       _ -> undefined
+      sign_index = case (last str) of
+                     '#' -> 1
+                     'b' -> -1
+                     _ -> 0
 
-  in ((letter,sign),parseAlexPosn pos)
+  in (letter_index+sign_index,parseAlexPosn pos)
 
 
 parseOctave (Lex.T pos _ str) =

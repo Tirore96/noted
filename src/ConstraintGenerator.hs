@@ -106,9 +106,13 @@ evalTimes (Times t1 t2 ) t3 = do evaled <-  evalTimes t1 t2
 evalTimes t1 (Times t2 t3 ) = do evaled <-  evalTimes t2 t3
                                  evalTimes evaled t1
 
-evalTimes (Multiple ct1 cs1) (Multiple ct2 cs2) =
+evalTimes t1@(Multiple ct1 cs1) t2@(Multiple ct2 cs2) =
   if ct1 /= ct2
-    then Nothing
+    then case (ct1,ct2) of
+           (P.Serial,P.Parallel) -> do new_cs <- mapM (\cs1_elem -> evalTimes cs1_elem t2) cs1
+                                       return $ Multiple P.Serial new_cs
+           (P.Parallel,P.Serial) -> do new_cs <- mapM (\cs2_elem -> evalTimes t1 cs2_elem) cs2
+                                       return $ Multiple P.Serial new_cs
     else case (cs1,cs2) of
            ([],[]) -> Just Single  --just to give something
            (_:_,[]) -> Nothing

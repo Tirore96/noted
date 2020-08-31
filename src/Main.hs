@@ -54,18 +54,15 @@ showResult Reduce str = let maybe_ast = do tokens <- Lex.scanner str
                              Right ast -> putStrLn $ show $ TR.reduce ast
                              Left _ -> putStrLn "type checking failed"
 
-showResult Translate str = let maybe_ast = do tokens <- Lex.scanner str
-                                              ast <- Par.parseTokens tokens
-                                              let cons = CG.generateConstraints ast
-                                              _ <- Sol.solve cons
-                                              return ast
-                           in case maybe_ast of
-                                Right ast -> let transM = do reduced <-  TR.reduce ast
-                                                             Trans.translate reduced
-                                             in case transM of
-                                                  Right music -> Eu.playDev 2 music
-                                                  Left err -> putStrLn err
-                                Left _ -> putStrLn "type checking failed"
+showResult Translate str = let maybe_music= do tokens <- Lex.scanner str
+                                               ast <- Par.parseTokens tokens
+                                               let cons = CG.generateConstraints ast
+                                               _ <- Sol.solve cons
+                                               reduced <-  TR.reduce ast
+                                               Trans.translate reduced
+                           in case maybe_music of
+                                Right music -> Eu.playDev 2 music
+                                Left err -> putStrLn err
 
 --sendMIDI :: String -> IO ()
 --sendMIDI program = 
