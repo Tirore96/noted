@@ -150,10 +150,13 @@ genConstraints program = do mapM_ genConstraint program
                             addConstraints [Equals (BMusic, Single) main_type term]
                               
 
-genConstraint :: P.Assignment -> ConstraintM ()
+genConstraint :: P.Line -> ConstraintM ()
 genConstraint (P.Assignment (var,_) term) = do
   term_t <- genConstraintT term
   updateGamma var term_t
+
+genConstraint  _ = return () --Don't type check import statement
+
 
 genConstraintT :: P.Term -> ConstraintM TypedTerm 
 genConstraintT term@(P.TIndex _) = return ((BIndex, Single),term)
