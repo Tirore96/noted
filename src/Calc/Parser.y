@@ -5,7 +5,9 @@ import qualified Data.Map as Map
 import qualified Data.List
 import qualified Data.Function
 import Data.Ratio
-
+import Control.Monad (void)
+import Control.Monad.IO.Class (liftIO)
+import Control.Monad.Trans.Except
 
 
 }
@@ -60,23 +62,23 @@ Lines :: {[Line]}
 
 Line :: {Line}
         : import importname   {Import (parseImportName $2,tokenPos $1)}
-        | var '=' Term newline {Assignment (parseBase $1) $3}
+        | var '=' TermImport newline {Assignment (parseBase $1) $3}
 
 --remember newline check later
-Term :: {Term}
-        : Term withDur Term     {TWith ((WithDur,$1,$3),getPos $1) }
-        | Term withOctave Term  {TWith ((WithOctave,$1,$3),getPos $1) }
-        | Term withScale Term   {TWith ((WithScale, $1,$3),getPos $1) }
-        | Term withColor Term   {TWith ((WithColor,$1,$3),getPos $1) }
-        | Term '-' Term   {buildFlatList Serial $1 $3}
-        | Term '|' Term   {buildFlatList Parallel $1 $3}
-        | index {TIndex (parseIndex $1)}
-        | dur {TDur (parseDur $1)}
-        | letter {TLetter (parseLetter $1)}
-        | octave {TOctave (parseOctave $1)}
-        | color {TColor (parseColor $1)}
-        | var {TVar (parseBase $1)}
-        | '(' Term ')' {$2}
+TermImport :: {TermImport}
+        : TermImport withDur TermImport     {TIWith ((WithDur,$1,$3),getPos $1) }
+        | TermImport withOctave TermImport  {TIWith ((WithOctave,$1,$3),getPos $1) }
+        | TermImport withScale TermImport   {TIWith ((WithScale, $1,$3),getPos $1) }
+        | TermImport withColor TermImport   {TIWith ((WithColor,$1,$3),getPos $1) }
+        | TermImport '-' TermImport   {buildFlatList Serial $1 $3}
+        | TermImport '|' TermImport   {buildFlatList Parallel $1 $3}
+        | index {TIIndex (parseIndex $1)}
+        | dur {TIDur (parseDur $1)}
+        | letter {TILetter (parseLetter $1)}
+        | octave {TIOctave (parseOctave $1)}
+        | color {TIColor (parseColor $1)}
+        | var {TIVar (parseBase $1)}
+        | '(' TermImport ')' {$2}
 
 {
 
@@ -95,25 +97,62 @@ data WithType = WithDur | WithOctave | WithScale | WithColor
 
 
 type Pos = (Int,Int)
-data Term =  TIndex (Integer,Pos)
-             | TDur (Integer,Pos)
-             | TLetter (Integer,Pos)
-             | TOctave (Integer,Pos)
-             | TColor (ColorType,Pos)
-             | TFlatList ((CompType,[Term]),Pos)
-             | TVar (String,Pos)
-             | TWith ((WithType,Term,Term),Pos)
+data TermImport =  TIIndex (Integer,Pos)
+                | TIDur (Integer,Pos)
+                | TILetter (Integer,Pos)
+                | TIOctave (Integer,Pos)
+                | TIColor (ColorType,Pos)
+                | TIFlatList ((CompType,[TermImport]),Pos)
+                | TIVar (String,Pos)
+                | TIWith ((WithType,TermImport,TermImport),Pos)
   deriving(Eq,Ord)
 
-getPos :: Term -> Pos
-getPos (TIndex (_,p)) = p
-getPos (TDur (_,p)) = p
-getPos (TLetter (_,p)) = p
-getPos (TOctave (_,p)) = p
-getPos (TColor (_,p)) = p
-getPos (TFlatList (_,p)) = p
-getPos (TVar (_,p)) = p
-getPos (TWith (_,p)) = p
+
+data Term =  TIndex (Integer,Pos)
+                | TDur (Integer,Pos)
+                | TLetter (Integer,Pos)
+                | TOctave (Integer,Pos)
+                | TColor (ColorType,Pos)
+                | TFlatList ((CompType,[Term]),Pos)
+                | TVar (String,Pos)
+                | TWith ((WithType,Term,Term),Pos)
+  deriving(Eq,Ord)
+
+load_module :: String -> IO (Either String Program)
+load_module str = runExcept $ do
+  tokens <- Lex.Scanner tokens
+  ast <- parseTokens tokens
+  liftIO ast
+  
+
+parseTokensImport tokens = case parseTokens tokens of
+                             Right program -> concatMapM processLine program
+                             Left err -> Left err
+
+concatMapM fun l = do mapped_l <- mapM fun l
+                      return $ foldl (++) [] mapped_l 
+
+
+processLine Line -> Program
+processLine line@(Assignment _ _) = return [Right line]
+processLine (Import file) = do 
+  str <- readFile (fst file)
+  case Lex.scanner str of
+    Right tokens -> case parseTokensImport tokens of
+                      Right program -> Right program
+    Left err -> return $ putStrLn err 
+ 
+
+
+getPos :: TermImport -> Pos
+getPos (TIIndex (_,p)) = p
+getPos (TIDur (_,p)) = p
+getPos (TILetter (_,p)) = p
+getPos (TIOctave (_,p)) = p
+getPos (TIColor (_,p)) = p
+getPos (TIFlatList (_,p)) = p
+getPos (TIVar (_,p)) = p
+getPos (TIWith (_,p)) = p
 
 tokenPos :: Lex.Token -> Pos
 tokenPos (Lex.T pos _ _) = parseAlexPosn pos
@@ -174,7 +213,7 @@ parseColor (Lex.T pos _ str) =
 
 
 type Program = [Line]
-data Line = Assignment (String,Pos) Term | Import (String,Pos)
+data Line = Assignment (String,Pos) TermImport | Import (String,Pos)
   deriving(Eq)
 
 instance Show Line where
@@ -197,7 +236,7 @@ instance Show CompType where
 
 
 
-buildFlatList :: CompType -> Term -> Term -> Term
+buildFlatList :: CompType -> TermImport -> TermImport -> TermImport
 buildFlatList compType t1 t2 = 
   let makeFlatListMember flat_notes = case flat_notes of
                                          TFlatList ((compType1,l),_) -> 
@@ -210,20 +249,20 @@ buildFlatList compType t1 t2 =
      in TFlatList ((compType,(t1_member++t2_member)),getPos t1)
 
 
-instance Show Term where
-  show (TIndex (n,_)) = "(TIndex " ++ (show n)++")"
-  show (TDur (8,_)) = "en"
-  show (TDur (4,_)) = "qn"
-  show (TDur (2,_)) = "hn"
-  show (TDur (1,_)) = "wn"
-  show (TLetter (l,_)) = show l
-  show (TOctave (n,_)) = "(TOctave " ++ (show n) ++")"
-  show (TColor (c,_)) = show c
-  show (TColor (c,_)) = show c
-  show (TFlatList ((t,[last]),_)) = (show last) 
-  show (TFlatList ((t,(first:rest)),_)) = (show first) ++ (show t) ++  (show (TFlatList ((t,rest),undefined) ))
-  show (TVar (s,_)) = "(TVar "++s++")"
-  show (TWith ((tW,t1,t2),_)) = (show t1) ++" " ++ (show tW) ++" " ++  (show t2)
+instance Show TermImport where
+  show (TIIndex (n,_)) = "(TIndex " ++ (show n)++")"
+  show (TIDur (8,_)) = "en"
+  show (TIDur (4,_)) = "qn"
+  show (TIDur (2,_)) = "hn"
+  show (TIDur (1,_)) = "wn"
+  show (TILetter (l,_)) = show l
+  show (TIOctave (n,_)) = "(TOctave " ++ (show n) ++")"
+  show (TIColor (c,_)) = show c
+  show (TIColor (c,_)) = show c
+  show (TIFlatList ((t,[last]),_)) = (show last) 
+  show (TIFlatList ((t,(first:rest)),_)) = (show first) ++ (show t) ++  (show (TFlatList ((t,rest),undefined) ))
+  show (TIVar (s,_)) = "(TVar "++s++")"
+  show (TIWith ((tW,t1,t2),_)) = (show t1) ++" " ++ (show tW) ++" " ++  (show t2)
 
 
 
