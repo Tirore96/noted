@@ -31,8 +31,6 @@ withOctave                          {mkL TWithOctave}
 withScale                           {mkL TWithScale}
 withColor                           {mkL TWithColor}
 [a-z] ($alpha|$digit|\_)*           {mkL TVar}
-import                              {mkL TImport}
-[A-Z] [a-zA-Z]*                     {mkL TImportName}
 {
 
 
@@ -55,8 +53,6 @@ data TokenClass =
     TWithOctave |
     TWithScale |
     TWithColor |
-    TImport |
-    TImportName |
     TEOF
   deriving (Eq,Show)
   

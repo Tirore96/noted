@@ -46,7 +46,7 @@ reduce program = let reduceM = do mapM_ reduceAssignment program
                       Right (val,_) -> Right val
                       Left err -> Left err
 
-reduceAssignment :: P.Line -> SEME ()
+reduceAssignment :: P.Assignment -> SEME ()
 reduceAssignment (P.Assignment (var,_) t) = do
   reduced_t <- reduceTerm t
   updateState var reduced_t

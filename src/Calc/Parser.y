@@ -34,8 +34,6 @@ import Data.Ratio
    withOctave {Lex.T _  Lex.TWithOctave _}
    withScale {Lex.T _ Lex.TWithScale _}
    withColor {Lex.T _  Lex.TWithColor _}
-   import    {Lex.T _ Lex.TImport _}
-   importname {Lex.T _ Lex.TImportName _}
    eof {Lex.T _ Lex.TEOF _}
 
 %left withDur
@@ -51,16 +49,15 @@ import Data.Ratio
 
 %%
 
-Program :: {[Line]}
-        : Lines {reverse $1}
+Program :: {[Assignment]}
+        : Assignments {reverse $1}
 
-Lines :: {[Line]}
-        : Lines Line {$2:$1}
-        | Line {[$1]}
+Assignments :: {[Assignment]}
+        : Assignments Assignment {$2:$1}
+        | Assignment {[$1]}
 
-Line :: {Line}
-        : import importname   {Import (parseImportName $2,tokenPos $1)}
-        | var '=' Term newline {Assignment (parseBase $1) $3}
+Assignment :: {Assignment}
+        : var '=' Term newline {Assignment (parseBase $1) $3}
 
 --remember newline check later
 Term :: {Term}
@@ -95,7 +92,7 @@ data WithType = WithDur | WithOctave | WithScale | WithColor
 
 
 type Pos = (Int,Int)
-data Term =  TIndex (Integer,Pos)
+data Term = TIndex (Integer,Pos)
              | TDur (Integer,Pos)
              | TLetter (Integer,Pos)
              | TOctave (Integer,Pos)
@@ -114,12 +111,6 @@ getPos (TColor (_,p)) = p
 getPos (TFlatList (_,p)) = p
 getPos (TVar (_,p)) = p
 getPos (TWith (_,p)) = p
-
-tokenPos :: Lex.Token -> Pos
-tokenPos (Lex.T pos _ _) = parseAlexPosn pos
-
-parseImportName :: Lex.Token -> String
-parseImportName (Lex.T pos _ str) = str
 
 parseAlexPosn :: Lex.AlexPosn -> Pos
 parseAlexPosn (Lex.AlexPn _ line column) = (line,column)
@@ -173,14 +164,12 @@ parseColor (Lex.T pos _ str) =
   in (color,parseAlexPosn pos)
 
 
-type Program = [Line]
-data Line = Assignment (String,Pos) Term | Import (String,Pos)
+type Program = [Assignment]
+data Assignment = Assignment (String,Pos) Term
   deriving(Eq)
 
-instance Show Line where
+instance Show Assignment where
   show (Assignment (s,p) term )= s ++ "=" ++ (show term)
-  show (Import (s,p) )= "import "++s
-
 
 data CompType = Serial | Parallel
   deriving(Eq,Ord)
