@@ -21,34 +21,36 @@ import Data.Ratio
    newline {Lex.T _ Lex.TNewLine _}
    '(' {Lex.T _ Lex.TOPara _}
    ')'  {Lex.T _ Lex.TCPara _}
-   '='  {Lex.T _ Lex.TEq _}
-   var {Lex.T _ Lex.TVar _}
    '|' {Lex.T _ Lex.TParallel _}
    '-' {Lex.T _ Lex.TSerial _}
-   dur {Lex.T _ Lex.TDur _}
-   octave {Lex.T _ Lex.TOctave _}
-   letter {Lex.T _ Lex.TLetter _}
-   color {Lex.T _ Lex.TColor _}
-   index {Lex.T _ Lex.TIndex _}
-   withDur {Lex.T _  Lex.TWithDur _}
-   withOctave {Lex.T _  Lex.TWithOctave _}
-   withScale {Lex.T _ Lex.TWithScale _}
-   withColor {Lex.T _  Lex.TWithColor _}
-   eof {Lex.T _ Lex.TEOF _}
+   '_' {Lex.T _ Lex.TUnderscore _}
+--   '<' {Lex.T _ Lex.TLangle _}
+--   '>'  {Lex.T _ Lex.TRangle _}
+   '='  {Lex.T _ Lex.TEq _}
+   n {Lex.T _ Lex.TNum _}
+   var {Lex.T _ Lex.TVar _}
+   l {Lex.T _ Lex.TLetter _}
+   '\\' {Lex.T _ Lex.TBackslash _ }
+   case {Lex.T _ Lex.TKeyword "case"}
+   endcase {Lex.T _ Lex.TKeyword "endcase"}
 
-%left withDur
-%left withOctave 
-%left withScale 
-%left withColor
+   of {Lex.T _ Lex.TKeyword "of"}
+--   serial {Lex.T _ Lex.TKeyword "serial"}
+--   parallel {Lex.T _ Lex.TKeyword "parallel"}
+   fix {Lex.T _ Lex.TKeyword "fix"}
+   play {Lex.T _ Lex.TKeyword "play"}
+   let {Lex.T _ Lex.TKeyword "let"}
+   in {Lex.T _ Lex.TKeyword "in"}
+   '->' {Lex.T _ Lex.TArrow _}
+   ',' {Lex.T _ Lex.TComma _}
+   '.' {Lex.T _ Lex.TDot _}
+--   eof {Lex.T _ Lex.TEOF _}
+
 %left '-'
+%left '_'
 %left '|'
 
-
-
-
-
 %%
-
 Program :: {[Assignment]}
         : Assignments {reverse $1}
 
@@ -57,162 +59,167 @@ Assignments :: {[Assignment]}
         | Assignment {[$1]}
 
 Assignment :: {Assignment}
-        : var '=' Term newline {Assignment (parseBase $1) $3}
+        : var '=' Exp newline {Assignment (getString $1) $3}
 
---remember newline check later
-Term :: {Term}
-        : Term withDur Term     {TWith ((WithDur,$1,$3),getPos $1) }
-        | Term withOctave Term  {TWith ((WithOctave,$1,$3),getPos $1) }
-        | Term withScale Term   {TWith ((WithScale, $1,$3),getPos $1) }
-        | Term withColor Term   {TWith ((WithColor,$1,$3),getPos $1) }
-        | Term '-' Term   {buildFlatList Serial $1 $3}
-        | Term '|' Term   {buildFlatList Parallel $1 $3}
-        | index {TIndex (parseIndex $1)}
-        | dur {TDur (parseDur $1)}
-        | letter {TLetter (parseLetter $1)}
-        | octave {TOctave (parseOctave $1)}
-        | color {TColor (parseColor $1)}
-        | var {TVar (parseBase $1)}
-        | '(' Term ')' {$2}
+Exp :: {Exp}
+          : n  {parse $1}
+          | l  {parse $1}
+          | '(' Exp ',' Exp ')'  {Tuple (($2,$4),getPos $1) }
+          | '.' {parse $1}
+          | Exp '-' Exp  {parseComp $1 $2 $3 }
+          | Exp '_' Exp  {parseComp $1 $2 $3 }
+          | Exp '|' Exp  {parseComp $1 $2 $3 }
+          | var {parse $1}
+          | let var '=' Exp newline in Exp {Let ((getString $2, $4, $7), getPos $1)}
+          | play Exp Exp {Play (($2,$3),getPos $1)}
+          | '\\' Args '->' Exp   {Lam (($2, $4),getPos $1)}
+          | Exp Exp       {App (($1, $2),getExpPos $1)}
+          | case Exp of newline OrderedCaseLines endcase {Case (($2,$5),getPos $1)}
+          | '(' Exp ')' {$2}
+
+OrderedCaseLines :: {[Exp]}
+         : CaseLines {reverse $1}
+
+CaseLines :: {[Exp]}
+         : CaseLines CaseLine {$2:$1}
+         | CaseLine {[$1]}
+
+CaseLine :: {Exp}
+         : Pattern '->' Exp newline {Lam (([$1],$3),getExpPos $1)}
+
+Args :: {[Exp]}
+         : Patterns {reverse $1}
+
+Patterns :: {[Exp]}
+         : Patterns Pattern {$2:$1}
+         | Pattern {[$1]}
+
+Pattern :: {Exp}
+          : n  {parse $1}
+          | l  {parse $1}
+          | '(' Pattern ',' Pattern ')'  {Tuple (($2,$4),getPos $1) }
+          | '.' {parse $1}
+          | Pattern '-' Pattern {parseComp $1 $2 $3 }
+          | Pattern '_' Pattern {parseComp $1 $2 $3 }
+          | Pattern '|' Pattern {parseComp $1 $2 $3 }
+          | var {parse $1}
 
 {
 
 
-data ColorType = Major | Minor
-  deriving(Eq,Ord,Show)
-
-data WithType = WithDur | WithOctave | WithScale | WithColor
-  deriving(Eq,Ord,Show)
-
---data Letter = A | B | C | D | E | F | G
---  deriving(Eq,Ord,Show)
---
---data Sign = Flat | Sharp | Natural
---  deriving(Eq,Ord,Show)
-
 
 type Pos = (Int,Int)
-data Term = TIndex (Integer,Pos)
-             | TDur (Integer,Pos)
-             | TLetter (Integer,Pos)
-             | TOctave (Integer,Pos)
-             | TColor (ColorType,Pos)
-             | TFlatList ((CompType,[Term]),Pos)
-             | TVar (String,Pos)
-             | TWith ((WithType,Term,Term),Pos)
-  deriving(Eq,Ord)
 
-getPos :: Term -> Pos
-getPos (TIndex (_,p)) = p
-getPos (TDur (_,p)) = p
-getPos (TLetter (_,p)) = p
-getPos (TOctave (_,p)) = p
-getPos (TColor (_,p)) = p
-getPos (TFlatList (_,p)) = p
-getPos (TVar (_,p)) = p
-getPos (TWith (_,p)) = p
+data Assignment = Assignment String Exp 
+  deriving(Eq,Show)
+
+data Dim = Serial | Parallel
+  deriving(Eq,Show)
+
+data Exp =  Num (Integer,Pos)
+             | Letter (String,Pos)
+             | Tuple ((Exp,Exp),Pos)
+             | Dot Pos
+             | Cons ((Dim,Int,Exp,Exp),Pos)
+             | Var (String,Pos)
+             | Let ((String ,Exp ,Exp),Pos)
+             | Play ((Exp,Exp),Pos)
+             | Lam (([Exp], Exp),Pos)
+             | App ((Exp, Exp),Pos)
+             | Case ((Exp, [Exp]),Pos)
+  deriving(Eq)
+
+instance Show Exp where
+  show (Num (n,_)) = show n
+  show (Letter (s,_)) = s
+  show (Tuple ((e1,e2),_)) = "("++ (show e1) ++ ","++ (show e2) ++ ")"
+  show (Dot _) = " . "
+  show (Cons ((d,n,e1,e2),_)) = "(" ++ (show e1) ++ "<" ++ (show d)++","++(show n) ++">" ++ (show e2) ++ ")"
+  show (Var (s,_)) = s
+  show (Let ((s,e1,e2),_)) = "let "++s++" = "++(show e1)++ " in " ++ (show e2)
+  show (Play ((e1,e2),_)) = "play " ++ (show e1)++ " "++ (show e2)
+  show (Lam ((e1, e2),_)) = "\\"++(show e1)++" "++(show e2)
+  show (App ((e1, e2),_)) = (show e1)++" "++(show e2)
+  show (Case ((e1, es),_)) = "case "++(show e1)++" of "++(show es)
+
+
+parseComp :: Exp -> Lex.Token -> Exp -> Exp
+parseComp e1 (Lex.T p _ str) e2 = let n = length str 
+                                  in let (dim,o) = case (head str) of
+                                                     '-' -> (Serial,n-1)
+                                                     '_' -> (Serial,0-n)
+                                                     '|' -> (Parallel,n-1)
+                                     in Cons ((dim,o,e1,e2),parseAlexPosn p)
+
+parseOp :: String -> (Dim,Int)
+parseOp str = let str_stripped = init (tail str)
+              in if (take 6 str_stripped) == "serial"
+                   then (Serial,read (drop 7 str_stripped))
+                   else (Parallel,read (drop 9 str_stripped))
+
+                        
+--Cons ((Serial, (read $ getString $5), $1, $7),getExpPos $1)
+getPos :: Lex.Token -> Pos
+getPos (Lex.T p _ _) = parseAlexPosn p
+
+getExpPos :: Exp -> Pos
+getExpPos (Num (_,p)) = p
+getExpPos (Letter (_,p)) = p
+getExpPos (Tuple (_,p)) = p
+getExpPos (Dot p) = p
+getExpPos (Cons (_,p)) = p
+getExpPos (Var (_,p)) = p
+getExpPos (Let (_,p)) = p
+getExpPos (Play (_,p)) = p
+getExpPos (Lam (_,p)) = p
+getExpPos (App (_,p)) = p
+getExpPos (Case (_,p)) = p
+
+--setExpPos :: Pos -> Exp -> Exp
+--setExpPos p1 (Num (v,_)) = Num (v,p1)
+--setExpPos p1 (Letter (v,_)) = Letter (v,p1)
+--setExpPos p1 (Tuple (v,_)) = Tuple (v,p1)
+--setExpPos p1 (Dot _) = Dot p1
+--setExpPos p1 (Cons (v,_)) = Cons (v,p1)
+--setExpPos p1 (Var (v,_)) = Var (v,p1)
+--setExpPos p1 (Let (v,_)) = Let (v,p1)
+--setExpPos p1 (Play (v,_)) = Play (v,p1)
+--setExpPos p1 (Lam (v,_)) = Lam (v,p1)
+--setExpPos p1 (App (v,_)) = App (v,p1)
+--setExpPos p1 (Case (v,_)) = Case (v,p1)
+
+
+
+
+getString :: Lex.Token -> String
+getString (Lex.T _ _ str) = str
 
 parseAlexPosn :: Lex.AlexPosn -> Pos
 parseAlexPosn (Lex.AlexPn _ line column) = (line,column)
 
-parseIndex :: Lex.Token -> (Integer,Pos)
-parseIndex (Lex.T pos _ str) = 
-  let num_str = init (init str)
-  in ((read num_str)-1,parseAlexPosn pos) --subtract 1 to make index zero_indexing
-
-parseDur :: Lex.Token -> (Integer,Pos)
-parseDur (Lex.T pos _ str) = 
-  let num = case str of
-              "wn" -> 1
-              "hn" -> 2
-              "qn" -> 4
-              "en" -> 8
-              _ -> undefined
-  in (num,parseAlexPosn pos)
+parse :: Lex.Token -> Exp
+parse (Lex.T p Lex.TNum str) = Num ((read str),parseAlexPosn p)
+parse (Lex.T p Lex.TLetter str) = Letter (str,parseAlexPosn p)
+parse (Lex.T p Lex.TDot _) = Dot (parseAlexPosn p)
+parse (Lex.T p Lex.TVar str ) = Var (str,parseAlexPosn p)
 
 
-parseBase :: Lex.Token -> (String,Pos)
-parseBase (Lex.T pos _ str) = (str,parseAlexPosn pos)
-
-parseLetter (Lex.T pos _ str) = 
-  let letter_index = case (head str) of
-                       'A' -> 0
-                       'B' -> 2
-                       'C' -> 3
-                       'D' -> 5
-                       'E' -> 7
-                       'F' -> 8
-                       'G' -> 10
-                       _ -> undefined
-      sign_index = case (last str) of
-                     '#' -> 1
-                     'b' -> -1
-                     _ -> 0
-
-  in (letter_index+sign_index,parseAlexPosn pos)
 
 
-parseOctave (Lex.T pos _ str) =
-  let num = read (tail str) 
-  in (num,parseAlexPosn pos)
-
-parseColor (Lex.T pos _ str) =
-  let color = case str of
-                "Major" -> Major
-                "Minor" -> Minor
-                _ -> undefined
-  in (color,parseAlexPosn pos)
 
 
-type Program = [Assignment]
-data Assignment = Assignment (String,Pos) Term
-  deriving(Eq)
-
-instance Show Assignment where
-  show (Assignment (s,p) term )= s ++ "=" ++ (show term)
-
-data CompType = Serial | Parallel
-  deriving(Eq,Ord)
+--type Program = [Assignment]
+--data Assignment = Assignment (String,Pos) Term
+--  deriving(Eq)
+--
+--instance Show Assignment where
+--  show (Assignment (s,p) term )= s ++ "=" ++ (show term)
+--
 
 
 ---show
 
 
-instance Show CompType where
-  show Serial = "-"
-  show Parallel = "|"
-
-
-
-
-
-buildFlatList :: CompType -> Term -> Term -> Term
-buildFlatList compType t1 t2 = 
-  let makeFlatListMember flat_notes = case flat_notes of
-                                         TFlatList ((compType1,l),_) -> 
-                                              if compType == compType1 
-                                                then l
-                                                else [flat_notes]
-                                         base -> [base]
-  in let t1_member = makeFlatListMember t1
-         t2_member = makeFlatListMember t2
-     in TFlatList ((compType,(t1_member++t2_member)),getPos t1)
-
-
-instance Show Term where
-  show (TIndex (n,_)) = "(TIndex " ++ (show n)++")"
-  show (TDur (8,_)) = "en"
-  show (TDur (4,_)) = "qn"
-  show (TDur (2,_)) = "hn"
-  show (TDur (1,_)) = "wn"
-  show (TLetter (l,_)) = show l
-  show (TOctave (n,_)) = "(TOctave " ++ (show n) ++")"
-  show (TColor (c,_)) = show c
-  show (TColor (c,_)) = show c
-  show (TFlatList ((t,[last]),_)) = (show last) 
-  show (TFlatList ((t,(first:rest)),_)) = (show first) ++ (show t) ++  (show (TFlatList ((t,rest),undefined) ))
-  show (TVar (s,_)) = "(TVar "++s++")"
-  show (TWith ((tW,t1,t2),_)) = (show t1) ++" " ++ (show tW) ++" " ++  (show t2)
 
 
 

@@ -13,24 +13,32 @@ $whitespace = [\ \t\f\v\r]
 
 tokens :-
 --general tokens
-$whitespace+                        {skip}     
-"//".*                              {skip}
+$whitespace+         {skip}
 (\n)+                               {mkL TNewLine}
 \(                                  {mkL TOPara}
 \)                                  {mkL TCPara}
+--\<serial\,[0-8]\>                    {mkL TSerial}
+--\<parallel\,[0-8]\>                  {mkL TParallel}
 =                                   {mkL TEq}
-\|                                  {mkL TParallel}
-\-                                  {mkL TSerial}
-wn | hn | qn | en                   {mkL TDur}
-o[1-8]                              {mkL TOctave}
-[A-G]                               {mkL TLetter}
-Major | Minor                       {mkL TColor}
-1st | 2nd | 3rd | [4-9] th        {mkL TIndex}
-withDur                             {mkL TWithDur}
-withOctave                          {mkL TWithOctave}
-withScale                           {mkL TWithScale}
-withColor                           {mkL TWithColor}
-[a-z] ($alpha|$digit|\_)*           {mkL TVar}
+\|+                                  {mkL TParallel}
+\-+                                  {mkL TSerial}
+\_+                                  {mkL TUnderscore}
+0|[1-9]([0-9]*)                       {mkL TNum}
+[a-g]                               {mkL TLetter}
+\\                                  {mkL TBackslash}
+case | endcase | of | play | let | in {mkL TKeyword}
+
+[h-z]|[a-z]($alpha|$digit|\_)+           {mkL TVar}
+\->                                  {mkL TArrow}
+\,                                   {mkL TComma}
+\.                                   {mkL TDot}
+
+
+
+
+
+
+
 {
 
 
@@ -40,19 +48,19 @@ data TokenClass =
     TNewLine |
     TOPara |
     TCPara |
-    TEq | 
-    TVar |
-    TParallel |
     TSerial |
-    TDur |
-    TOctave |
+    TParallel |
+    TUnderscore |
+    TEq | 
+    TNum |
+    TVar |
     TLetter |
-    TColor |
-    TIndex |
-    TWithDur |
-    TWithOctave |
-    TWithScale |
-    TWithColor |
+    TBackslash |
+    TKeyword |
+    TLet |
+    TArrow |
+    TComma |
+    TDot |
     TEOF
   deriving (Eq,Show)
   
@@ -75,5 +83,10 @@ alexJoin = do myToken <- alexMonadScan
                 _       -> do tokens <- alexJoin
                               return $ myToken:tokens
              
-scanner s = runAlex s alexJoin
+scanner s = do tokens <- runAlex s alexJoin
+               return $ (removeTrailingNewLines tokens) ++ [T (AlexPn 0 0 0) TNewLine "" ]
+           
+removeTrailingNewLines tokens = case (last tokens) of
+                                  (T _ TNewLine _) -> removeTrailingNewLines (init tokens)
+                                  _ -> tokens
 }
