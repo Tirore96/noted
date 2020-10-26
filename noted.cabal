@@ -19,7 +19,7 @@ executable noted-exe
   default-language:    Haskell2010
   build-depends:       base >= 4.7 && < 5
                      , array
-		     , Euterpea
+                     , Euterpea
                      , containers
                      , ghc
                      , mtl
@@ -28,8 +28,8 @@ executable noted-exe
                      , happy:happy
 
   other-modules:      Calc
-		    , Calc.Lexer
-		    , Calc.Parser
+                    , Calc.Lexer
+                    , Calc.Parser
                     , Evaluator
                     , Translator
 

@@ -19,7 +19,7 @@ data Exp = Num Integer
            | Cons P.Dim Int Exp Exp
            | Var String
            | Let String Exp Exp
-           | Play Exp Exp
+           | Play 
            | Lam [Exp] Exp
            | App Exp Exp
            | Case Exp [Exp]
@@ -55,7 +55,7 @@ convertExp (P.Let ((str,e1,e2),_)) = let e1_con = convertExp e1
                                          e2_con = convertExp e2
                                      in Let str e1_con e2_con
 
-convertExp (P.Play ((e1,e2),_)) = Play (convertExp e1) (convertExp e2)
+convertExp (P.Play _ ) = Play
 
 convertExp (P.Lam ((es,e),_)) = Lam (map convertExp es) (convertExp e)
 
@@ -116,10 +116,7 @@ substitute (Let var e1 e2) str sub_e =
       e2_sub = substitute e2 str sub_e                                             
   in Let var e1_sub e2_sub
 
-substitute (Play e1 e2 ) str sub_e = let e1_sub = substitute e1 str sub_e
-                                         e2_sub = substitute e2 str sub_e
-
-                                     in Play e1_sub e2_sub
+substitute Play _ _ = Play 
 
 substitute (Lam var e1) str sub_e = let e1_sub = substitute e1 str sub_e
                                     in Lam var e1_sub
@@ -161,23 +158,21 @@ reduceTerm (Let str e1 e2) = let e2_sub = substitute e2 str e1
                              in reduceTerm e2_sub
 
 
-reduceTerm (Play e1 e2) = do v1 <- reduceTerm e1
-                             v2 <- reduceTerm e2
-                             return $ Play v1 v2
+reduceTerm Play = return Play
 
 reduceTerm e@(Lam _ _) = return e
 
 reduceTerm (App e1 e2) = do v1 <- reduceTerm e1
-                            (p,ps,e0) <- case v1 of
-                                          Lam (p:ps) e0 -> return (p,ps,e0)
-                                          e -> failM ("not lambda, is: "++show e)
-                            v_arg <- reduceTerm e2
-                            let e_sub =  applyPattern e0 p v_arg
-                            case e_sub of 
-                              Right e -> case ps of
-                                           [] -> reduceTerm e
-                                           l -> return $ Lam l e
-                              Left f -> failM f
+                            v2 <- reduceTerm e2
+                            case v1 of
+                              Lam (p:ps) e0 -> case applyPattern e0 p v2 of
+                                                 Right e -> case ps of
+                                                              [] -> reduceTerm e
+                                                              l -> return $ Lam l e
+                                                 Left f -> failM f
+                              Play -> return $ App Play v2
+                              App Play varg1 -> return $ App (App Play varg1) v2
+                              e -> failM ("not lambda or Play or App Play arg1, is: "++show e)
                  
 
 reduceTerm (Case e1 es ) =  -- For now don't substitute d and n because they are not P.Exp

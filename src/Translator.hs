@@ -8,9 +8,11 @@ import Data.Ratio
 
 
 translate :: E.Exp -> Either String (Eu.Music Eu.Pitch)
-translate (E.Play (E.Num n) e2) = case translateCompositions (fromIntegral n) (fromIntegral n) e2 of
-                                    Right (m,_) -> Right m
-                                    Left f -> Left f
+translate (E.App (E.App E.Play (E.Num n)) e2) = 
+  case translateCompositions (fromIntegral n) (fromIntegral n) e2 of
+    Right (m,_) -> Right m
+    Left f -> Left f
+
 translate e = Left ("argument to translate is not music, but: "++(show e))
 
 

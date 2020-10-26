@@ -79,7 +79,7 @@ Exp :: {Exp}
 
           | var {parse $1}
           | let var '=' Exp newline in Exp {Let ((getString $2, $4, $7), getPos $1)}
-          | play Exp Exp {Play (($2,$3),getPos $1)}
+          | play {Play (getPos $1)}
           | '\\' Args '->' Exp   {Lam (($2, $4),getPos $1)}
           | Exp Exp2       {App (($1, $2),getExpPos $1)}
           | case Exp of newline OrderedCaseLines endcase {Case (($2,$5),getPos $1)}
@@ -95,7 +95,7 @@ Exp2 :: {Exp}
           | Exp2 '|' Exp2  {parseComp $1 $2 $3 }
           | var {parse $1}
           | let var '=' Exp newline in Exp {Let ((getString $2, $4, $7), getPos $1)}
-          | play Exp2 Exp2 {Play (($2,$3),getPos $1)}
+          | play {Play (getPos $1)}
           | '\\' Args '->' Exp2  {Lam (($2, $4),getPos $1)}
           | case Exp of newline OrderedCaseLines endcase {Case (($2,$5),getPos $1)}
           | '(' Exp ')' {$2}
@@ -147,7 +147,7 @@ data Exp =  Num (Integer,Pos)
              | Cons ((Dim,Int,Exp,Exp),Pos)
              | Var (String,Pos)
              | Let ((String ,Exp ,Exp),Pos)
-             | Play ((Exp,Exp),Pos)
+             | Play (Pos)
              | Lam (([Exp], Exp),Pos)
              | App ((Exp, Exp),Pos)
              | Case ((Exp, [Exp]),Pos)
@@ -163,7 +163,7 @@ instance Show Exp where
   show (Cons ((d,n,e1,e2),_)) = "(" ++ (show e1) ++ "<" ++ (show d)++","++(show n) ++">" ++ (show e2) ++ ")"
   show (Var (s,_)) = s
   show (Let ((s,e1,e2),_)) = "let "++s++" = "++(show e1)++ " in " ++ (show e2)
-  show (Play ((e1,e2),_)) = "play " ++ (show e1)++ " "++ (show e2)
+  show (Play (_)) = "play " 
   show (Lam ((e1, e2),_)) = "\\"++(show e1)++" "++(show e2)
   show (App ((e1, e2),_)) = (show e1)++" "++(show e2)
   show (Case ((e1, es),_)) = "case "++(show e1)++" of "++(show es)
@@ -199,7 +199,7 @@ getExpPos (Dot p) = p
 getExpPos (Cons (_,p)) = p
 getExpPos (Var (_,p)) = p
 getExpPos (Let (_,p)) = p
-getExpPos (Play (_,p)) = p
+getExpPos (Play p) = p
 getExpPos (Lam (_,p)) = p
 getExpPos (App (_,p)) = p
 getExpPos (Case (_,p)) = p
