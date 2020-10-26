@@ -42,8 +42,13 @@ import Data.Ratio
    let {Lex.T _ Lex.TKeyword "let"}
    in {Lex.T _ Lex.TKeyword "in"}
    '->' {Lex.T _ Lex.TArrow _}
+   '<->' {Lex.T _ Lex.TPComp "serial"}
+   '<|>' {Lex.T _ Lex.TPComp "parallel"}
+
+
    ',' {Lex.T _ Lex.TComma _}
    '.' {Lex.T _ Lex.TDot _}
+
 --   eof {Lex.T _ Lex.TEOF _}
 
 %left '-'
@@ -69,13 +74,32 @@ Exp :: {Exp}
           | Exp '-' Exp  {parseComp $1 $2 $3 }
           | Exp '_' Exp  {parseComp $1 $2 $3 }
           | Exp '|' Exp  {parseComp $1 $2 $3 }
+          | Exp '<->' Exp  {parseComp $1 $2 $3 }
+          | Exp '<|>' Exp  {parseComp $1 $2 $3 }
+
           | var {parse $1}
           | let var '=' Exp newline in Exp {Let ((getString $2, $4, $7), getPos $1)}
           | play Exp Exp {Play (($2,$3),getPos $1)}
           | '\\' Args '->' Exp   {Lam (($2, $4),getPos $1)}
-          | Exp Exp       {App (($1, $2),getExpPos $1)}
+          | Exp Exp2       {App (($1, $2),getExpPos $1)}
           | case Exp of newline OrderedCaseLines endcase {Case (($2,$5),getPos $1)}
           | '(' Exp ')' {$2}
+
+Exp2 :: {Exp}
+          : n  {parse $1}
+          | l  {parse $1}
+          | '(' Exp2 ',' Exp2 ')'  {Tuple (($2,$4),getPos $1) }
+          | '.' {parse $1}
+          | Exp2 '-' Exp2  {parseComp $1 $2 $3 }
+          | Exp2 '_' Exp2  {parseComp $1 $2 $3 }
+          | Exp2 '|' Exp2  {parseComp $1 $2 $3 }
+          | var {parse $1}
+          | let var '=' Exp newline in Exp {Let ((getString $2, $4, $7), getPos $1)}
+          | play Exp2 Exp2 {Play (($2,$3),getPos $1)}
+          | '\\' Args '->' Exp2  {Lam (($2, $4),getPos $1)}
+          | case Exp of newline OrderedCaseLines endcase {Case (($2,$5),getPos $1)}
+          | '(' Exp ')' {$2}
+
 
 OrderedCaseLines :: {[Exp]}
          : CaseLines {reverse $1}
@@ -127,6 +151,8 @@ data Exp =  Num (Integer,Pos)
              | Lam (([Exp], Exp),Pos)
              | App ((Exp, Exp),Pos)
              | Case ((Exp, [Exp]),Pos)
+             | PComp ((Dim,Exp,Exp),Pos)
+
   deriving(Eq)
 
 instance Show Exp where
@@ -144,6 +170,9 @@ instance Show Exp where
 
 
 parseComp :: Exp -> Lex.Token -> Exp -> Exp
+parseComp e1 (Lex.T p Lex.TPComp "<->") e2 = PComp ((Serial, e1, e2),parseAlexPosn p)
+parseComp e1 (Lex.T p Lex.TPComp "<|>") e2 = PComp ((Parallel, e1, e2),parseAlexPosn p)
+
 parseComp e1 (Lex.T p _ str) e2 = let n = length str 
                                   in let (dim,o) = case (head str) of
                                                      '-' -> (Serial,n-1)

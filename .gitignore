@@ -5,3 +5,4 @@ backlog.txt
 examples/*
 .stack-work/*
 tests/*
+*.swo

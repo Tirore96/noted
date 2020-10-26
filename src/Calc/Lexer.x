@@ -14,7 +14,8 @@ $whitespace = [\ \t\f\v\r]
 tokens :-
 --general tokens
 $whitespace+         {skip}
-(\n)+                               {mkL TNewLine}
+((\/\/(.*))\n)                               {skip}
+\n+                               {mkL TNewLine}
 \(                                  {mkL TOPara}
 \)                                  {mkL TCPara}
 --\<serial\,[0-8]\>                    {mkL TSerial}
@@ -30,6 +31,7 @@ case | endcase | of | play | let | in {mkL TKeyword}
 
 [h-z]|[a-z]($alpha|$digit|\_)+           {mkL TVar}
 \->                                  {mkL TArrow}
+serial | parallel                                  {mkL TPComp }
 \,                                   {mkL TComma}
 \.                                   {mkL TDot}
 
@@ -50,6 +52,7 @@ data TokenClass =
     TCPara |
     TSerial |
     TParallel |
+    TPComp |
     TUnderscore |
     TEq | 
     TNum |
@@ -84,9 +87,9 @@ alexJoin = do myToken <- alexMonadScan
                               return $ myToken:tokens
              
 scanner s = do tokens <- runAlex s alexJoin
-               return $ (removeTrailingNewLines tokens) ++ [T (AlexPn 0 0 0) TNewLine "" ]
+               return $ tokens
            
-removeTrailingNewLines tokens = case (last tokens) of
-                                  (T _ TNewLine _) -> removeTrailingNewLines (init tokens)
-                                  _ -> tokens
+--removeTrailingNewLines tokens = case (last tokens) of
+--                                  (T _ TNewLine _) -> removeTrailingNewLines (init tokens)
+--                                  _ -> tokens
 }

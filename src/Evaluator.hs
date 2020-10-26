@@ -23,6 +23,9 @@ data Exp = Num Integer
            | Lam [Exp] Exp
            | App Exp Exp
            | Case Exp [Exp]
+           | PComp P.Dim Exp Exp
+
+
   deriving(Eq,Show)
 
 convertAssignment :: P.Assignment -> Assignment
@@ -60,12 +63,15 @@ convertExp (P.App ((e1,e2),_)) = let e1_con = convertExp e1
                                      e2_con = convertExp e2
                                  in App e1_con e2_con
 
+convertExp (P.PComp ((d,e1,e2),_)) =  let e1_con = convertExp e1
+                                          e2_con = convertExp e2
+                                      in PComp d e1_con e2_con
+
+
 convertExp (P.Case ((e1,es),_)) =  -- For now don't substitute d and n because they are not P.Exp
   let e1_con = convertExp e1
       es_con = map convertExp es
   in Case e1_con es_con
-
-
 
 
 type StateData = Map.Map String Exp
@@ -129,6 +135,12 @@ substitute (Case e1 es) str sub_e =
       es_sub = map (\e -> substitute e str sub_e) es
   in Case e1_sub es_sub
 
+substitute (PComp dim e1 e2) str sub_e =
+  let e1_sub = substitute e1 str sub_e
+      e2_sub = substitute e2 str sub_e
+  in PComp dim e1_sub e2_sub
+
+
 substitute e _ _ = e
 
 reduceTerm :: Exp -> SEME Exp
@@ -158,7 +170,7 @@ reduceTerm e@(Lam _ _) = return e
 reduceTerm (App e1 e2) = do v1 <- reduceTerm e1
                             (p,ps,e0) <- case v1 of
                                           Lam (p:ps) e0 -> return (p,ps,e0)
-                                          _ -> failM "not lambda"
+                                          e -> failM ("not lambda, is: "++show e)
                             v_arg <- reduceTerm e2
                             let e_sub =  applyPattern e0 p v_arg
                             case e_sub of 
@@ -173,6 +185,10 @@ reduceTerm (Case e1 es ) =  -- For now don't substitute d and n because they are
      case firstMatchingLam v1 es of 
        Right e -> reduceTerm e
        Left f -> failM f
+
+reduceTerm (PComp dim e1 e2) = do v1 <- reduceTerm e1
+                                  v2 <- reduceTerm e2
+                                  return $ PComp dim v1 v2
 
 firstMatchingLam :: Exp -> [Exp] -> Either String Exp
 firstMatchingLam e [] = Left ("no pattern matched, for e: "++(show e))

@@ -8,24 +8,37 @@ import Data.Ratio
 
 
 translate :: E.Exp -> Either String (Eu.Music Eu.Pitch)
-translate (E.Play (E.Num n) e2) = case translateCompositions (fromIntegral n) e2 of
+translate (E.Play (E.Num n) e2) = case translateCompositions (fromIntegral n) (fromIntegral n) e2 of
                                     Right (m,_) -> Right m
                                     Left f -> Left f
 translate e = Left ("argument to translate is not music, but: "++(show e))
 
 
-translateCompositions :: Int -> E.Exp -> Either String (Eu.Music Eu.Pitch,Int)
-translateCompositions o (E.Tuple (E.Letter s) (E.Tuple (E.Num n1) (E.Num n2)))
- = do fun <- stringToLetterFun s
-      return $ (fun o (n1%n2),o)
+translateCompositions :: Int -> Int -> E.Exp -> Either String (Eu.Music Eu.Pitch,(Int,Int))
+translateCompositions os op (E.Cons P.Serial n E.Dot e2) = 
+ translateCompositions (os+n) os e2
 
-translateCompositions o (E.Cons _ n E.Dot e2) = translateCompositions (o+n) e2
+translateCompositions os op (E.Cons P.Parallel n E.Dot e2) = 
+ translateCompositions os (op+n) e2
 
-translateCompositions o (E.Cons dim n e1 e2) = do (e1_music,o2) <- translateCompositions o e1
-                                                  (e2_music,o3) <- translateCompositions (o2+n) e2
-                                                  return $ (combinePitches dim e1_music e2_music,o3)
 
-translateCompositions _ e = Left ("translateComps arg not E.Cons, but: "++(show e))
+translateCompositions os op (E.Tuple (E.Letter s) (E.Tuple (E.Num n1) (E.Num n2))) = 
+ do fun <-  stringToLetterFun s
+    return $ (fun (os) (n1%n2),((os,op)))
+
+translateCompositions os op (E.Cons P.Serial n e1 e2) = do (e1_music,(os2,op2)) <- translateCompositions os op e1
+                                                           (e2_music,(os3,op3)) <- translateCompositions (os2+n) op e2
+                                                           return $ (combinePitches P.Serial e1_music e2_music,(os3,op))
+
+translateCompositions os op (E.Cons P.Parallel n e1 e2) = do (e1_music,(os2,op2)) <- translateCompositions os op e1
+                                                             (e2_music,(os3,op3)) <- translateCompositions os (op2+n) e2
+                                                             return $ (combinePitches P.Parallel e1_music e2_music,(os,op3))
+
+translateCompositions os op (E.PComp dim e1 e2) = do (e1_music,_) <- translateCompositions os op e1
+                                                     (e2_music,_) <- translateCompositions os op e2
+                                                     return $ (combinePitches dim e1_music e2_music,(os,op))
+
+translateCompositions _ _ e = Left ("translateComps arg not E.Cons, but: "++(show e))
 
 
 combinePitches :: P.Dim -> Eu.Music Eu.Pitch -> Eu.Music Eu.Pitch -> Eu.Music Eu.Pitch
