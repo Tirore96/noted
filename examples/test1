@@ -1,0 +1,6 @@
+index1 = 1st | 3rd | 5th
+index2 = 3rd | 5th | 1st //should be different
+m1 = index1 withScale  C withColor Major withOctave o4 withDur qn
+m2 = index2 withScale  C withColor Major withOctave o4 withDur qn
+
+main = m2

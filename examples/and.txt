@@ -1,0 +1,9 @@
+$attrib = pos and dur and octave and scale
+$m1 = c and qn and o4
+$m2 = (4 in Cm) and qn and o2
+$p = 1 - 2 - 3 - 4
+$t = $pos -> $pos+1
+$p2 = $t2 and p
+$c = c and (4 in Dm) in Dm 
+$f = f shift dorian 5
+main = $m1 and $m2

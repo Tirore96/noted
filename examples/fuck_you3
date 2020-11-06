@@ -1,0 +1,2 @@
+main = (play 2 ss) parallel (play 2 ch)
+

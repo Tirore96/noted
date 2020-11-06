@@ -1,0 +1,33 @@
+Syntax:
+
+t =             l | //letters
+                o | //octaves 
+                n | //offsets
+              t/t | //durations
+         list t_0 | //lists
+            t * t | //joining tuple values
+   t_0 'from' t_1 | //t_0 indexes into t_1 
+     t_0 'in' t_1 | //t_0 offsets offsat by t_1
+       t_0 => t_1 | //apply t_1 funktion to t_0 argument
+fun_name ts = t_0 // define funktion with arguments ts and body t_0
+
+base types:
+letter : c
+octave : o1
+duration : qn
+
+scale : [0,3,5,6,7,10] //blues
+
+from
+
+Term = Term * Term //join primitives
+Term in Term  // lookup in array
+term as term // offset 
+[int]
+C_n = c * qn * o4
+D_n = 1 in (C as [0,2,4,5])
+
+MajorScale letter = [2,2,1,2,2,1] in letter
+
+C_chord = (1|3|5) from (C => MajorScale) 
+C_chord = (1|2|3) from ([4,3] in C) 

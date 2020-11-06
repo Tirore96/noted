@@ -1,0 +1,14 @@
+ld = \l dur -> (l,dur)
+
+zip = \l1 l2 -> case (l1,l2) of
+                  (xs - x,ys - y) -> (zip xs ys) - (x,y)
+                  (.,.) -> .
+                endcase
+qn = (1,4)
+hn = (1,2)
+wn = (1,1)
+
+durs = . - qn - qn - qn
+ls   = . - c  - d  - e
+main = play 4 ((zip ls) durs)
+
