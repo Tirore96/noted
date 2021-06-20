@@ -1,1 +1,0 @@
-main = 1st withScale C withColor Major

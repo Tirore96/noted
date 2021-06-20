@@ -1,6 +1,0 @@
-indices1 = 1st | 3rd
-durs1 = qn | wn
-cMaj = C withColor Minor
-m1 = indices1 withScale cMaj withOctave o2 withDur durs1
-
-main = m1 - m1

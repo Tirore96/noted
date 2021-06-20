@@ -1,4 +1,0 @@
-qn = (1,4)
-m = . - (a,qn) - (b,qn) -- (c,qn) - (d,qn)
-m2 = . | (c,qn) | (e,qn) | (g,qn)
-main = (play 4 m)  | (play 4 m2)
